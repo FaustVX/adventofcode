@@ -11,22 +11,21 @@ namespace AdventOfCode.Generator {
                  |using System.Text.RegularExpressions;
                  |using System.Text;
                  |
-                 |namespace AdventOfCode.Y{problem.Year}.Day{problem.Day:00} {{
-                 |    class Solution : Solver {{
+                 |namespace AdventOfCode.Y{problem.Year}.Day{problem.Day:00}
+                 |{{
+                 |    class Solution : Solver
+                 |    {{
                  |        public string Name => ""{problem.Title}"";
                  |
-                 |        public IEnumerable<object> Solve(string input) {{
+                 |        public IEnumerable<object> Solve(string input)
+                 |        {{
                  |            yield return PartOne(input);
                  |            yield return PartTwo(input);
                  |        }}
                  |
-                 |        int PartOne(string input) {{
-                 |            return 0;
-                 |        }}
+                 |        int PartOne(string input) => 0;
                  |
-                 |        int PartTwo(string input) {{
-                 |            return 0;
-                 |        }}
+                 |        int PartTwo(string input) => 0;
                  |    }}
                  |}}".StripMargin();
         }
