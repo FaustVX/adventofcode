@@ -7,16 +7,16 @@ using AngleSharp.Dom;
 namespace AdventOfCode.Model {
 
     public class CalendarToken {
-        public string Text { get; set; }
-        public int ConsoleColor { get; set; }
-        public bool Bold { get; set; }
+        public string Text { get; init; }
+        public int ConsoleColor { get; init; }
+        public bool Bold { get; init; }
     }
 
     public class Calendar {
-        public int Year;
+        public int Year { get; private init; }
 
-        public Dictionary<string[], int> Theme = new Dictionary<string[], int>();
-        public IReadOnlyList<IReadOnlyList<CalendarToken>> Lines { get; private set; }
+        public Dictionary<string[], int> Theme { get; private init; } = new Dictionary<string[], int>();
+        public IReadOnlyList<IReadOnlyList<CalendarToken>> Lines { get; private init; }
 
         public static Calendar Parse(int year, IDocument document) {
 

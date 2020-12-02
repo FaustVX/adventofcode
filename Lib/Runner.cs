@@ -6,7 +6,7 @@ using System.Reflection;
 
 namespace AdventOfCode {
     interface Solver {
-        string GetName();
+        string Name { get; }
         IEnumerable<object> Solve(string input);
     }
 
@@ -20,14 +20,14 @@ namespace AdventOfCode {
         }
 
         public static int Year(Type t) {
-            return int.Parse(t.FullName.Split('.')[1].Substring(1));
+            return int.Parse(t.FullName!.Split('.')[1][1..]);
         }
         public static int Day(this Solver solver) {
             return Day(solver.GetType());
         }
 
         public static int Day(Type t) {
-            return int.Parse(t.FullName.Split('.')[2].Substring(3));
+            return int.Parse(t.FullName!.Split('.')[2][3..]);
         }
 
         public static string WorkingDir(int year) {
@@ -43,10 +43,10 @@ namespace AdventOfCode {
         }
 
         public static SplashScreen SplashScreen(this Solver solver) {
-            var tsplashScreen = Assembly.GetEntryAssembly().GetTypes()
+            var tsplashScreen = Assembly.GetEntryAssembly()!.GetTypes()
                  .Where(t => t.GetTypeInfo().IsClass && typeof(SplashScreen).IsAssignableFrom(t))
                  .Single(t => Year(t) == solver.Year());
-            return (SplashScreen)Activator.CreateInstance(tsplashScreen);
+            return (SplashScreen)Activator.CreateInstance(tsplashScreen)!;
         }
     }
 
@@ -56,14 +56,14 @@ namespace AdventOfCode {
             var errors = new List<string>();
 
             var lastYear = -1;
-            foreach (var solver in tsolvers.Select(tsolver => Activator.CreateInstance(tsolver) as Solver)) {
+            foreach (var solver in tsolvers.Select(tsolver => (Solver)Activator.CreateInstance(tsolver)!)) {
                 if (lastYear != solver.Year()) {
                     solver.SplashScreen().Show();
                     lastYear = solver.Year();
                 }
 
                 var workingDir = solver.WorkingDir();
-                WriteLine(ConsoleColor.White, $"{solver.DayName()}: {solver.GetName()}");
+                WriteLine(ConsoleColor.White, $"{solver.DayName()}: {solver.Name}");
                 WriteLine();
                 foreach (var dir in new[] { workingDir, Path.Combine(workingDir, "test") }) {
                     if (!Directory.Exists(dir)) {

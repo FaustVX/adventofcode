@@ -38,7 +38,7 @@ namespace AdventOfCode {
                 Directory.CreateDirectory(dir);
             }
 
-            var years = Assembly.GetEntryAssembly().GetTypes()
+            var years = Assembly.GetEntryAssembly()!.GetTypes()
                 .Where(t => t.GetTypeInfo().IsClass && typeof(Solver).IsAssignableFrom(t))
                 .Select(tsolver => SolverExtensions.Year(tsolver));
 

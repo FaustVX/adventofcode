@@ -8,7 +8,7 @@ namespace AdventOfCode {
 
         static void Main(string[] args) {
 
-            var tsolvers = Assembly.GetEntryAssembly().GetTypes()
+            var tsolvers = Assembly.GetEntryAssembly()!.GetTypes()
                 .Where(t => t.GetTypeInfo().IsClass && typeof(Solver).IsAssignableFrom(t))
                 .OrderBy(t => t.FullName)
                 .ToArray();
@@ -20,8 +20,8 @@ namespace AdventOfCode {
                     return () => new Updater().Update(year, day).Wait();
                 }) ??
                 Command(args, Args("update", "last"), m => {
-                    var dt = DateTime.Now;
-                    if (dt.Month == 12 && dt.Day >=1 && dt.Day <= 25) {
+                    var dt = DateTime.UtcNow.AddHours(-5);
+                    if (dt is { Month: 12, Day: >=1 and <= 25 }) {
                         return () => new Updater().Update(dt.Year, dt.Day).Wait();
                     } else {
                         throw new Exception("Event is not active. This option works in Dec 1-25 only)");
@@ -67,7 +67,7 @@ namespace AdventOfCode {
             action();
         }
 
-        static Action Command(string[] args, string[] regexes, Func<string[], Action> parse) {
+        static Action? Command(string[] args, string[] regexes, Func<string[], Action> parse) {
             if (args.Length != regexes.Length) {
                 return null;
             }

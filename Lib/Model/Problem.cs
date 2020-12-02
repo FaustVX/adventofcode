@@ -7,12 +7,12 @@ using System.Text.RegularExpressions;
 
 namespace AdventOfCode.Model {
     public class Problem {
-        public string Title { get; private set; }
-        public string ContentMd { get; private set; }
-        public int Day { get; private set; }
-        public int Year { get; private set; }
-        public string Input { get; private set; }
-        public string Answers { get; private set; }
+        public string Title { get; private init; }
+        public string ContentMd { get; private init; }
+        public int Day { get; private init; }
+        public int Year { get; private init; }
+        public string Input { get; private init; }
+        public string Answers { get; private init; }
 
         public static Problem Parse(int year, int day, string url, IDocument document, string input) {
 
@@ -23,8 +23,8 @@ namespace AdventOfCode.Model {
 
                 var answerNode = article.NextSibling; 
                 while (answerNode != null && !( 
-                    answerNode.NodeName == "P" 
-                    && (answerNode as IElement).QuerySelector("code") != null 
+                    answerNode.NodeName == "P"
+                    && ((IElement)answerNode).QuerySelector("code") != null 
                     && answerNode.TextContent.Contains("answer"))
                 ) {
                     answerNode = answerNode.NextSibling as IElement;
@@ -96,7 +96,7 @@ namespace AdventOfCode.Model {
                     }
                     break;
                 case "a":
-                    yield return "[" + UnparseList("", node) + "](" + (node as IElement).Attributes["href"].Value + ")";
+                    yield return "[" + UnparseList("", node) + "](" + ((IElement)node).Attributes["href"].Value + ")";
                     break;
                 case "br":
                     yield return "\n";
