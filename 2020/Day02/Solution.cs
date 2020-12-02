@@ -13,13 +13,14 @@ namespace AdventOfCode.Y2020.Day02 {
 
         public IEnumerable<object> Solve(string input) {
             yield return PartOne(input.Split(new[]{'\r', '\n'}, StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries).Select(PasswordPolicy.Parse));
-            yield return PartTwo(input);
+            yield return PartTwo(input.Split(new[]{'\r', '\n'}, StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries).Select(PasswordPolicy.Parse));
         }
 
         int PartOne(IEnumerable<PasswordPolicy> paswords)
-            => paswords.Count(PasswordPolicy.IsValid);
+            => paswords.Count(PasswordPolicy.IsCountValid);
 
-        int PartTwo(string input) => 0;
+        int PartTwo(IEnumerable<PasswordPolicy> paswords)
+            => paswords.Count(PasswordPolicy.IsPosValid);
     }
 
     struct PasswordPolicy
@@ -28,11 +29,14 @@ namespace AdventOfCode.Y2020.Day02 {
         public char Letter { get; init; }
         public string Password { get; init; }
 
-        public static bool IsValid(PasswordPolicy password)
-            => password.Password.Count(c => c == password.Letter) is var c && IsValid(c, password.Quantity);
+        public static bool IsCountValid(PasswordPolicy password)
+            => password.Password.Count(c => c == password.Letter) is var c && IsCountValid(c, password.Quantity);
 
-        private static bool IsValid(int count, Range range)
+        private static bool IsCountValid(int count, Range range)
             => count >= range.Start.Value && count <= range.End.Value;
+
+        public static bool IsPosValid(PasswordPolicy password)
+            => password.Password[password.Quantity.Start.Value - 1] == password.Letter ^ password.Password[password.Quantity.End.Value - 1] == password.Letter;
 
         public static PasswordPolicy Parse(string input)
         {
