@@ -33,8 +33,11 @@ namespace AdventOfCode {
                         var refoutFile = file.Replace(".in", ".refout");
                         var refout = File.Exists(refoutFile) ? File.ReadAllLines(refoutFile) : null;
                         var input = File.ReadAllText(file);
-                        if (input.EndsWith("\n")) {
-                            input = input.Substring(0, input.Length - 1);
+                        if (input.EndsWith("\r\n")) {
+                            input = input[..^2];
+                        }
+                        else if (input.EndsWith("\n")) {
+                            input = input[..^1];
                         }
                         var dt = DateTime.Now;
                         var iline = 0;
