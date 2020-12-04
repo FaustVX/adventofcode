@@ -14,8 +14,8 @@ namespace AdventOfCode.Y2020.Day01 {
             yield return PartTwo(input);
         }
 
-        long PartOne(string input) => Solve1(2020, input.Split('\n').Select(int.Parse).ToArray());
-        long PartTwo(string input) => Solve2(2020, input.Split('\n').Select(int.Parse).ToArray());
+        long PartOne(string input) => Solve1(2020, input.SplitLine().Select(int.Parse).ToArray());
+        long PartTwo(string input) => Solve2(2020, input.SplitLine().Select(int.Parse).ToArray());
 
         long Solve1(int sum, int[] inputs) {
             for (int i = 0; i < inputs.Length - 1; i++)

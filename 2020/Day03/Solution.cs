@@ -13,7 +13,7 @@ namespace AdventOfCode.Y2020.Day03
 
         public IEnumerable<object> Solve(string input)
         {
-            var terrain = input.Split(Environment.NewLine.ToCharArray(), StringSplitOptions.RemoveEmptyEntries).Select(line => line.Select(c => c is '.').ToArray()).ToArray();
+            var terrain = input.SplitLine().Select(line => line.Select(c => c is '.').ToArray()).ToArray();
             yield return CalcutateTrees(1, 3, terrain);
             yield return new[]{ (1, 1), (1, 3), (1, 5), (1, 7), (2, 1) }.Select(t => CalcutateTrees(t.Item1, t.Item2, terrain)).Aggregate(1L, (a, c) => a * c);
         }

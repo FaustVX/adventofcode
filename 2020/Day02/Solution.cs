@@ -12,8 +12,8 @@ namespace AdventOfCode.Y2020.Day02 {
         public string Name => "Password Philosophy";
 
         public IEnumerable<object> Solve(string input) {
-            yield return PartOne(input.Split(new[]{'\r', '\n'}, StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries).Select(PasswordPolicy.Parse));
-            yield return PartTwo(input.Split(new[]{'\r', '\n'}, StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries).Select(PasswordPolicy.Parse));
+            yield return PartOne(input.SplitLine().Select(PasswordPolicy.Parse));
+            yield return PartTwo(input.SplitLine().Select(PasswordPolicy.Parse));
         }
 
         int PartOne(IEnumerable<PasswordPolicy> paswords)
