@@ -14,7 +14,16 @@ namespace AdventOfCode.Y2020.Day05
         public IEnumerable<object> Solve(string input)
         {
             yield return input.SplitLine().Select(CalculateSeatId).Max();
-            yield return PartTwo(input);
+            yield return input.SplitLine()
+                .Select(CalculateSeatId)
+                .OrderBy(id => id)
+                .Aggregate(0, (o, c)
+                    => (o, c) switch
+                        {
+                            (0, _) => c,
+                            (_, _) when c - o == 1 => c,
+                            (_, _) => o
+                        }) + 1;
         }
 
         int CalculateSeatId(string boardingPass)
@@ -47,7 +56,5 @@ namespace AdventOfCode.Y2020.Day05
 
             return miR * 8 + miC;
         }
-
-        int PartTwo(string input) => 0;
     }
 }
