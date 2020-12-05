@@ -28,33 +28,33 @@ namespace AdventOfCode.Y2020.Day05
 
         int CalculateSeatId(string boardingPass)
         {
-            var (miR, maR, leR) = (0, 127, 128);
-            var (miC, maC, leC) = (0, 7, 8);
+            var (minRow, maxRow, lenRow) = (0, 127, 128);
+            var (minCol, maxCol, lenCol) = (0, 7, 8);
 
             foreach (var c in boardingPass)
             {
                 switch (c)
                 {
                     case 'F':
-                        leR /= 2;
-                        maR = miR + (leR - 1);
+                        lenRow /= 2;
+                        maxRow = minRow + (lenRow - 1);
                         break;
                     case 'B':
-                        leR /= 2;
-                        miR = maR - (leR - 1);
+                        lenRow /= 2;
+                        minRow = maxRow - (lenRow - 1);
                         break;
                     case 'L':
-                        leC /= 2;
-                        maC = miC + (leC - 1);
+                        lenCol /= 2;
+                        maxCol = minCol + (lenCol - 1);
                         break;
                     case 'R':
-                        leC /= 2;
-                        miC = maC - (leC - 1);
+                        lenCol /= 2;
+                        minCol = maxCol - (lenCol - 1);
                         break;
                 }
             }
 
-            return miR * 8 + miC;
+            return minRow * 8 + minCol;
         }
     }
 }
