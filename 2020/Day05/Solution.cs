@@ -14,16 +14,7 @@ namespace AdventOfCode.Y2020.Day05
         public IEnumerable<object> Solve(string input)
         {
             yield return input.SplitLine().Select(CalculateSeatId).Max();
-            yield return input.SplitLine()
-                .Select(CalculateSeatId)
-                .OrderBy(id => id)
-                .Aggregate(0, (o, c)
-                    => (o, c) switch
-                        {
-                            (0, _) => c,
-                            (_, _) when c - o == 1 => c,
-                            (_, _) => o
-                        }) + 1;
+            yield return input.SplitLine().Select(CalculateSeatId).OrderBy(id => id).SelectWithLast().TakeWhile(t => t.current - t.last is 1).Last().current + 1;
         }
 
         int CalculateSeatId(string boardingPass)
