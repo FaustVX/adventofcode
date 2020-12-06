@@ -12,30 +12,19 @@
             "preLaunchTask": "build",
             // If you have changed target frameworks, make sure to update the program path.
             "program": "${workspaceFolder}/bin/Debug/net5.0/adventofcode.dll",
-            "args": "${input:args}",
+            "args": ["last"],
             "cwd": "${workspaceFolder}",
             // For more information about the 'console' field, see https://github.com/OmniSharp/omnisharp-vscode/blob/master/debugger-launchjson.md#console-terminal-window
             "console": "internalConsole",
             "stopAtEntry": false,
             "internalConsoleOptions": "openOnSessionStart",
-            "requireExactSource": false,
-            "env": {
-                "SESSION": "53616c7465645f5f83073acf117a023e787bd139adbfb322209f8c696fa7d965"
-            }
+            "requireExactSource": false
         },
         {
             "name": ".NET Core Attach",
             "type": "coreclr",
             "request": "attach",
             "processId": "${command:pickProcess}"
-        }
-    ],
-    "inputs": [
-        {
-            "id": "args",
-            "type": "pickString",
-            "options": ["update last", "last", "all"],
-            "description": "Command to pass"
         }
     ]
 }
