@@ -111,17 +111,6 @@ namespace AdventOfCode.Y2020.Day07
         }
 
         static int GetContent(Bag bag)
-        {
-            if(bag.Bags is null)
-                return 0;
-
-            var sum = 0;
-            foreach (var item in bag.Bags)
-            {
-                sum += GetContent(item.bag) * item.qty + item.qty;
-            }
-
-            return sum;
-        }
+            => bag.Bags?.Aggregate(0, (o, c) => o += GetContent(c.bag) * c.qty + c.qty) ?? 0;
     }
 }
