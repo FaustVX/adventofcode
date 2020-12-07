@@ -75,30 +75,35 @@ namespace AdventOfCode.Y2020.Day07
 
         int PartOne(string input, string findBag)
         {
-            var bags = GetBags(input).ToArray();
+            PrepareBags(input);
             var bag = Bag.GetBag(findBag);
             return GetParents(bag).Skip(1).Select(bag => bag.FullAdjective).ToHashSet().Count();
         }
 
         int PartTwo(string input, string findBag)
         {
-            var bags = GetBags(input).ToArray();
+            PrepareBags(input);
             var bag = Bag.GetBag(findBag);
             return GetContent(bag);
         }
 
-        static IEnumerable<Bag> GetBags(string input)
+        static void PrepareBags(string input)
         {
-            foreach (var rule in input.SplitLine())
+            GetBags(input).ToArray();
+
+            static IEnumerable<Bag> GetBags(string input)
             {
-                var splitted = rule[..^1].Split(" contain ");
-                var bag = Bag.Parse(splitted[0]);
-                if (splitted[1] is not "no other bags")
+                foreach (var rule in input.SplitLine())
                 {
-                    var contain = splitted[1].Split(", ").Select(Bag.ParseWithQty).ToArray();
-                    bag.SetBag(contain);
+                    var splitted = rule[..^1].Split(" contain ");
+                    var bag = Bag.Parse(splitted[0]);
+                    if (splitted[1] is not "no other bags")
+                    {
+                        var contain = splitted[1].Split(", ").Select(Bag.ParseWithQty).ToArray();
+                        bag.SetBag(contain);
+                    }
+                    yield return bag;
                 }
-                yield return bag;
             }
         }
 
