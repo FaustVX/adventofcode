@@ -28,11 +28,6 @@
                 "run",
                 "${input:year}/${input:day}"
             ],
-            "options": {
-                "env": {
-                    "SESSION": "${input:session}"
-                }
-            },
             "problemMatcher": [],
             "dependsOn": [
                 "git add",
@@ -63,7 +58,8 @@
             "type": "process",
             "args": [
                 "add",
-                "**/Day*/*.refout"
+                "**/Day*/*.refout",
+                "**/*.cs"
             ],
             "problemMatcher": [],
             "dependsOn": "upload"
@@ -107,6 +103,18 @@
                 "reset",
                 "--soft",
                 "HEAD~1"
+            ],
+            "problemMatcher": []
+        },
+        {
+            "label": "git stash",
+            "command": "git",
+            "type": "process",
+            "args": [
+                "stash",
+                "push",
+                "-m",
+                "Y${input:year}D${input:day}P${input:part}"
             ],
             "problemMatcher": []
         }

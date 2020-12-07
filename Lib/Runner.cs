@@ -20,7 +20,7 @@ namespace AdventOfCode {
                 var workingDir = solver.WorkingDir();
                 WriteLine(ConsoleColor.White, $"{solver.DayName()}: {solver.Name}");
                 WriteLine();
-                foreach (var dir in new[] { workingDir, Path.Combine(workingDir, "test") }) {
+                foreach (var dir in new[] { Path.Combine(workingDir, "test"), workingDir }) {
                     if (!Directory.Exists(dir)) {
                         continue;
                     }
