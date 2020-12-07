@@ -75,14 +75,12 @@ namespace AdventOfCode.Y2020.Day07
 
         int PartOne(string input, string findBag)
         {
-            PrepareBags(input);
             var bag = Bag.GetBag(findBag);
             return GetParents(bag).Skip(1).Select(bag => bag.FullAdjective).ToHashSet().Count();
         }
 
         int PartTwo(string input, string findBag)
         {
-            PrepareBags(input);
             var bag = Bag.GetBag(findBag);
             return GetContent(bag);
         }
