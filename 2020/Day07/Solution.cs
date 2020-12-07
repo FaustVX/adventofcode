@@ -70,7 +70,7 @@ namespace AdventOfCode.Y2020.Day07
             Bag.Reset();
             PrepareBags(input);
             yield return PartOne(input, "shiny gold");
-            yield return PartTwo(input);
+            yield return PartTwo(input, "shiny gold");
         }
 
         int PartOne(string input, string findBag)
@@ -80,7 +80,12 @@ namespace AdventOfCode.Y2020.Day07
             return GetParents(bag).Skip(1).Select(bag => bag.FullAdjective).ToHashSet().Count();
         }
 
-        int PartTwo(string input) => 0;
+        int PartTwo(string input, string findBag)
+        {
+            var bags = GetBags(input).ToArray();
+            var bag = Bag.GetBag(findBag);
+            return GetContent(bag);
+        }
 
         static IEnumerable<Bag> GetBags(string input)
         {
@@ -103,6 +108,20 @@ namespace AdventOfCode.Y2020.Day07
 
             foreach (var item in Bag.GetBags(bag).SelectMany(GetParents))
                 yield return item;
+        }
+
+        static int GetContent(Bag bag)
+        {
+            if(bag.Bags is null)
+                return 0;
+
+            var sum = 0;
+            foreach (var item in bag.Bags)
+            {
+                sum += GetContent(item.bag) * item.qty + item.qty;
+            }
+
+            return sum;
         }
     }
 }
