@@ -8,7 +8,10 @@ namespace AdventOfCode {
 
     interface Solver {
         string Name { get; }
-        IEnumerable<object> Solve(string input);
+        IEnumerable<object> Solve(string input)
+            => Solve(input, default);
+        IEnumerable<object> Solve(string input, string? location)
+            => Solve(input);
     }
 
     static class SolverExtensions {
