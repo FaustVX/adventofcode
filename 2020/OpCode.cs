@@ -18,7 +18,8 @@ namespace AdventOfCode.Y2020
             return Visited = true;
         }
 
-        protected abstract void RunImpl(Processor processor);
+        protected virtual void RunImpl(Processor processor)
+            => processor.InstructionPointer++;
 
         public static OpCode Parse(string input)
         {
@@ -42,9 +43,6 @@ namespace AdventOfCode.Y2020
             }
 
             public int Value { get; }
-
-            protected override void RunImpl(Processor processor)
-            { }
         }
 
         public sealed class Acc : OpCode
@@ -59,6 +57,7 @@ namespace AdventOfCode.Y2020
             protected override void RunImpl(Processor processor)
             {
                 processor.Accumulator += Value;
+                base.RunImpl(processor);
             }
 
             protected override string GetDebuggerDisplay()
@@ -76,7 +75,7 @@ namespace AdventOfCode.Y2020
 
             protected override void RunImpl(Processor processor)
             {
-                processor.InstructionPointer += Offset - 1;
+                processor.InstructionPointer += Offset;
             }
 
             protected override string GetDebuggerDisplay()

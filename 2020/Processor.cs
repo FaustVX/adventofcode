@@ -22,11 +22,11 @@ namespace AdventOfCode.Y2020
 
         public bool Run()
         {
-            for (; InstructionPointer < Program.Length; InstructionPointer++)
+            do
             {
                 if (!Program[InstructionPointer].Run(this))
                     return false;
-            }
+            } while (InstructionPointer < Program.Length);
             return true;
         }
     }
