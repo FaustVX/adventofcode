@@ -18,15 +18,16 @@ namespace AdventOfCode.Y2020
 
         public int Accumulator { get; set; }
         public int InstructionPointer { get; set; }
-        public OpCode CurrentOpCode => Program[InstructionPointer];
+        public ref OpCode CurrentOpCode => ref Program[InstructionPointer];
 
-        public void Run()
+        public bool Run()
         {
             for (; InstructionPointer < Program.Length; InstructionPointer++)
             {
                 if (!Program[InstructionPointer].Run(this))
-                    return;
+                    return false;
             }
+            return true;
         }
     }
 }
