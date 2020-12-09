@@ -4,11 +4,14 @@ using System.Collections.Immutable;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Text;
+using RegExtract;
 
 namespace AdventOfCode.Y2020.Day07
 {
     class Bag
     {
+        private static readonly Regex _parser2 = new(@"(\w*) (\w*) bags?");
+        private static readonly Regex _parserQty = new(@"(\d*) (.*)");
         public Bag(string adjective, string color)
         {
             Adjective = adjective;
@@ -42,17 +45,14 @@ namespace AdventOfCode.Y2020.Day07
 
         public static Bag Parse(string input)
         {
-            var matches = Regex.Match(input, @"(\w*) (\w*) bags?");
-            if(_bags.TryGetValue($"{matches.Groups[1].Value} {matches.Groups[2].Value}", out var bag))
+            var (adj, col) = input.Extract<(string, string)>(_parser2);
+            if(_bags.TryGetValue($"{adj} {col}", out var bag))
                 return bag;
-            return new(matches.Groups[1].Value, matches.Groups[2].Value);
+            return new(adj, col);
         }
 
         public static (int, Bag) ParseWithQty(string input)
-        {
-            var matches = Regex.Match(input, @"(\d*) (.*)");
-            return (int.Parse(matches.Groups[1].Value), Parse(matches.Groups[2].Value));
-        }
+            => input.Extract<(int, Bag)>(_parserQty);
 
         public static void Reset()
         {

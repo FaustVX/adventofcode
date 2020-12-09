@@ -4,6 +4,7 @@ using System.Collections.Immutable;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Text;
+using RegExtract;
 
 namespace AdventOfCode.Y2020.Day02 {
 
@@ -25,6 +26,7 @@ namespace AdventOfCode.Y2020.Day02 {
 
     struct PasswordPolicy
     {
+        private static readonly Regex _parser = new(@"^(\d+)-(\d+) ([a-z]): ([a-z]*)$");
         public Range Quantity { get; init; }
         public char Letter { get; init; }
         public string Password { get; init; }
@@ -40,8 +42,8 @@ namespace AdventOfCode.Y2020.Day02 {
 
         public static PasswordPolicy Parse(string input)
         {
-            var splitted = Regex.Split(input, @"^(\d+)-(\d+) ([a-z]): ([a-z]*)$");
-            return new(){ Quantity = new(int.Parse(splitted[1]), int.Parse(splitted[2])), Letter = splitted[3][0], Password = splitted[4] };
+            var (start, end, letter, password) = input.Extract<(int, int, char, string)>(_parser);
+            return new(){ Quantity = new(start, end), Letter = letter, Password = password };
         }
     }
 }

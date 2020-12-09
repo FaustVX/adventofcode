@@ -1,5 +1,6 @@
 using System.Diagnostics;
 using System.Text.RegularExpressions;
+using RegExtract;
 
 namespace AdventOfCode.Y2020
 {
@@ -23,8 +24,7 @@ namespace AdventOfCode.Y2020
 
         public static OpCode Parse(string input)
         {
-            var group = _opCodeIntRegex.Match(input).Groups;
-            return (group[1].Value, int.Parse(group[2].Value)) switch
+            return (input.Extract<(string, int)>(_opCodeIntRegex)) switch
             {
                 ("nop", var v) => new Nop(v),
                 ("acc", var v) => new Acc(v),
