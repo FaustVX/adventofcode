@@ -9,7 +9,6 @@ using System.Reflection;
 
 using AngleSharp;
 using AngleSharp.Io;
-using AngleSharp.Dom;
 
 using System.Net.Http;
 using System.Collections.Generic;

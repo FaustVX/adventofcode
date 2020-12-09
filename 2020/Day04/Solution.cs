@@ -7,10 +7,10 @@ using System.Text;
 
 namespace AdventOfCode.Y2020.Day04
 {
+    [ProblemName("Passport Processing")]
     class Solution : Solver
     {
         private delegate bool TryParse<T>(string input, out T output);
-        public string Name => "Passport Processing";
 
         public IEnumerable<object> Solve(string input)
         {

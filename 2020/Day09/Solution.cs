@@ -7,10 +7,9 @@ using System.Text;
 
 namespace AdventOfCode.Y2020.Day09
 {
+    [ProblemName("Encoding Error")]
     class Solution : Solver
     {
-        public string Name => "Encoding Error";
-
         public IEnumerable<object> Solve(string input)
         {
             var partOne = PartOne(input);

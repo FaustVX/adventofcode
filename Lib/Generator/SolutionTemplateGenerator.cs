@@ -13,10 +13,9 @@ namespace AdventOfCode.Generator {
                  |
                  |namespace AdventOfCode.Y{problem.Year}.Day{problem.Day:00}
                  |{{
+                 |    [ProblemName(""{problem.Title}"")]      
                  |    class Solution : Solver
                  |    {{
-                 |        public string Name => ""{problem.Title}"";
-                 |
                  |        public IEnumerable<object> Solve(string input)
                  |        {{
                  |            yield return PartOne(input);

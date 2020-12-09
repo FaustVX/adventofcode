@@ -8,9 +8,8 @@ using RegExtract;
 
 namespace AdventOfCode.Y2020.Day02 {
 
+    [ProblemName("Password Philosophy")]
     class Solution : Solver {
-
-        public string Name => "Password Philosophy";
 
         public IEnumerable<object> Solve(string input) {
             yield return PartOne(input.SplitLine().Select(PasswordPolicy.Parse));

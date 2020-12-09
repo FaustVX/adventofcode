@@ -7,10 +7,9 @@ using System.Text;
 
 namespace AdventOfCode.Y2020.Day08
 {
+    [ProblemName("Handheld Halting")]
     class Solution : Solver
     {
-        public string Name => "Handheld Halting";
-
         public IEnumerable<object> Solve(string input)
         {
             yield return PartOne(input);

@@ -7,9 +7,8 @@ using System.Text;
 
 namespace AdventOfCode.Y2020.Day06
 {
-    class Solution : Solver
-    {
-        public string Name => "Custom Customs";
+    [ProblemName("Custom Customs")]      
+    class Solution : Solver {
 
         public IEnumerable<object> Solve(string input)
         {

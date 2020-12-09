@@ -61,10 +61,9 @@ namespace AdventOfCode.Y2020.Day07
         }
     }
 
+    [ProblemName("Handy Haversacks")]
     class Solution : Solver
     {
-        public string Name => "Handy Haversacks";
-
         public IEnumerable<object> Solve(string input)
         {
             Bag.Reset();

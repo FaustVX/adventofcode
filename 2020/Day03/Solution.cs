@@ -7,10 +7,9 @@ using System.Text;
 
 namespace AdventOfCode.Y2020.Day03
 {
+    [ProblemName("Toboggan Trajectory")]
     class Solution : Solver
     {
-        public string Name => "Toboggan Trajectory";
-
         public IEnumerable<object> Solve(string input)
         {
             var terrain = input.SplitLine().Select(line => line.Select(c => c is '.').ToArray()).ToArray();

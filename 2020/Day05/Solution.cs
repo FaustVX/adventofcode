@@ -7,10 +7,9 @@ using System.Text;
 
 namespace AdventOfCode.Y2020.Day05
 {
+    [ProblemName("Binary Boarding")]
     class Solution : Solver
     {
-        public string Name => "Binary Boarding";
-
         public IEnumerable<object> Solve(string input)
         {
             yield return input.SplitLine().Select(CalculateSeatId).Max();

@@ -6,8 +6,14 @@ using System.Reflection;
 
 namespace AdventOfCode {
 
+    class ProblemName : Attribute {
+        public readonly string Name;
+        public ProblemName(string name){
+            this.Name = name;
+        }
+    }
+
     interface Solver {
-        string Name { get; }
         IEnumerable<object> Solve(string input)
             => Solve(input, default);
         IEnumerable<object> Solve(string input, string? location)
@@ -15,6 +21,11 @@ namespace AdventOfCode {
     }
 
     static class SolverExtensions {
+
+        public static string GetName(this Solver solver) {
+            return ((ProblemName)solver.GetType().GetCustomAttribute(typeof(ProblemName))!).Name;
+        }
+
         public static string DayName(this Solver solver) {
             return $"Day {solver.Day()}";
         }
