@@ -13,7 +13,7 @@ namespace AdventOfCode.Generator {
                  |
                  |namespace AdventOfCode.Y{problem.Year}.Day{problem.Day:00}
                  |{{
-                 |    [ProblemName(""{problem.Title}"")]      
+                 |    [ProblemName(""{problem.Title}"")]
                  |    class Solution : Solver
                  |    {{
                  |        public IEnumerable<object> Solve(string input)
@@ -22,9 +22,15 @@ namespace AdventOfCode.Generator {
                  |            yield return PartTwo(input);
                  |        }}
                  |
-                 |        int PartOne(string input) => 0;
+                 |        int PartOne(string input)
+                 |        {{
+                 |            return 0;
+                 |        }}
                  |
-                 |        int PartTwo(string input) => 0;
+                 |        int PartTwo(string input)
+                 |        {{
+                 |            return 0;
+                 |        }}
                  |    }}
                  |}}".StripMargin();
         }
