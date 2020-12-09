@@ -13,8 +13,9 @@ namespace AdventOfCode.Y2020.Day09
 
         public IEnumerable<object> Solve(string input)
         {
-            yield return PartOne(input);
-            yield return PartTwo(input);
+            var partOne = PartOne(input);
+            yield return partOne;
+            yield return PartTwo(input, partOne);
         }
 
         long PartOne(string input)
@@ -47,6 +48,37 @@ namespace AdventOfCode.Y2020.Day09
             }
         }
 
-        long PartTwo(string input) => 0;
+        long PartTwo(string input, long partOne)
+        {
+            var values = Find(input.SplitLine().Select(long.Parse).ToArray(), partOne).ToArray();
+            return values.Min() + values.Max();
+
+            static LinkedList<long> Find(Span<long> span, long value)
+            {
+                for (int i = 0; i < span.Length; i++)
+                {
+                    if(GetList(span[i..], value) is {} list)
+                        return list;
+                }
+                throw new Exception();
+
+                static LinkedList<long>? GetList(Span<long> span, long value)
+                {
+                    var current = span[0];
+                    if (current > value)
+                        return null;
+                    if(current == value)
+                        return new(new[] { value });
+                    switch (GetList(span[1..], value - current))
+                    {
+                        case null:
+                            return null;
+                        case var list:
+                            list.AddLast(current);
+                            return list;
+                    }
+                }
+            }
+        }
     }
 }
