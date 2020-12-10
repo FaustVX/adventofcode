@@ -184,6 +184,13 @@ namespace AdventOfCode {
         void UpdateInput(Problem problem) {
             var file = Path.Combine(Dir(problem.Year, problem.Day), "input.in");
             WriteFile(file, problem.Input);
+
+            var test = Path.Combine(Dir(problem.Year, problem.Day), "test");
+            Directory.CreateDirectory(test);
+            test = Path.Combine(test, "test1.in");
+            if (File.Exists(test))
+                return;
+            WriteFile(test, "");
         }
 
         void UpdateRefout(Problem problem) {
@@ -191,6 +198,12 @@ namespace AdventOfCode {
             if (problem.Answers.Any()) {
                 WriteFile(file, problem.Answers);
             }
+
+            var test = Path.Combine(Dir(problem.Year, problem.Day), "test");
+            test = Path.Combine(test, "test1.refout");
+            if (File.Exists(test))
+                return;
+            WriteFile(test, "");
         }
     }
 }
