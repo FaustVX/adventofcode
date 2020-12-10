@@ -1,0 +1,32 @@
+using System;
+using System.Collections.Generic;
+using System.Collections.Immutable;
+using System.Linq;
+using System.Text.RegularExpressions;
+using System.Text;
+
+namespace AdventOfCode.Y2020.Day10
+{
+    [ProblemName("Adapter Array")]
+    class Solution : Solver
+    {
+        public IEnumerable<object> Solve(string input)
+        {
+            yield return PartOne(input);
+            yield return PartTwo(input);
+        }
+
+        int PartOne(string input)
+            => input.SplitLine().Select(int.Parse).OrderBy(i => i)
+                .Aggregate((one: 0, three: 0, last: 0), (a, c) => (c - a.last) switch {
+                    1 => (a.one + 1, a.three, c),
+                    3 => (a.one, a.three + 1, c),
+                    _ => (a.one, a.three, c),
+                }, a => a.one * (a.three + 1));
+
+        int PartTwo(string input)
+        {
+            return 0;
+        }
+    }
+}
