@@ -41,7 +41,7 @@ namespace AdventOfCode {
                         }
                         var dt = DateTime.Now;
                         var iline = 0;
-                        foreach (var line in solver.Solve(input, Path.ChangeExtension(file, ""))) {
+                        foreach (var line in solver.Solve(input, Path.ChangeExtension(file, "").TrimEnd('.'))) {
                             var now = DateTime.Now;
                             var (statusColor, status, err) =
                                 refout == null || refout.Length <= iline ? (ConsoleColor.Cyan, "?", null) :
