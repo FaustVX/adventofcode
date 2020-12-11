@@ -27,9 +27,9 @@ namespace AdventOfCode.Y2020.Day10
         long PartTwo(string input)
         {
             var inputs = input.SplitLine().Select(int.Parse).OrderBy(i => i);
-            return GetLists(ImmutableList.Create<int>(), 0, inputs.Append(inputs.Max() + 3).ToArray()).LongCount();
+            return GetLists(0, inputs.Append(inputs.Max() + 3).ToArray()).LongCount();
 
-            static IEnumerable<ImmutableList<int>> GetLists(ImmutableList<int> current, int value, int[] nexts)
+            static IEnumerable<object?> GetLists(int value, int[] nexts)
             {
                 for (var i = 0; i < nexts.Length; i++)
                 {
@@ -37,10 +37,10 @@ namespace AdventOfCode.Y2020.Day10
                     if (next - value > 3)
                         break;
                     if (nexts.Length >= 2)
-                        foreach (var item in GetLists(current.Add(value), nexts[i], nexts[(i + 1)..]))
-                            yield return item;
+                        foreach (var item in GetLists(next, nexts[(i + 1)..]))
+                            yield return null;
                     else
-                        yield return current.Add(value);
+                        yield return null;
                 }
             }
         }
