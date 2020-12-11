@@ -21,7 +21,7 @@ namespace AdventOfCode.Y2020.Day11
         public IEnumerable<object> Solve(string input, string? location)
         {
             yield return PartOne(input, location!);
-            yield return PartTwo(input);
+            yield return PartTwo(input, location!);
         }
 
         int PartOne(string input, string location)
@@ -41,7 +41,7 @@ namespace AdventOfCode.Y2020.Day11
             for (int i = 0; ; i++)
             {
                 using var file = File.CreateText(Path.Combine(location, i + ".txt"));
-                grid = NextGeneration(grid, out var hasChanged);
+                grid = NextGeneration(grid, out var hasChanged, 1);
 
                 for (int y = 0; y < h; y++)
                 {
@@ -55,12 +55,38 @@ namespace AdventOfCode.Y2020.Day11
             }
         }
 
-        int PartTwo(string input)
+        int PartTwo(string input, string location)
         {
-            return 0;
+            location += ".2";
+            if(Directory.Exists(location))
+                Directory.Delete(location, recursive: true);
+            Directory.CreateDirectory(location);
+
+            var inputs = input.SplitLine();
+            var (w, h) = (inputs[0].Length, inputs.Length);
+            var grid = new Seat[w, h];
+            for (int x = 0; x < w; x++)
+                for (int y = 0; y < h; y++)
+                    grid[x, y] = (Seat)inputs[y][x];
+
+            for (int i = 0; ; i++)
+            {
+                using var file = File.CreateText(Path.Combine(location, i + ".txt"));
+                grid = NextGeneration(grid, out var hasChanged, 2);
+
+                for (int y = 0; y < h; y++)
+                {
+                    for (int x = 0; x < w; x++)
+                        file.Write((char)grid[x, y]);
+                    file.WriteLine();
+                }
+
+                if (!hasChanged)
+                    return grid.Cast<Seat>().Count(s => s is Seat.Occupied);
+            }
         }
 
-        Seat[,] NextGeneration(Seat[,] seats, out bool hasChanged)
+        Seat[,] NextGeneration(Seat[,] seats, out bool hasChanged, int part)
         {
             var dirs = new (int x, int y)[] { (-1, -1), (-1, 0), (-1, 1), (0, -1), (0, 1), (1, -1), (1, 0), (1, 1) };
             var (w, h) = (seats.GetLength(0), seats.GetLength(1));
@@ -70,11 +96,11 @@ namespace AdventOfCode.Y2020.Day11
 
             for (int x = 0; x < w; x++)
                 for (int y = 0; y < h; y++)
-                    newGen[x, y] = Change(x, y, seats[x, y], ref hasChanged);
+                    newGen[x, y] = part is 1 ? Change1(x, y, seats[x, y], ref hasChanged) : Change2(x, y, seats[x, y], ref hasChanged);
 
             return newGen;
 
-            Seat Change(int x, int y, Seat seat, ref bool hasChanged)
+            Seat Change1(int x, int y, Seat seat, ref bool hasChanged)
             {
                 if (seat is Seat.Floor)
                     return seat;
@@ -94,6 +120,34 @@ namespace AdventOfCode.Y2020.Day11
 
                 hasChanged |= seat != result;
                 return result;
+            }
+
+            Seat Change2(int x, int y, Seat seat, ref bool hasChanged)
+            {
+                if (seat is Seat.Floor)
+                    return seat;
+
+                var occupied = dirs
+                                    .Select(dir => GetOffsets(dir, (x, y)).Select(pos => seats[pos.x, pos.y]).FirstOrDefault(pos => pos is not Seat.Floor))
+                                    .Count(s => s is Seat.Occupied);
+
+                var result = (seat, occupied) switch
+                    {
+                        (Seat.Empty, 0) => Seat.Occupied,
+                        (Seat.Occupied, >= 5) => Seat.Empty,
+                        _ => seat,
+                    };
+
+                hasChanged |= seat != result;
+                return result;
+
+                IEnumerable<(int x, int y)> GetOffsets((int x, int y) dir, (int x, int y) pos)
+                {
+                    pos = (pos.x + dir.x, pos.y + dir.y);
+                    if (pos.x < 0 || pos.x >= w || pos.y < 0 || pos.y >= h)
+                        return Enumerable.Empty<(int, int)>();
+                    return GetOffsets(dir, pos).Prepend(pos);
+                }
             }
         }
     }
