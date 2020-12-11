@@ -26,23 +26,27 @@ namespace AdventOfCode.Y2020.Day10
 
         long PartTwo(string input)
         {
+            var dict = new Dictionary<int, long>();
             var inputs = input.SplitLine().Select(int.Parse).OrderBy(i => i);
-            return GetLists(0, inputs.Append(inputs.Max() + 3).ToArray());
+            return Count(0, inputs.Append(inputs.Max() + 3).ToArray());
 
-            static long GetLists(int value, Span<int> nexts)
+            long Count(int value, Memory<int> nexts)
             {
                 var sum = 0L;
+                if(dict.TryGetValue(value, out sum))
+                    return sum;
+
                 for (var i = 0; i < nexts.Length; i++)
                 {
-                    var next = nexts[i];
+                    var next = nexts.Span[i];
                     if (next - value > 3)
                         break;
                     if (nexts.Length >= 2)
-                        sum += GetLists(next, nexts[(i + 1)..]);
+                        sum += Count(next, nexts[(i + 1)..]);
                     else
                         sum++;
                 }
-                return sum;
+                return dict[value] = sum;
             }
         }
     }
