@@ -24,9 +24,25 @@ namespace AdventOfCode.Y2020.Day10
                     _ => (a.one, a.three, c),
                 }, a => a.one * (a.three + 1));
 
-        int PartTwo(string input)
+        long PartTwo(string input)
         {
-            return 0;
+            var inputs = input.SplitLine().Select(int.Parse).OrderBy(i => i);
+            return GetLists(ImmutableList.Create<int>(), 0, inputs.Append(inputs.Max() + 3).ToArray()).LongCount();
+
+            static IEnumerable<ImmutableList<int>> GetLists(ImmutableList<int> current, int value, int[] nexts)
+            {
+                for (var i = 0; i < nexts.Length; i++)
+                {
+                    var next = nexts[i];
+                    if (next - value > 3)
+                        break;
+                    if (nexts.Length >= 2)
+                        foreach (var item in GetLists(current.Add(value), nexts[i], nexts[(i + 1)..]))
+                            yield return item;
+                    else
+                        yield return current.Add(value);
+                }
+            }
         }
     }
 }
