@@ -27,21 +27,22 @@ namespace AdventOfCode.Y2020.Day10
         long PartTwo(string input)
         {
             var inputs = input.SplitLine().Select(int.Parse).OrderBy(i => i);
-            return GetLists(0, inputs.Append(inputs.Max() + 3).ToArray()).LongCount();
+            return GetLists(0, inputs.Append(inputs.Max() + 3).ToArray());
 
-            static IEnumerable<object?> GetLists(int value, int[] nexts)
+            static long GetLists(int value, Span<int> nexts)
             {
+                var sum = 0L;
                 for (var i = 0; i < nexts.Length; i++)
                 {
                     var next = nexts[i];
                     if (next - value > 3)
                         break;
                     if (nexts.Length >= 2)
-                        foreach (var item in GetLists(next, nexts[(i + 1)..]))
-                            yield return null;
+                        sum += GetLists(next, nexts[(i + 1)..]);
                     else
-                        yield return null;
+                        sum++;
                 }
+                return sum;
             }
         }
     }
