@@ -44,7 +44,22 @@ namespace AdventOfCode.Y2020.Day12
 
         int PartTwo(string input)
         {
-            return 0;
+            var (e, n, w) = (0, 0, (e: 10, n: 1));
+            foreach (var dir in input.SplitLine().Select(line => line.Extract<(char, int)>(@"(\w)(\d+)")))
+            {
+                (e, n, w) = dir switch
+                {
+                    ('N', var l) => (e, n, (w.e, w.n + l)),
+                    ('S', var l) => (e, n, (w.e, w.n - l)),
+                    ('E', var l) => (e, n, (w.e + l, w.n)),
+                    ('W', var l) => (e, n, (w.e - l, w.n)),
+                    ('L', 90) or ('R', 270) => (e, n, (-w.n, w.e)),
+                    ('R', 90) or ('L', 270) => (e, n, (w.n, -w.e)),
+                    ('L' or 'R', 180) => (e, n, (-w.e, -w.n)),
+                    ('F', var l) => (e + l * w.e, n + l * w.n, w),
+                };
+            }
+            return Math.Abs(e) + Math.Abs(n);
         }
     }
 }
