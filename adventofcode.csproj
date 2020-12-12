@@ -11,6 +11,6 @@
     <PackageReference Include="Microsoft.CodeAnalysis" Version="3.8.0"/>
     <PackageReference Include="System.Reflection.Emit" Version="4.3.0"/>
     <PackageReference Include="System.ValueTuple" Version="4.4.0"/>
-    <PackageReference Include="RegExtract" Version="0.9.17"/>
+    <PackageReference Include="RegExtract" Version="0.9.24"/>
   </ItemGroup>
 </Project>
