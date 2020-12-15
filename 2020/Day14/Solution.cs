@@ -50,9 +50,35 @@ namespace AdventOfCode.Y2020.Day14
             return memory.Values.Sum();
         }
 
-        int PartTwo(string input)
+        long PartTwo(string input)
         {
-            return 0;
+            var memory = new Dictionary<long, long>();
+            foreach (var (m, mem) in Parse(input))
+            {
+                var mask = m.PadLeft(34, '0').TrimStart('0');
+                var pow = Math.Pow(2, mask.Count(c => c is 'X'));
+
+                foreach (var (addr, val) in mem)
+                    for (int i = 0; i < pow; i++)
+                    {
+                        var address = addr;
+                        var k = 0;
+                        for (int j = 0; j < mask.Length; j++)
+                            switch (mask[mask.Length - j - 1])
+                            {
+                                case '1':
+                                    address |= 1L << j;
+                                    break;
+                                case 'X':
+                                    // Set the nth bit to x: https://stackoverflow.com/questions/47981/how-do-you-set-clear-and-toggle-a-single-bit
+                                    address = (address & ~(1L << j)) | ((long)((i >> (k++)) & 1) << j);
+                                    break;
+                            }
+                        memory[address] = val;
+                    }
+            }
+
+            return memory.Values.Sum();
         }
     }
 }
