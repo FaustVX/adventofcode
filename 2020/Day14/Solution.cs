@@ -17,18 +17,24 @@ namespace AdventOfCode.Y2020.Day14
             yield return PartTwo(input);
         }
 
-        long PartOne(string input)
+        private static IEnumerable<(string mask, IEnumerable<(long addr, long value)> mem)> Parse(string input)
         {
-            var memory = new Dictionary<long, long>();
             foreach (var program in input.Split("mask = ").Skip(1))
             {
                 var splitted = program.SplitLine();
                 var mask = splitted[0];
-                foreach (var (addr, val) in splitted.Skip(1).TakeWhile(l => l is not "").Select(l => l.Extract<(long, long)>(@"mem\[(\d+)\] = (\d+)")))
+                yield return (mask, splitted.Skip(1).TakeWhile(l => l is not "").Select(l => l.Extract<(long, long)>(@"mem\[(\d+)\] = (\d+)")));
+            }
+        }
+
+        long PartOne(string input)
+        {
+            var memory = new Dictionary<long, long>();
+            foreach (var (mask, mem) in Parse(input))
+                foreach (var (addr, val) in mem)
                 {
                     var value = val;
                     for (int i = 0; i < mask.Length; i++)
-                    {
                         switch (mask[mask.Length - i - 1])
                         {
                             case '0':
@@ -38,10 +44,9 @@ namespace AdventOfCode.Y2020.Day14
                                 value |= 1L << i;
                                 break;
                         }
-                    }
                     memory[addr] = value;
                 }
-            }
+
             return memory.Values.Sum();
         }
 
