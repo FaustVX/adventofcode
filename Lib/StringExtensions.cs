@@ -20,5 +20,8 @@ namespace AdventOfCode {
 
         public static string[] SplitLine(this string st)
             => Regex.Split(st, "\r?\n");
+
+        public static string[] Split2Lines(this string st)
+            => Regex.Split(st, "\r?\n\r?\n");
     }
 }
