@@ -60,15 +60,8 @@ namespace AdventOfCode.Y2020.Day18
                 if (int.TryParse(formula, out var i))
                     return i;
                 if (formula.Contains('*'))
-                    return formula.Extract<(string, string)>(@"\s*(.*?)\s\*\s(.*)") switch
-                    {
-                        var (other, n) => Calculate(other) * Calculate(n),
-                    };
-                // if (formula.Contains('+'))
-                return formula.Extract<(string, string)>(@"\s*(.*?)\s\+\s(.*)") switch
-                {
-                    var (other, n) => Calculate(other) + Calculate(n),
-                };
+                    return formula.Extract<(string, string)>(@"\s*(.*?)\s\*\s(.*)") is var (a, b) ? Calculate(a) * Calculate(b) : 0;
+                return formula.Extract<(string, string)>(@"\s*(.*?)\s\+\s(.*)") is var (c, d) ? Calculate(c) + Calculate(d) : 0;
             }
         }
     }
