@@ -13,56 +13,37 @@ namespace AdventOfCode.Y2020.Day18
     {
         public IEnumerable<object> Solve(string input)
         {
-            yield return PartOne(input);
-            yield return PartTwo(input);
+            yield return Solve(input, Calculate1);
+            yield return Solve(input, Calculate2);
         }
 
-        ulong PartOne(string input)
-        {
-            var sum = 0uL;
-            foreach (var line in input.SplitLine())
+        static long Solve(string input, Func<string, long> calculate)
+            => input.SplitLine().Select(line =>
             {
                 var formula = line;
                 while (formula.Contains('('))
                 {
                     var open = formula.LastIndexOf('(');
                     var close = formula.IndexOf(')', open);
-                    formula = formula[..open] + Calculate(formula[(open + 1)..close]) + formula[(close + 1)..];
+                    formula = formula[..open] + calculate(formula[(open + 1)..close]) + formula[(close + 1)..];
                 }
-                sum += (ulong)Calculate(formula);
-            }
-            return sum;
-            static long Calculate(string formula)
-                => int.TryParse(formula, out var i) ? i : formula.Extract<(string, char, int)>(@"\s*(.*)\s(\+|\*)\s(\d+)") switch
-                    {
-                        (var other, '+', var n) => Calculate(other) + n,
-                        (var other, '*', var n) => Calculate(other) * n,
-                    };
-        }
+                return calculate(formula);
+            }).Sum();
 
-        ulong PartTwo(string input)
-        {
-            var sum = 0uL;
-            foreach (var line in input.SplitLine())
-            {
-                var formula = line;
-                while (formula.Contains('('))
+        static long Calculate1(string formula)
+            => int.TryParse(formula, out var i) ? i : formula.Extract<(string, char, int)>(@"\s*(.*)\s(\+|\*)\s(\d+)") switch
                 {
-                    var open = formula.LastIndexOf('(');
-                    var close = formula.IndexOf(')', open);
-                    formula = formula[..open] + Calculate(formula[(open + 1)..close]) + formula[(close + 1)..];
-                }
-                sum += (ulong)Calculate(formula);
-            }
-            return sum;
-            static long Calculate(string formula)
-            {
-                if (int.TryParse(formula, out var i))
-                    return i;
-                if (formula.Contains('*'))
-                    return formula.Extract<(string, string)>(@"\s*(.*?)\s\*\s(.*)") is var (a, b) ? Calculate(a) * Calculate(b) : 0;
-                return formula.Extract<(string, string)>(@"\s*(.*?)\s\+\s(.*)") is var (c, d) ? Calculate(c) + Calculate(d) : 0;
-            }
+                    (var other, '+', var n) => Calculate1(other) + n,
+                    (var other, '*', var n) => Calculate1(other) * n,
+                };
+
+        static long Calculate2(string formula)
+        {
+            if (int.TryParse(formula, out var i))
+                return i;
+            if (formula.Contains('*'))
+                return formula.Extract<(string, string)>(@"\s*(.*?)\s\*\s(.*)") is var (a, b) ? Calculate2(a) * Calculate2(b) : 0;
+            return formula.Extract<(string, string)>(@"\s*(.*?)\s\+\s(.*)") is var (c, d) ? Calculate2(c) + Calculate2(d) : 0;
         }
     }
 }
