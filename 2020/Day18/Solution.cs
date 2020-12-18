@@ -33,16 +33,11 @@ namespace AdventOfCode.Y2020.Day18
             }
             return sum;
             static long Calculate(string formula)
-            {
-                if (int.TryParse(formula, out var i))
-                    return i;
-                var (other, op, n) = formula.Extract<(string, char, int)>(@"\s*(.*)\s(\+|\*)\s(\d+)");
-                return op switch
-                {
-                    '+' => Calculate(other) + n,
-                    '*' => Calculate(other) * n,
-                };
-            }
+                => int.TryParse(formula, out var i) ? i : formula.Extract<(string, char, int)>(@"\s*(.*)\s(\+|\*)\s(\d+)") switch
+                    {
+                        (var other, '+', var n) => Calculate(other) + n,
+                        (var other, '*', var n) => Calculate(other) * n,
+                    };
         }
 
         int PartTwo(string input)
