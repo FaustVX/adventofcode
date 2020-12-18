@@ -40,9 +40,36 @@ namespace AdventOfCode.Y2020.Day18
                     };
         }
 
-        int PartTwo(string input)
+        ulong PartTwo(string input)
         {
-            return 0;
+            var sum = 0uL;
+            foreach (var line in input.SplitLine())
+            {
+                var formula = line;
+                while (formula.Contains('('))
+                {
+                    var open = formula.LastIndexOf('(');
+                    var close = formula.IndexOf(')', open);
+                    formula = formula[..open] + Calculate(formula[(open + 1)..close]) + formula[(close + 1)..];
+                }
+                sum += (ulong)Calculate(formula);
+            }
+            return sum;
+            static long Calculate(string formula)
+            {
+                if (int.TryParse(formula, out var i))
+                    return i;
+                if (formula.Contains('*'))
+                    return formula.Extract<(string, string)>(@"\s*(.*?)\s\*\s(.*)") switch
+                    {
+                        var (other, n) => Calculate(other) * Calculate(n),
+                    };
+                // if (formula.Contains('+'))
+                return formula.Extract<(string, string)>(@"\s*(.*?)\s\+\s(.*)") switch
+                {
+                    var (other, n) => Calculate(other) + Calculate(n),
+                };
+            }
         }
     }
 }
