@@ -3,141 +3,170 @@ using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
 
-namespace AdventOfCode {
-    class App {
+using AdventOfCode;
 
-        static void Main(string[] args) {
+var tsolvers = Assembly.GetEntryAssembly()!.GetTypes()
+    .Where(t => t.GetTypeInfo().IsClass && typeof(Solver).IsAssignableFrom(t))
+    .OrderBy(t => t.FullName)
+    .ToArray();
 
-            var tsolvers = Assembly.GetEntryAssembly()!.GetTypes()
-                .Where(t => t.GetTypeInfo().IsClass && typeof(Solver).IsAssignableFrom(t))
-                .OrderBy(t => t.FullName)
-                .ToArray();
-
-            var action =
-                Command(args, Args("update", "([0-9]+)/([0-9]+)"), m => {
-                    var year = int.Parse(m[1]);
-                    var day = int.Parse(m[2]);
-                    return () => new Updater().Update(year, day).Wait();
-                }) ??
-                Command(args, Args("update", "last"), m => {
-                    var dt = DateTime.UtcNow.AddHours(-5);
-                    if (dt is { Month: 12, Day: >= 1 and <= 25 }) {
-                        return () => new Updater().Update(dt.Year, dt.Day).Wait();
-                    } else {
-                        throw new Exception("Event is not active. This option works in Dec 1-25 only)");
-                    }
-                }) ??
-                Command(args, Args("upload", "([0-9]+)/([0-9]+)", "(1|2)", "(.*)"), m => {
-                    var year = int.Parse(m[1]);
-                    var day = int.Parse(m[2]);
-                    return () => new Updater().Upload(year, day, int.Parse(m[3]), m[4]).Wait();
-                }) ??
-                Command(args, Args("upload", "last", "(1|2)", "(.*)"), m => {
-                    var dt = DateTime.UtcNow.AddHours(-5);
-                    if (dt is { Month: 12, Day: >= 1 and <= 25 }) {
-                        return () => new Updater().Upload(dt.Year, dt.Day, int.Parse(m[2]), m[3]).Wait();
-                    } else {
-                        throw new Exception("Event is not active. This option works in Dec 1-25 only)");
-                    }
-                }) ??
-                Command(args, Args("([0-9]+)/([0-9]+)"), m => {
-                    var year = int.Parse(m[0]);
-                    var day = int.Parse(m[1]);
-                    var tsolversSelected = tsolvers.First(tsolver => 
-                        SolverExtensions.Year(tsolver) == year && 
-                        SolverExtensions.Day(tsolver) == day);
-                    return () => Runner.RunAll(tsolversSelected);
-                }) ??
-                 Command(args, Args("[0-9]+"), m => {
-                    var year = int.Parse(m[0]);
-                    var tsolversSelected = tsolvers.Where(tsolver => 
-                        SolverExtensions.Year(tsolver) == year);
-                    return () => Runner.RunAll(tsolversSelected.ToArray());
-                }) ??
-                Command(args, Args("([0-9]+)/last"), m => {
-                    var year = int.Parse(m[0]);
-                    var tsolversSelected = tsolvers.Last(tsolver =>
-                        SolverExtensions.Year(tsolver) == year);
-                    return () => Runner.RunAll(tsolversSelected);
-                }) ??
-                Command(args, Args("([0-9]+)/all"), m => {
-                    var year = int.Parse(m[0]);
-                    var tsolversSelected = tsolvers.Where(tsolver =>
-                        SolverExtensions.Year(tsolver) == year);
-                    return () => Runner.RunAll(tsolversSelected.ToArray());
-                }) ??
-                Command(args, Args("all"), m => {
-                    return () => Runner.RunAll(tsolvers);
-                }) ??
-                Command(args, Args("last"),  m => {
-                    var tsolversSelected = tsolvers.Last();
-                    return () => Runner.RunAll(tsolversSelected);
-                }) ??
-                new Action(() => {
-                    Console.WriteLine(Usage.Get());
-                });
-
-            action();
+var action =
+    Command(args, Args("update", "([0-9]+)/([0-9]+)"), m => {
+        var year = int.Parse(m[1]);
+        var day = int.Parse(m[2]);
+        return () => new Updater().Update(year, day).Wait();
+    }) ??
+    Command(args, Args("update", "today"), m => {
+        var dt = DateTime.UtcNow.AddHours(-5);
+        if (dt is { Month: 12, Day: >= 1 and <= 25 }) {
+            return () => new Updater().Update(dt.Year, dt.Day).Wait();
+        } else {
+            throw new Exception("Event is not active. This option works in Dec 1-25 only)");
         }
+    }) ??
+    Command(args, Args("upload", "([0-9]+)/([0-9]+)"), m => {
+        var year = int.Parse(m[1]);
+        var day = int.Parse(m[2]);
+        return () => {
+            var tsolver = tsolvers.First(tsolver =>
+                SolverExtensions.Year(tsolver) == year &&
+                SolverExtensions.Day(tsolver) == day);
 
-        static Action? Command(string[] args, string[] regexes, Func<string[], Action> parse) {
-            if (args.Length != regexes.Length) {
-                return null;
-            }
-            var matches = Enumerable.Zip(args, regexes, (arg, regex) => new Regex("^" + regex + "$").Match(arg));
-            if (!matches.All(match => match.Success)) {
-                return null;
-            }
-            try {
+            new Updater().Upload(GetSolvers(tsolver)[0]).Wait();
+        };
+    }) ??
+    Command(args, Args("upload", "today"), m => {
+        var dt = DateTime.UtcNow.AddHours(-5);
+        if (dt is { Month: 12, Day: >= 1 and <= 25 }) {
 
-                return parse(matches.SelectMany(m => m.Groups.Count > 1 ? m.Groups.Cast<Group>().Skip(1).Select(g => g.Value) : new []{m.Value}).ToArray());
-            } catch {
-                return null;
-            }
+            var tsolver = tsolvers.First(tsolver =>
+                SolverExtensions.Year(tsolver) == dt.Year &&
+                SolverExtensions.Day(tsolver) == dt.Day);
+
+            return () =>
+                new Updater().Upload(GetSolvers(tsolver)[0]).Wait();
+
+        } else {
+            throw new Exception("Event is not active. This option works in Dec 1-25 only)");
         }
+    }) ??
+    Command(args, Args("([0-9]+)/([0-9]+)"), m => {
+        var year = int.Parse(m[0]);
+        var day = int.Parse(m[1]);
+        var tsolversSelected = tsolvers.First(tsolver =>
+            SolverExtensions.Year(tsolver) == year &&
+            SolverExtensions.Day(tsolver) == day);
+        return () => Runner.RunAll(GetSolvers(tsolversSelected));
+    }) ??
+    Command(args, Args("[0-9]+"), m => {
+        var year = int.Parse(m[0]);
+        var tsolversSelected = tsolvers.Where(tsolver =>
+            SolverExtensions.Year(tsolver) == year);
+        return () => Runner.RunAll(GetSolvers(tsolversSelected.ToArray()));
+    }) ??
+    Command(args, Args("([0-9]+)/all"), m => {
+        var year = int.Parse(m[0]);
+        var tsolversSelected = tsolvers.Where(tsolver =>
+            SolverExtensions.Year(tsolver) == year);
+        return () => Runner.RunAll(GetSolvers(tsolversSelected.ToArray()));
+    }) ??
+    Command(args, Args("all"), m => {
+        return () => Runner.RunAll(GetSolvers(tsolvers));
+    }) ??
+    Command(args, Args("today"), m => {
+        var dt = DateTime.UtcNow.AddHours(-5);
+        if (dt is { Month: 12, Day: >= 1 and <= 25 }) {
 
-        static string[] Args(params string[] regex) {
-            return regex;
+            var tsolversSelected = tsolvers.First(tsolver =>
+                SolverExtensions.Year(tsolver) == dt.Year &&
+                SolverExtensions.Day(tsolver) == dt.Day);
+
+            return () =>
+                Runner.RunAll(GetSolvers(tsolversSelected));
+
+        } else {
+            throw new Exception("Event is not active. This option works in Dec 1-25 only)");
         }
+    }) ??
+    Command(args, Args("calendars"), _ => {
+        return () => {
+            var tsolversSelected = (
+                    from tsolver in tsolvers
+                    group tsolver by SolverExtensions.Year(tsolver) into g
+                    orderby SolverExtensions.Year(g.First()) descending
+                    select g.First()
+                ).ToArray();
 
+            var solvers = GetSolvers(tsolversSelected);
+            foreach (var solver in solvers) {
+                solver.SplashScreen().Show();
+            }
+        };
+    }) ??
+    new Action(() => {
+        Console.WriteLine(Usage.Get());
+    });
+
+action();
+
+Solver[] GetSolvers(params Type[] tsolver) {
+    return tsolver.Select(t => Activator.CreateInstance(t) as Solver).ToArray();
+}
+
+Action Command(string[] args, string[] regexes, Func<string[], Action> parse) {
+    if (args.Length != regexes.Length) {
+        return null;
     }
+    var matches = Enumerable.Zip(args, regexes, (arg, regex) => new Regex("^" + regex + "$").Match(arg));
+    if (!matches.All(match => match.Success)) {
+        return null;
+    }
+    try {
 
-    public class Usage {
-        public static string Get(){
-            return $@"
-               > Usage: dotnet run [arguments]
-               > Supported arguments:
+        return parse(matches.SelectMany(m => 
+                m.Groups.Count > 1 ? m.Groups.Cast<Group>().Skip(1).Select(g => g.Value) 
+                                   : new[] { m.Value }
+            ).ToArray());
+    } catch {
+        return null;
+    }
+}
 
-               >  [year]/[day|last|all] Solve the specified problems
-               >  [year]                Solve the whole year
-               >  last                  Solve the last problem
-               >  all                   Solve everything
+string[] Args(params string[] regex) {
+    return regex;
+}
 
-               > To start working on new problems:
-               > login to https://adventofcode.com, then copy your session cookie, and export it in your console like this
+class Usage {
+    public static string Get() {
+        return $@"
+            > Usage: dotnet run [arguments]
+            > 1) To run the solutions and admire your advent calendar:
 
-               >   export SESSION=73a37e9a72a...
+            >  [year]/[day|all]      Solve the specified problems
+            >  today                 Shortcut to the above
+            >  [year]                Solve the whole year
+            >  all                   Solve everything
 
-               > then run the app with
+            >  calendars             Show the calendars
 
-               >  update [year]/[day]   Prepares a folder for the given day, updates the input,
-               >                        the readme and creates a solution template.
-               >  update last           Same as above, but for the current day. Works in December only.
+            > 2) To start working on new problems:
+            > login to https://adventofcode.com, then copy your session cookie, and export 
+            > it in your console like this
 
-               > You can directly upload your answer with:
+            >  export SESSION=73a37e9a72a...
 
-               >  upload last [part(1/2)] [answer]           Upload the answer for the selected part on the current day
-               >  upload [year]/[day] [part(1/2)] [answer]   Upload the answer for the selected part on the selected year and day
+            > then run the app with
 
-               > Or, you can do everything fron within VSCode:
+            >  update [year]/[day]   Prepares a folder for the given day, updates the input,
+            >                        the readme and creates a solution template.
+            >  update today          Shortcut to the above.
 
-               >  Open the command Palette ('Cmd\Ctrl + Shift + P')
-               >  run the task ('Tasks: Run Task' command) : 'update'
-               >  then Write / Debug your code for part 1.
-               >  then run the task 'run part'
-               >  then Write / Debug your code for part 2.
-               >  then run the task 'run part'
-               > ".StripMargin("> ");
-        }
+            > 3) To upload your answer:
+            > set up your SESSION variable as above.
+
+            >  upload [year]/[day]   Upload the answer for the selected year and day.
+            >  upload today          Shortcut to the above.
+
+            > ".StripMargin("> ");
     }
 }

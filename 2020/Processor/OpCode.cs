@@ -23,14 +23,11 @@ namespace AdventOfCode.Y2020
             => processor.InstructionPointer++;
 
         public static OpCode Parse(string input)
-        {
-            return (input.Extract<(string, int)>(_opCodeIntRegex)) switch
-            {
+            => input.Extract<(string, int)>(_opCodeIntRegex) switch {
                 ("nop", var v) => new Nop(v),
                 ("acc", var v) => new Acc(v),
                 ("jmp", var o) => new Jmp(o),
             };
-        }
 
         protected virtual string GetDebuggerDisplay()
             => (Visited ? "!" : "") + this.GetType().Name;
@@ -74,9 +71,7 @@ namespace AdventOfCode.Y2020
             public int Offset { get; }
 
             protected override void RunImpl(Processor processor)
-            {
-                processor.InstructionPointer += Offset;
-            }
+                => processor.InstructionPointer += Offset;
 
             protected override string GetDebuggerDisplay()
                 => $"{base.GetDebuggerDisplay()} ({Offset})";

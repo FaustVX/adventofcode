@@ -1,81 +1,75 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Text;
 
-namespace AdventOfCode.Y2020.Day09
+namespace AdventOfCode.Y2020.Day09;
+
+[ProblemName("Encoding Error")]
+class Solution : Solver
 {
-    [ProblemName("Encoding Error")]
-    class Solution : Solver
+    private long _partOne;
+
+    public object PartOne(string input)
     {
-        public IEnumerable<object> Solve(string input)
+        var inputs = input.SplitLine().Select(long.Parse).ToArray().AsSpan();
+        var preamble = inputs.Length > 25 ? 25 : 5;
+
+        for (var i = preamble; i < inputs.Length; i++)
         {
-            var partOne = PartOne(input);
-            yield return partOne;
-            yield return PartTwo(input, partOne);
+            var current = inputs[i];
+            if (!Find(inputs[(i - preamble)..i], current))
+                return _partOne = current;
         }
+        throw new Exception();
 
-        long PartOne(string input)
+        static bool Find(Span<long> previous, long current)
         {
-            var inputs = input.SplitLine().Select(long.Parse).ToArray().AsSpan();
-            var preamble = inputs.Length > 25 ? 25 : 5;
-
-            for (var i = preamble; i < inputs.Length; i++)
+            for (var i = 0; i < previous.Length; i++)
             {
-                var current = inputs[i];
-                if(!Find(inputs[(i - preamble)..i], current))
-                    return current;
+                var item = previous[i];
+                if (item >= current)
+                    continue;
+                var other = current - item;
+                if (other == item)
+                    continue;
+                if (previous[(i + 1)..].Contains(other))
+                    return true;
+            }
+            return false;
+        }
+    }
+
+    public object PartTwo(string input)
+    {
+        var values = Find(input.SplitLine().Select(long.Parse).ToArray(), _partOne).ToArray();
+        return values.Min() + values.Max();
+
+        static LinkedList<long> Find(Span<long> span, long value)
+        {
+            for (int i = 0; i < span.Length; i++)
+            {
+                if (GetList(span[i..], value) is { } list)
+                    return list;
             }
             throw new Exception();
 
-            static bool Find(Span<long> previous, long current)
+            static LinkedList<long> GetList(Span<long> span, long value)
             {
-                for (var i = 0; i < previous.Length; i++)
+                var current = span[0];
+                if (current > value)
+                    return null;
+                if (current == value)
+                    return new(new[] { value });
+                switch (GetList(span[1..], value - current))
                 {
-                    var item = previous[i];
-                    if(item >= current)
-                        continue;
-                    var other = current - item;
-                    if(other == item)
-                        continue;
-                    if (previous[(i + 1)..].Contains(other))
-                        return true;
-                }
-                return false;
-            }
-        }
-
-        long PartTwo(string input, long partOne)
-        {
-            var values = Find(input.SplitLine().Select(long.Parse).ToArray(), partOne).ToArray();
-            return values.Min() + values.Max();
-
-            static LinkedList<long> Find(Span<long> span, long value)
-            {
-                for (int i = 0; i < span.Length; i++)
-                {
-                    if(GetList(span[i..], value) is {} list)
-                        return list;
-                }
-                throw new Exception();
-
-                static LinkedList<long>? GetList(Span<long> span, long value)
-                {
-                    var current = span[0];
-                    if (current > value)
+                    case null:
                         return null;
-                    if(current == value)
-                        return new(new[] { value });
-                    switch (GetList(span[1..], value - current))
-                    {
-                        case null:
-                            return null;
-                        case var list:
-                            list.AddLast(current);
-                            return list;
-                    }
+                    case var list:
+                        list.AddLast(current);
+                        return list;
                 }
             }
         }

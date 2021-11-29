@@ -1,15 +1,16 @@
 
 using System;
 
-namespace AdventOfCode.Y2020 {
+namespace AdventOfCode.Y2020;
 
-    class SplashScreenImpl : AdventOfCode.SplashScreen {
+class SplashScreenImpl : SplashScreen {
 
-        public void Show() {
+    public void Show() {
 
-            var color = Console.ForegroundColor;
-            Write(0xffff66, false, "\n /\\   _|     _  ._ _|_    _ _|_   /   _   _|  _  \n/--\\ (_| \\/ (/_ | | |_   (_) |    \\_ (_) (_| (/_ ");
-            Write(0xffff66, false, " 2020\n\n                         ");
+        var color = Console.ForegroundColor;
+        Write(0xcc00, false, "           ▄█▄ ▄▄█ ▄ ▄ ▄▄▄ ▄▄ ▄█▄  ▄▄▄ ▄█  ▄▄ ▄▄▄ ▄▄█ ▄▄▄\n           █▄█ █ █ █ █ █▄█ █ █ █   █ █ █▄ ");
+            Write(0xcc00, false, " █  █ █ █ █ █▄█\n           █ █ █▄█ ▀▄▀ █▄▄ █ █ █▄  █▄█ █   █▄ █▄█ █▄█ █▄▄  $year = 2020\n            ");
+            Write(0xcc00, false, "\n                         ");
             Write(0xccccff, false, "..........");
             Write(0xff0000, false, "|");
             Write(0xccccff, false, "..........                ");
@@ -200,7 +201,7 @@ namespace AdventOfCode.Y2020 {
             Write(0xcc00, false, ".  ");
             Write(0xcccccc, false, "11 ");
             Write(0xffff66, false, "**\n           ");
-            Write(0x666666, false, "    ~ ~    ");
+            Write(0x666666, false, "~ ~ ~ ~    ");
             Write(0xcccccc, false, "\\");
             Write(0x666666, false, ", :         ");
             Write(0xcc00, false, "''");
@@ -208,32 +209,48 @@ namespace AdventOfCode.Y2020 {
             Write(0x333399, false, "~     ");
             Write(0xcccccc, false, "/             13 ");
             Write(0xffff66, false, "*");
-            Write(0x666666, false, "*\n           ");
-            Write(0x333333, false, "     ~ ~ ~ ,");
+            Write(0x666666, false, "*\n            ~ ~ ~ ~ ~ ,");
             Write(0xcccccc, false, "[]");
-            Write(0x333333, false, ":           ");
+            Write(0x666666, false, ":     ~     ");
             Write(0x333399, false, "~  ");
             Write(0xcccccc, false, "\\__    /");
             Write(0x333399, false, "~");
-            Write(0x333333, false, "      ~      ");
-            Write(0x666666, false, "21\n                 ~ ~  , .'                 ");
+            Write(0x666666, false, "      ~      ");
+            Write(0xcccccc, false, "21 ");
+            Write(0xffff66, false, "*");
+            Write(0x666666, false, "*\n           ~ ~ ~ ~ ~  , .'                 ");
             Write(0xcccccc, false, "\\__/               12 ");
             Write(0xffff66, false, "**\n           ");
-            Write(0x333333, false, "     ~    ..'                   ");
-            Write(0x333399, false, "~         ~    ~ \n           ");
-            Write(0x333333, false, "       '''                 ");
-            Write(0x333399, false, "~                     \n                                        ");
-            Write(0xcc00, false, ". ..   .' ..       ");
-            Write(0x333399, false, "~\n                                         ");
-            Write(0xcc00, false, "'.            ");
-            Write(0x333399, false, "~    \n           \n");
+            Write(0x666666, false, " ~ ~ ~    ..'   ~               ");
+            Write(0x333399, false, "~         ~    ~   ");
+            Write(0xcccccc, false, "22 ");
+            Write(0xffff66, false, "*");
+            Write(0x666666, false, "*\n             .....'''           ~     ");
+            Write(0x333399, false, "~                       ");
+            Write(0xcccccc, false, "23 ");
+            Write(0xffff66, false, "*");
+            Write(0x666666, false, "*\n           ''         ~                 ");
+            Write(0xcc00, false, ".");
+            Write(0x666666, false, "'");
+            Write(0xcc00, false, "..   .'");
+            Write(0x666666, false, "'");
+            Write(0xcc00, false, "..       ");
+            Write(0x333399, false, "~  ");
+            Write(0xcccccc, false, "24 ");
+            Write(0xffff66, false, "*");
+            Write(0x666666, false, "*\n                ~          ~        ~    ");
+            Write(0xcc00, false, "'.");
+            Write(0x666666, false, "'  :    .'  ");
+            Write(0x333399, false, "~      ");
+            Write(0xcccccc, false, "25 ");
+            Write(0xffff66, false, "*");
+            Write(0x666666, false, "*\n           \n");
             
-            Console.ForegroundColor = color;
-            Console.WriteLine();
-        }
-
-       private static void Write(int rgb, bool bold, string text){
-           Console.Write($"\u001b[38;2;{(rgb>>16)&255};{(rgb>>8)&255};{rgb&255}{(bold ? ";1" : "")}m{text}");
-       }
+        Console.ForegroundColor = color;
+        Console.WriteLine();
     }
+
+   private static void Write(int rgb, bool bold, string text){
+       Console.Write($"\u001b[38;2;{(rgb>>16)&255};{(rgb>>8)&255};{rgb&255}{(bold ? ";1" : "")}m{text}");
+   }
 }

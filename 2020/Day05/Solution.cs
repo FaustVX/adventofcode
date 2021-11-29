@@ -1,23 +1,24 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Text;
 
-namespace AdventOfCode.Y2020.Day05
-{
-    [ProblemName("Binary Boarding")]
-    class Solution : Solver
-    {
-        public IEnumerable<object> Solve(string input)
-        {
-            yield return input.SplitLine().Select(CalculateSeatId).Max();
-            var hashSets = input.SplitLine().Select(CalculateSeatId).ToList();
-            yield return Enumerable.Range(hashSets.Min(), hashSets.Max() - hashSets.Min()).First(bp => !hashSets.Contains(bp));
-        }
+namespace AdventOfCode.Y2020.Day05;
 
-        int CalculateSeatId(string boardingPass)
-            => Convert.ToInt32(string.Concat(boardingPass.Select(l => l is 'B' or 'R' ? '1' : '0')), 2);
+[ProblemName("Binary Boarding")]
+class Solution : Solver
+{
+    public object PartOne(string input)
+        => input.SplitLine().Select(CalculateSeatId).Max();
+
+    public object PartTwo(string input)
+    {
+        var hashSets = input.SplitLine().Select(CalculateSeatId).ToList();
+        return Enumerable.Range(hashSets.Min(), hashSets.Max() - hashSets.Min()).First(bp => !hashSets.Contains(bp));
     }
+
+    int CalculateSeatId(string boardingPass)
+        => Convert.ToInt32(string.Concat(boardingPass.Select(l => l is 'B' or 'R' ? '1' : '0')), 2);
 }
