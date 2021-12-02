@@ -2,5 +2,19 @@
     "files.exclude": {
         "bin": true,
         "obj": true
-    }
+    },
+    "activitusbar.views": [
+        {
+            "name": "task.update today",
+            "codicon": "refresh"
+        },
+        {
+            "name": "task.run today",
+            "codicon": "play-circle"
+        },
+        {
+            "name": "task.upload today",
+            "codicon": "repo-push"
+        },
+    ]
 }
