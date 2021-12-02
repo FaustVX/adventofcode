@@ -16,47 +16,41 @@ class Solution : Solver
         Up,
         Down,
     }
+
     private static IEnumerable<(Direction direction, int value)> Parse(string input)
         => input.SplitLine()
             .Select(static line => line.Split(' '))
             .Select(static array => (Enum.Parse<Direction>(array[0], ignoreCase: true), int.Parse(array[1])));
 
     public object PartOne(string input)
-    {
-        var (position, depth) = (0, 0);
-        foreach (var (direction, value) in Parse(input))
-            switch (direction)
+        => Parse(input).Aggregate((position: 0, depth: 0), static (infos, instruction) => instruction switch
             {
-                case Direction.Forward:
-                    position += value;
-                    break;
-                case Direction.Up:
-                    depth -= value;
-                    break;
-                case Direction.Down:
-                    depth += value;
-                    break;
-            }
-        return position * depth;
-    }
+                (Direction.Forward, var value) => infos with {
+                    position = infos.position + value
+                },
+                (Direction.Up, var value) => infos with {
+                    depth = infos.depth - value
+                },
+                (Direction.Down, var value) => infos with {
+                    depth = infos.depth + value
+                },
+            }, static infos => infos.depth * infos.position);
 
     public object PartTwo(string input)
-    {
-        var (position, depth, aim) = (0, 0, 0);
-        foreach (var (direction, value) in Parse(input))
-            switch (direction)
+        => Parse(input).Aggregate((position: 0, depth: 0, aim: 0), static (infos, instruction) => instruction switch
             {
-                case Direction.Forward:
-                    position += value;
-                    depth += value * aim;
-                    break;
-                case Direction.Up:
-                    aim -= value;
-                    break;
-                case Direction.Down:
-                    aim += value;
-                    break;
-            }
-        return position * depth;
-    }
+                (Direction.Forward, var value) => infos with
+                    {
+                        position = infos.position + value,
+                        depth = infos.depth + value * infos.aim
+                    },
+                (Direction.Up, var value) => infos with
+                    {
+                        aim = infos.aim - value
+                    },
+                (Direction.Down, var value) => infos with
+                    {
+                        aim = infos.aim + value
+                    },
+            }, static infos => infos.position * infos.depth);
 }
