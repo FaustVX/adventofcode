@@ -23,7 +23,9 @@ class Solution : Solver
             .Select(static array => (Enum.Parse<Direction>(array[0], ignoreCase: true), int.Parse(array[1])));
 
     public object PartOne(string input)
+#pragma warning disable CS8524 // The switch expression does not handle some values of its input type (it is not exhaustive) involving an unnamed enum value. For example, the pattern ‘...’ is not covered.
         => Parse(input).Aggregate((position: 0, depth: 0), static (infos, instruction) => instruction switch
+#pragma warning restore
             {
                 (Direction.Forward, var value) => infos with {
                     position = infos.position + value
@@ -37,7 +39,9 @@ class Solution : Solver
             }, static infos => infos.depth * infos.position);
 
     public object PartTwo(string input)
+#pragma warning disable CS8524 // The switch expression does not handle some values of its input type (it is not exhaustive) involving an unnamed enum value. For example, the pattern ‘...’ is not covered.
         => Parse(input).Aggregate((position: 0, depth: 0, aim: 0), static (infos, instruction) => instruction switch
+#pragma warning restore
             {
                 (Direction.Forward, var value) => infos with
                     {
