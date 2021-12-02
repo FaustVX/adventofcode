@@ -42,6 +42,21 @@ class Solution : Solver
 
     public object PartTwo(string input)
     {
-        return 0;
+        var (position, depth, aim) = (0, 0, 0);
+        foreach (var (direction, value) in Parse(input))
+            switch (direction)
+            {
+                case Direction.Forward:
+                    position += value;
+                    depth += value * aim;
+                    break;
+                case Direction.Up:
+                    aim -= value;
+                    break;
+                case Direction.Down:
+                    aim += value;
+                    break;
+            }
+        return position * depth;
     }
 }
