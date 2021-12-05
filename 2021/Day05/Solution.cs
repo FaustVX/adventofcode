@@ -34,9 +34,8 @@ class Solution : Solver
     {
         foreach (var line in input.SplitLine())
         {
-            var splitted = line.Split(" -> ")
-                .SelectMany(v => v.Split(','))
-                .Select(v => int.Parse(v))
+            var splitted = line.Split(" ->,".ToCharArray(), StringSplitOptions.RemoveEmptyEntries)
+                .Select(int.Parse)
                 .ToArray();
             yield return ((splitted[0], splitted[1]), (splitted[2], splitted[3]));
         }
@@ -77,6 +76,6 @@ class Solution : Solver
                 for (int i = 0; i <= length; i++)
                     positions[(x1 + i * x, y1 + i * y)]++;
             }
-        return positions.Values.Count(v => v >= 2);
+        return positions.Values.Count(static v => v >= 2);
     }
 }
