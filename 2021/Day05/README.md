@@ -49,3 +49,33 @@ To avoid the most dangerous areas, you need to determine <em>the number of point
 Consider only horizontal and vertical lines. <em>At how many points do at least two lines overlap?</em>
 
 
+## --- Part Two ---
+Unfortunately, considering only horizontal and vertical lines doesn't give you the full picture; you need to also consider <em>diagonal lines</em>.
+
+Because of the limits of the hydrothermal vent mapping system, the lines in your list will only ever be horizontal, vertical, or a diagonal line at exactly 45 degrees. In other words:
+
+
+ - An entry like <code>1,1 -> 3,3</code> covers points <code>1,1</code>, <code>2,2</code>, and <code>3,3</code>.
+ - An entry like <code>9,7 -> 7,9</code> covers points <code>9,7</code>, <code>8,8</code>, and <code>7,9</code>.
+
+Considering all lines from the above example would now produce the following diagram:
+
+<pre>
+<code>1.1....11.
+.111...2..
+..2.1.111.
+...1.2.2..
+.112313211
+...1.2....
+..1...1...
+.1.....1..
+1.......1.
+222111....
+</code>
+</pre>
+
+You still need to determine <em>the number of points where at least two lines overlap</em>. In the above example, this is still anywhere in the diagram with a <code>2</code> or larger - now a total of <code><em>12</em></code> points.
+
+Consider all of the lines. <em>At how many points do at least two lines overlap?</em>
+
+
