@@ -71,3 +71,13 @@ The <em>score</em> of the winning board can now be calculated. Start by finding 
 To guarantee victory against the giant squid, figure out which board will win first. <em>What will your final score be if you choose that board?</em>
 
 
+## --- Part Two ---
+On the other hand, it might be wise to try a different strategy: let the giant squid win.
+
+You aren't sure how many bingo boards a giant squid could play at once, so rather than waste time counting its arms, the safe thing to do is to <em>figure out which board will win last</em> and choose that one. That way, no matter which boards it picks, it will win for sure.
+
+In the above example, the second board is the last to win, which happens after <code>13</code> is eventually called and its middle column is completely marked. If you were to keep playing until this point, the second board would have a sum of unmarked numbers equal to <code>148</code> for a final score of <code>148 * 13 = <em>1924</em></code>.
+
+Figure out which board will win last. <em>Once it wins, what would its final score be?</em>
+
+

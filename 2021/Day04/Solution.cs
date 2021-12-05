@@ -101,6 +101,16 @@ class Solution : Solver
 
     public object PartTwo(string input)
     {
-        return 0;
+        var (numbers, boards) = Parse(input);
+
+        var wonBoards = 0;
+        foreach (var number in numbers)
+            foreach (var board in boards.Where(static b => !b.IsBingo()))
+            {
+                board.Mark(number);
+                if (board.IsBingo() && ++wonBoards >= boards.Length)
+                    return board.GetUnmarkedValues().Sum(static v => v) * number;
+            }
+        throw new();
     }
 }
