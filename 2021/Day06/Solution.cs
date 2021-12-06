@@ -38,17 +38,20 @@ class Solution : Solver
         => input.Split(',').Select(int.Parse).Select(timer => new Lanternfish(timer)).ToList();
 
     public object PartOne(string input)
+        => Solve(input, 80);
+
+    public object PartTwo(string input)
+        => Solve(input, 256);
+
+    private static long Solve(string input, int days)
     {
         var fishes = Parse(input);
-        for (int day = 0; day < 80; day++)
+        for (int day = 0; day < days; day++)
             foreach (var lanternfish in fishes.ToArray())
                 if (lanternfish.NextDay() is {} baby)
                     fishes.Add(baby);
-        return fishes.Count;
-    }
-
-    public object PartTwo(string input)
-    {
-        return 0;
+#pragma warning disable CA1829 // Use Length/Count property instead of Enumerable.Count method
+        return fishes.LongCount();
+#pragma warning restore
     }
 }
