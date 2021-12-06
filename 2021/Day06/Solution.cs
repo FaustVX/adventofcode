@@ -7,35 +7,13 @@ using System.Text;
 
 namespace AdventOfCode.Y2021.Day06;
 
-#nullable enable
 [ProblemName("Lanternfish")]
 class Solution : Solver
 {
-    private class Lanternfish
-    {
-        private int _timer;
-
-        public Lanternfish()
-            : this(6, true)
-        { }
-
-        public Lanternfish(int timer)
-            : this(timer, false)
-        { }
-
-        private Lanternfish(int timer, bool isBaby)
-            => (_timer) = (timer + (isBaby ? 2 : 0));
-
-        public Lanternfish? NextDay()
-        {
-            if (--_timer >= 0)
-                return null;
-            _timer = 6;
-            return new();
-        }
-    }
-    private static List<Lanternfish> Parse(string input)
-        => input.Split(',').Select(int.Parse).Select(timer => new Lanternfish(timer)).ToList();
+    private static int[] Parse(string input)
+        => input.Split(',')
+            .Select(int.Parse)
+            .ToArray();
 
     public object PartOne(string input)
         => Solve(input, 80);
@@ -43,15 +21,32 @@ class Solution : Solver
     public object PartTwo(string input)
         => Solve(input, 256);
 
-    private static long Solve(string input, int days)
+    private static ulong Solve(string input, int days)
     {
-        var fishes = Parse(input);
-        for (int day = 0; day < days; day++)
-            foreach (var lanternfish in fishes.ToArray())
-                if (lanternfish.NextDay() is {} baby)
-                    fishes.Add(baby);
-#pragma warning disable CA1829 // Use Length/Count property instead of Enumerable.Count method
-        return fishes.LongCount();
-#pragma warning restore
+        // fishes: TKey => Timer; TValue => Number of fishes
+        var fishes = Parse(input)
+            .GroupBy(static i => i)
+            .ToDictionary(static group => group.Key, static group => group.LongCount());
+
+        Sanitize(fishes, 8, 0);
+
+        for (var day = 0; day < days; day++)
+        {
+            fishes = Enumerable.Range(0, 9).ToDictionary(static i => i, i => i switch
+            {
+                6 => fishes[0] + fishes[7],
+                8 => fishes[0],
+                _ => fishes[i + 1],
+            });
+        }
+
+        return fishes.Values.Aggregate(0UL, static (acc, i) => acc + (ulong)i);
+
+        static void Sanitize<TValue>(Dictionary<int, TValue> dictionary, int maxValue, TValue defaultValue)
+        {
+            for (int i = 0; i <= maxValue; i++)
+                if (!dictionary.ContainsKey(i))
+                    dictionary[i] = defaultValue;
+        }
     }
 }
