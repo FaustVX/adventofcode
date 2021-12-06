@@ -14,26 +14,17 @@ class Solution : Solver
         => Solve(input, i => i);
 
     public object PartTwo(string input)
-    {
-        return Solve(input, Slide);
-
-        static IEnumerable<int> Slide(int[] source)
-        {
-            for (var i = 0; i < source.Length - 2; i++)
-                yield return source[i] + source[i + 1] + source[i + 2];
-        }
-    }
+        => Solve(input, static source => source.Zip(source[1..], source[2..]).Select(t => t.First + t.Second + t.Third));
 
     private static int Solve(string input, Func<int[], IEnumerable<int>> selector)
     {
         var inputs = input.SplitLine().Select(int.Parse).ToArray();
         var (increasedCount, last) = (-1, int.MinValue);
         foreach (var item in selector(inputs))
-        {
             if (item > last)
                 increasedCount++;
-            last = item;
-        }
+            else
+                last = item;
         return increasedCount;
     }
 }
