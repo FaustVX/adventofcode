@@ -21,6 +21,11 @@ class Solution : Solver
 
     public object PartTwo(string input)
     {
-        return 0;
+        var crabs = Parse(input);
+        return Enumerable.Range(0, crabs.Max()).Min(pos => crabs.Aggregate(0L, (acc, crab) =>
+        {
+            var n = Math.Abs(crab - pos);
+            return acc + (long)((n / 2f) * (n + 1));
+        }));
     }
 }
