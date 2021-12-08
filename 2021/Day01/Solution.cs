@@ -18,7 +18,7 @@ class Solution : Solver
 
     private static int Solve(string input, Func<int[], IEnumerable<int>> selector)
     {
-        var inputs = input.SplitLine().Select(int.Parse).ToArray();
+        var inputs = input.ParseToArrayOfT(int.Parse);
         var (increasedCount, last) = (-1, int.MinValue);
         foreach (var item in selector(inputs))
             if (item > last)

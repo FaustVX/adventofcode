@@ -11,7 +11,7 @@ namespace AdventOfCode.Y2021.Day07;
 class Solution : Solver
 {
     private static int[] Parse(string input)
-        => input.Split(',').Select(int.Parse).ToArray();
+        => input.Split(',').ParseToArrayOfT(int.Parse);
 
     public object PartOne(string input)
     {

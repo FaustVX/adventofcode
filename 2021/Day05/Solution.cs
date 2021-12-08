@@ -35,8 +35,7 @@ class Solution : Solver
         foreach (var line in input.SplitLine())
         {
             var splitted = line.Split(" ->,".ToCharArray(), StringSplitOptions.RemoveEmptyEntries)
-                .Select(int.Parse)
-                .ToArray();
+                .ParseToArrayOfT(int.Parse);
             yield return ((splitted[0], splitted[1]), (splitted[2], splitted[3]));
         }
     }

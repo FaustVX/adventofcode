@@ -11,9 +11,7 @@ namespace AdventOfCode.Y2021.Day03;
 class Solution : Solver
 {
     private static byte[][] Parse(string input)
-        => input.SplitLine()
-            .Select(static l => l.Select(static s => (byte)(s - '0')).ToArray())
-            .ToArray();
+        => input.ParseToArrayOfT(static l => l.Select(static s => (byte)(s - '0')).ToArray());
 
     public object PartOne(string input)
     {

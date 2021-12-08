@@ -79,8 +79,7 @@ class Solution : Solver
             .ToArray();
 
         var boards = datas[1..]
-            .Select(Board.Parse)
-            .ToArray();
+            .ParseToArrayOfT(Board.Parse);
 
         return (numbers, boards);
     }

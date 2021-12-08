@@ -12,8 +12,7 @@ class Solution : Solver
 {
     private static int[] Parse(string input)
         => input.Split(',')
-            .Select(int.Parse)
-            .ToArray();
+            .ParseToArrayOfT(int.Parse);
 
     public object PartOne(string input)
         => Solve(input, 80);
