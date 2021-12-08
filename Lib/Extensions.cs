@@ -1,4 +1,6 @@
 using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
 
@@ -31,4 +33,12 @@ public static class Extensions
     [MethodImpl(MethodImplOptions.AggressiveOptimization | MethodImplOptions.AggressiveInlining)]
     public static T[] ParseToArrayOfT<T>(this string[] inputs, Func<string, T> parser)
         => inputs.Select(parser).ToArray();
+
+    [MethodImpl(MethodImplOptions.AggressiveOptimization | MethodImplOptions.AggressiveInlining)]
+    public static IEnumerable<T> ParseToIEnumOfT<T>(this string input, Func<string, T> parser)
+        => input.SplitLine().Select(parser);
+
+    [MethodImpl(MethodImplOptions.AggressiveOptimization | MethodImplOptions.AggressiveInlining)]
+    public static IEnumerable<T> ParseToIEnumOfT<T>(this string[] inputs, Func<string, T> parser)
+        => inputs.Select(parser);
 }
