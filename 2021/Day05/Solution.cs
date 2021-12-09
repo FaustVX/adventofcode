@@ -10,26 +10,6 @@ namespace AdventOfCode.Y2021.Day05;
 [ProblemName("Hydrothermal Venture")]
 class Solution : Solver
 {
-    private class DefaultableDictionary<TKey, TValue> : Dictionary<TKey, TValue>
-        where TKey : notnull
-    {
-        private readonly TValue _defaultValue;
-        public DefaultableDictionary(int capacity, TValue defaultValue = default)
-            : base(capacity)
-            => _defaultValue = defaultValue;
-
-        public new TValue this[TKey key]
-        {
-            get
-            {
-                if (TryGetValue(key, out var value))
-                    return value;
-                return _defaultValue;
-            }
-            set => base[key] = value;
-        }
-    }
-
     public static IEnumerable<((int x, int y) pos1, (int x, int y) pos2)> Parse(string input)
     {
         foreach (var line in input.SplitLine())
