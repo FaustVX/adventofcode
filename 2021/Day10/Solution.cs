@@ -20,8 +20,13 @@ class Solution : Solver
         public bool IsCorrupted { get; }
         public bool IsIncomplete { get; }
         public bool ContainsCorrupted { get; }
+        public bool ContainsIncomplete { get; }
         public int Length { get; } = 2;
         public List<Chunck> Inner { get; } = new();
+        public char ExpectedClosing
+            => IsIncomplete
+                ? _closing[_openning.AsSpan().IndexOf(Openning)]
+                : Closing;
 
         public Chunck(ReadOnlySpan<char> input)
         {
@@ -33,6 +38,7 @@ class Solution : Solver
                     Length += item.Length;
                     Inner.Add(item);
                     ContainsCorrupted |= item.ContainsCorrupted;
+                    ContainsIncomplete |= item.ContainsIncomplete;
                 }
                 Closing = input[Length - 1];
                 IsCorrupted = _openning.AsSpan().IndexOf(Openning) != _closing.AsSpan().IndexOf(Closing);
@@ -41,7 +47,7 @@ class Solution : Solver
             }
             catch (IndexOutOfRangeException)
             {
-                IsIncomplete = true;
+                IsIncomplete = ContainsIncomplete = true;
                 Length--;
             }
         }
@@ -56,6 +62,16 @@ class Solution : Solver
                 if (chunck.GetCorruptedChunck() is {} corrupted)
                     return corrupted;
             return null;
+        }
+
+        public IEnumerable<Chunck> GetIncompeteChunck()
+        {
+            if (!ContainsIncomplete)
+                return Enumerable.Empty<Chunck>();
+            if (IsIncomplete && Inner.Count > 0)
+                return Inner[^1].GetIncompeteChunck().Append(this);
+
+            return Enumerable.Repeat(this, 1);
         }
 
         public override string ToString()
@@ -98,6 +114,25 @@ class Solution : Solver
 
     public object PartTwo(string input)
     {
-        return 0;
+        var sums = new List<ulong>();
+        foreach (var chuncks in input.ParseToIEnumOfT(Chunck.Parse))
+        {
+            if (chuncks.Any(static chuck => chuck.ContainsCorrupted))
+                continue;
+            var incompleteChuncks = chuncks
+                .First(static chunck => chunck.ContainsIncomplete)
+                .GetIncompeteChunck();
+            var sum = 0UL;
+            foreach (var chunck in incompleteChuncks)
+                sum = sum * 5 + chunck.ExpectedClosing switch
+                {
+                    ')' => 1,
+                    ']' => 2,
+                    '}' => 3,
+                    '>' => 4,
+                };
+            sums.Add(sum);
+        }
+        return sums.OrderBy(static sum => sum).ElementAt(sums.Count / 2);
     }
 }
