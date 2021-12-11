@@ -11,7 +11,6 @@
             ],
             "problemMatcher": "$msCompile"
         },
-
         {
             "label": "run",
             "command": "dotnet",
@@ -24,7 +23,6 @@
                 "build"
             ]
         },
-
         {
             "label": "run today",
             "command": "dotnet",
@@ -37,7 +35,6 @@
                 "build"
             ]
         },
-
         {
             "label": "upload",
             "command": "dotnet",
@@ -46,14 +43,8 @@
                 "upload",
                 "${input:year}/${input:day}",
             ],
-            "options": {
-                "env": {
-                    "SESSION": "${input:session}"
-                }
-            },
             "problemMatcher": [],
         },
-        
         {
             "label": "upload today",
             "command": "dotnet",
@@ -62,14 +53,8 @@
                 "upload",
                 "today",
             ],
-            "options": {
-                "env": {
-                    "SESSION": "${input:session}"
-                }
-            },
             "problemMatcher": [],
         },
-
         {
             "label": "update",
             "command": "dotnet",
@@ -78,14 +63,8 @@
                 "update",
                 "${input:year}/${input:day}"
             ],
-            "options": {
-                "env": {
-                    "SESSION": "${input:session}"
-                }
-            },
             "problemMatcher": []
         },
-
         {
             "label": "update today",
             "command": "dotnet",
@@ -94,25 +73,8 @@
                 "update",
                 "today"
             ],
-            "options": {
-                "env": {
-                    "SESSION": "${input:session}"
-                }
-            },
             "problemMatcher": []
         },
-        {
-            "label": "git stash",
-            "command": "git",
-            "type": "process",
-            "args": [
-                "stash",
-                "push",
-                "-m",
-                "Y${input:year}D${input:day}P${input:part}"
-            ],
-            "problemMatcher": []
-        }
     ],
     "inputs": [
         {
@@ -125,16 +87,6 @@
             }
         },
         {
-            "id": "part",
-            "type": "command",
-            "command": "memento.pickString",
-            "args": {
-                "id": "part",
-                "options": ["1", "2"],
-                "description": "Part of the day"
-            }
-        },
-        {
             "id": "day",
             "type": "command",
             "command": "memento.pickString",
@@ -144,19 +96,5 @@
                 "description": "Current day"
             }
         },
-        {
-            "id": "answer",
-            "type": "promptString",
-            "description": "Answer for the part day"
-        },
-        {
-            "id": "session",
-            "type": "command",
-            "command": "memento.promptString",
-            "args": {
-                "id": "session",
-                "description": "Session cookie"
-            }
-        }
     ]
 }

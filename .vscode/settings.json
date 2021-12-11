@@ -16,5 +16,14 @@
             "name": "task.upload today",
             "codicon": "repo-push"
         },
-    ]
+    ],
+    "terminal.integrated.env.windows": {
+        "SESSION": "Put Your Cookie Here"
+    },
+    "terminal.integrated.env.linux": {
+        "SESSION": "Put Your Cookie Here"
+    },
+    "terminal.integrated.env.osx": {
+        "SESSION": "Put Your Cookie Here"
+    },
 }
