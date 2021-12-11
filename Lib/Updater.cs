@@ -19,10 +19,7 @@ class Updater {
 
     public async Task Update(int year, int day) {
 
-        if (!Environment.GetEnvironmentVariables().Contains("SESSION")) {
-            throw new Exception("Specify SESSION environment variable");
-        }
-        var session = Environment.GetEnvironmentVariable("SESSION");
+        var session = GetSession();
         var baseAddress = new Uri("https://adventofcode.com/");
 
         var context = BrowsingContext.New(Configuration.Default
@@ -59,7 +56,7 @@ class Updater {
 
     private string GetSession() {
         if (!Environment.GetEnvironmentVariables().Contains("SESSION")) {
-            throw new Exception("Specify SESSION environment variable.");
+            throw new AocCommuncationError("Specify SESSION environment variable", null);
         }
         return Environment.GetEnvironmentVariable("SESSION");
     }
@@ -161,6 +158,9 @@ class Updater {
 
     async Task<Calendar> DownloadCalendar(IBrowsingContext context, Uri baseUri, int year) {
         var document = await context.OpenAsync(baseUri.ToString() + year);
+        if (document.StatusCode != HttpStatusCode.OK) {
+            throw new AocCommuncationError("Could not fetch calendar", document.StatusCode, document.TextContent);
+        }
         return Calendar.Parse(year, document);
     }
 
@@ -174,6 +174,11 @@ class Updater {
         var problemStatement = await context.OpenAsync(uri);
         var input = await context.GetService<IDocumentLoader>().FetchAsync(
                 new DocumentRequest(new Url(baseUri + $"{year}/day/{day}/input"))).Task;
+
+        if (input.StatusCode != HttpStatusCode.OK) {
+            throw new AocCommuncationError("Could not fetch input", input.StatusCode, new StreamReader(input.Content).ReadToEnd());
+        }
+
         return Problem.Parse(
             year, day, baseUri + $"{year}/day/{day}", problemStatement,
             new StreamReader(input.Content).ReadToEnd()
