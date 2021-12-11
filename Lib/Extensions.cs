@@ -41,4 +41,18 @@ public static class Extensions
     [MethodImpl(MethodImplOptions.AggressiveOptimization | MethodImplOptions.AggressiveInlining)]
     public static IEnumerable<T> ParseToIEnumOfT<T>(this string[] inputs, Func<string, T> parser)
         => inputs.Select(parser);
+
+    public static (T[,], int width, int height) Parse2D<T>(this string input, Func<char, T> creator)
+    {
+        var lines = input.SplitLine();
+        int width = lines[0].Length;
+        int height = lines.Length;
+        var datas = new T[width, height];
+
+        for (var x = 0; x < width; x++)
+            for (var y = 0; y < height; y++)
+                datas[x, y] = creator(lines[y][x]);
+
+        return (datas, width, height);
+    }
 }

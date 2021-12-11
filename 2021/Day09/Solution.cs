@@ -13,18 +13,7 @@ namespace AdventOfCode.Y2021.Day09;
 class Solution : Solver
 {
     private static ((byte height, int? basin)[,] datas, int width, int height) Parse(string input)
-    {
-        var lines = input.SplitLine();
-        int width = lines[0].Length;
-        int height = lines.Length;
-        var datas = new (byte, int?)[width, height];
-
-        for (var x = 0; x < width; x++)
-            for (var y = 0; y < height; y++)
-                datas[x, y] = (byte.Parse(lines[y][x].ToString()), null);
-
-        return (datas, width, height);
-    }
+        => input.Parse2D(static c => ((byte)(c - '0'), default(int?)));
 
     public object PartOne(string input)
     {
