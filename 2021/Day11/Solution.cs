@@ -32,11 +32,10 @@ class Solution : Solver
     private static (Octopus[,] octopuses, int width, int height) Parse(string input)
         => input.Parse2D(Octopus.Parse);
 
-    public object PartOne(string input)
+    private static IEnumerable<IEnumerable<Octopus>> Solve(string input)
     {
         var (octopi, width, height) = Parse(input);
-        var sum = 0L;
-        for (var step = 0; step < 100; step++)
+        while (true)
         {
             var flashed = new HashSet<(int x, int y)>();
             var propagate = new Queue<(int x, int y)>();
@@ -53,13 +52,11 @@ class Solution : Solver
                     Propagate(octopi, (x, y), propagate);
             }
 
+            yield return flashed.Select(pos => octopi[pos.x, pos.y]);
+
             foreach (var (x, y) in flashed)
-            {
-                sum++;
                 octopi[x, y].Reset();
-            }
         }
-        return sum;
 
         static void Propagate(Octopus[,] octopi, (int x, int y) pos, Queue<(int x, int y)> propagate)
         {
@@ -92,8 +89,11 @@ class Solution : Solver
         }
     }
 
+    public object PartOne(string input)
+        => Solve(input).Take(100).Aggregate(0L, static (acc, step) => acc + step.Count());
+
     public object PartTwo(string input)
-    {
-        return 0;
-    }
+        => Solve(input)
+            .TakeWhile(static step => step.Count() != 100)
+            .Count() + 1;
 }
