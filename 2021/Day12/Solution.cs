@@ -13,6 +13,8 @@ class Solution : Solver
 {
     record class Cave(string Name)
     {
+        public static ulong Count { get; private set; }
+        public ulong Id { get; } = Count++;
         public bool IsBig { get; } = Name[0].IsUppercaseAscii();
         public int Visited { get; set; }
         public int MaxVisit { get; set; } = 1;
@@ -81,20 +83,19 @@ class Solution : Solver
     {
         var (start, end, _) = Parse(input);
 
-        var paths = new List<Cave[]>();
+        var paths = new HashSet<ulong>();
         AllDepthFirstSearch(start, end, new(), paths);
         return paths.Count;
     }
 
-    private static void AllDepthFirstSearch(Cave entrance, Cave end, LinkedList<Cave> path, List<Cave[]> paths)
+    private static void AllDepthFirstSearch(Cave entrance, Cave end, LinkedList<Cave> path, HashSet<ulong> paths)
     {
         if (entrance.Name == end.Name)
         {
-            var array = path.ToArray();
-            if (!paths.Any(p => p.SequenceEqual(array)))
-                paths.Add(array);
+            paths.Add(CalculateID(path));
             return;
         }
+
         entrance.Visited++;
         foreach (var cave in entrance.NavigateCaves())
         {
@@ -103,13 +104,21 @@ class Solution : Solver
             path.RemoveLast();
         }
         entrance.Visited--;
+
+        static ulong CalculateID(IEnumerable<Cave> path)
+        {
+            var id = 0UL;
+            foreach (var cave in path)
+                id = id * Cave.Count + cave.Id;
+            return id;
+        }
     }
 
     public object PartTwo(string input)
     {
         var (start, end, caves) = Parse(input);
 
-        var paths = new List<Cave[]>();
+        var paths = new HashSet<ulong>();
         foreach (var cave in caves.Values.Where(static cave => !cave.IsBig))
         {
             if (cave.Name == start.Name || cave.Name == end.Name)
