@@ -15,10 +15,11 @@ class Solution : Solver
     {
         public bool IsBig { get; } = Name[0].IsUppercaseAscii();
         public int Visited { get; set; }
+        public int MaxVisit { get; set; } = 1;
         public List<Cave> Related { get; } = new();
 
         public IEnumerable<Cave> NavigateCaves()
-            => Related.Where(static cave => cave.IsBig || cave.Visited == 0);
+            => Related.Where(static cave => cave.IsBig || cave.Visited < cave.MaxVisit);
 
         public void AddRelated(Cave cave)
         {
@@ -81,29 +82,42 @@ class Solution : Solver
         var (start, end, _) = Parse(input);
 
         var paths = new List<Cave[]>();
-        DepthFirstSearch(start, end, new(), paths);
+        AllDepthFirstSearch(start, end, new(), paths);
         return paths.Count;
+    }
 
-        static void DepthFirstSearch(Cave entrance, Cave end, LinkedList<Cave> path, List<Cave[]> paths)
+    private static void AllDepthFirstSearch(Cave entrance, Cave end, LinkedList<Cave> path, List<Cave[]> paths)
+    {
+        if (entrance.Name == end.Name)
         {
-            if (entrance.Name == end.Name)
-            {
-                paths.Add(path.ToArray());
-                return;
-            }
-            entrance.Visited++;
-            foreach (var cave in entrance.NavigateCaves())
-            {
-                path.AddLast(cave);
-                DepthFirstSearch(cave, end, path, paths);
-                path.RemoveLast();
-            }
-            entrance.Visited--;
+            var array = path.ToArray();
+            if (!paths.Any(p => p.SequenceEqual(array)))
+                paths.Add(array);
+            return;
         }
+        entrance.Visited++;
+        foreach (var cave in entrance.NavigateCaves())
+        {
+            path.AddLast(cave);
+            AllDepthFirstSearch(cave, end, path, paths);
+            path.RemoveLast();
+        }
+        entrance.Visited--;
     }
 
     public object PartTwo(string input)
     {
-        return 0;
+        var (start, end, caves) = Parse(input);
+
+        var paths = new List<Cave[]>();
+        foreach (var cave in caves.Values.Where(static cave => !cave.IsBig))
+        {
+            if (cave.Name == start.Name || cave.Name == end.Name)
+                continue;
+            cave.MaxVisit++;
+            AllDepthFirstSearch(start, end, new(), paths);
+            cave.MaxVisit--;
+        }
+        return paths.Count;
     }
 }
