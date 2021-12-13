@@ -31,7 +31,19 @@ class Solution : Solver
 
     public object PartTwo(string input)
     {
-        return 0;
+        var code = Solve(input).Last();
+        Console.Clear();
+        var maxY = 0;
+        foreach (var (x, y) in code)
+        {
+            Console.SetCursorPosition(x, y);
+            Console.Write('#');
+            if (y > maxY)
+                maxY = y;
+        }
+        Console.SetCursorPosition(0, maxY + 1);
+        Console.Write("What is the code ? ");
+        return Console.ReadLine();
     }
 
     private static IEnumerable<(int x, int y)[]> Solve(string input)
