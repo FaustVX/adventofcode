@@ -3,6 +3,7 @@
     <OutputType>Exe</OutputType>
     <TargetFramework>net6.0</TargetFramework>
     <LangVersion>10</LangVersion>
+    <EnablePreviewFeatures>True</EnablePreviewFeatures>
     <!-- <Nullable>enable</Nullable> -->
   </PropertyGroup>
   <ItemGroup>

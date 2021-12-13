@@ -31,19 +31,27 @@ class Solution : Solver
 
     public object PartTwo(string input)
     {
-        var code = Solve(input).Last();
+        var dots = Solve(input).Last();
+        var (width, height) = (dots.Max(static pos => pos.x) + 1, dots.Max(static pos => pos.y) + 1);
+        var lines = Enumerable.Range(0, height)
+            .Select(y => Enumerable.Repeat(' ', width).ToArray())
+            .ToArray();
         Console.Clear();
         var maxY = 0;
-        foreach (var (x, y) in code)
+        foreach (var (x, y) in dots)
         {
             Console.SetCursorPosition(x, y);
+            lines[y][x] = '#';
             Console.Write('#');
             if (y > maxY)
                 maxY = y;
         }
+        var code = width == 5
+            ? OCR.GetOCR<OCR.Char5x5>(lines, 1)
+            : OCR.GetOCR<OCR.Char4x6>(lines, 1);
+
         Console.SetCursorPosition(0, maxY + 1);
-        Console.Write("What is the code ? ");
-        return Console.ReadLine();
+        return code;
     }
 
     private static IEnumerable<(int x, int y)[]> Solve(string input)
