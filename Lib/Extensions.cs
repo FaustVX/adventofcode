@@ -21,6 +21,12 @@ public static class Extensions
         tail = span[1..];
     }
 
+    public static void Deconstruct(this string span, out char head, out ReadOnlySpan<char> tail)
+    {
+        head = span[0];
+        tail = span.AsSpan(1);
+    }
+
     public static void Deconstruct<T>(this T[] span, out T head, out Span<T> tail)
     {
         head = span[0];

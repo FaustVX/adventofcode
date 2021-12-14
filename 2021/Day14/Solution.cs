@@ -10,7 +10,7 @@ namespace AdventOfCode.Y2021.Day14;
 [ProblemName("Extended Polymerization")]
 class Solution : Solver
 {
-    private static (string template, Dictionary<(char, char), char> rules) Parse(string input)
+    private static (string template, IReadOnlyDictionary<(char, char), char> rules) Parse(string input)
     {
         var (template, (rules, _)) = input.Split2Lines();
         return (template, rules.SplitLine()
@@ -20,33 +20,44 @@ class Solution : Solver
     }
 
     public object PartOne(string input)
-    {
-        var line = Solve(input).ElementAt(10).GroupBy(static c => c);
-        return line.Max(static g => g.Count()) - line.Min(static g => g.Count());
-    }
+        => Solve(input, 10);
 
     public object PartTwo(string input)
-    {
-        return 0;
-    }
+        => Solve(input, 40);
 
-    private static IEnumerable<string> Solve(string input)
+    private static ulong Solve(string input, int step)
     {
-        var (template, rules) = Parse(input);
-        var list = new LinkedList<char>(template);
-        while (true)
+        var ((c0, template), rules) = Parse(input);
+        var count = new DefaultableDictionary<char, ulong>();
+        var backup = new Dictionary<(char, char, int step), IReadOnlyDictionary<char, ulong>>();
+        count[c0]++;
+        for (int i = 0; i < template.Length; i++)
         {
-            var output = new LinkedList<char>();
-            var c0 = list.First.Value;
-            output.AddLast(c0);
-            foreach (var c1 in list.Skip(1))
-            {
-                output.AddLast(rules[(c0, c1)]);
-                output.AddLast(c1);
-                c0 = c1;
-            }
-            yield return string.Concat(list);
-            list = output;
+            var c1 = template[i];
+            count = Merge(count, Compute(c0, c1, rules, step, backup));
+            c0 = c1;
+            count[c1]++;
+        }
+        return count.Values.Max() - count.Values.Min();
+
+        static IReadOnlyDictionary<char, ulong> Compute(char left, char right, IReadOnlyDictionary<(char, char), char> rules, int step, Dictionary<(char, char, int step), IReadOnlyDictionary<char, ulong>> backup)
+        {
+            if (step <= 0)
+                return new DefaultableDictionary<char, ulong>();
+            if (backup.TryGetValue((left, right, step), out var dict))
+                return dict;
+            var middle = rules[(left, right)];
+            var count = Merge(Compute(left, middle, rules, step - 1, backup), Compute(middle, right, rules, step - 1, backup));
+            count[middle]++;
+            return backup[(left, right, step)] = count;
+        }
+
+        static DefaultableDictionary<char, ulong> Merge(IReadOnlyDictionary<char, ulong> left, IReadOnlyDictionary<char, ulong> right)
+        {
+            var count = new DefaultableDictionary<char, ulong>(left);
+            foreach (var (key, value) in right)
+                count[key] += value;
+            return count;
         }
     }
 }
