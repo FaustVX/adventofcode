@@ -16,6 +16,8 @@
             "command": "dotnet",
             "args": [
                 "run",
+                "--configuration=Release",
+                "--",
                 "${input:year}/${input:day}"
             ],
             "problemMatcher": [],
@@ -28,6 +30,8 @@
             "command": "dotnet",
             "args": [
                 "run",
+                "--configuration=Release",
+                "--",
                 "today"
             ],
             "problemMatcher": [],
@@ -40,6 +44,8 @@
             "command": "dotnet",
             "args": [
                 "run",
+                "--configuration=Release",
+                "--",
                 "upload",
                 "${input:year}/${input:day}",
             ],
@@ -50,6 +56,8 @@
             "command": "dotnet",
             "args": [
                 "run",
+                "--configuration=Release",
+                "--",
                 "upload",
                 "today",
             ],
