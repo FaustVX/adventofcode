@@ -65,4 +65,12 @@ public static class Extensions
 
     public static Queue<T> ToQueue<T>(this IEnumerable<T> source)
         => new(source);
+
+    public static IReadOnlyDictionary<(int x, int y), T> ToDictionary<T>(this T[,] array)
+    {
+        var (w, h) = (array.GetLength(0), array.GetLength(1));
+        return Enumerable.Range(0, w)
+            .SelectMany(x => Enumerable.Range(0, h).Select(y => ((x, y), array[x, y])))
+            .ToDictionary(static t => t.Item1, static t => t.Item2);
+    }
 }

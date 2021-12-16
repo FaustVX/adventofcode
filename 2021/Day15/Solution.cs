@@ -11,11 +11,10 @@ namespace AdventOfCode.Y2021.Day15;
 [ProblemName("Chiton")]
 class Solution : Solver
 {
-    private struct Node
+    private class Node
     {
-        public byte Risk { readonly get; init; }
-        public bool IsVisited { readonly get; set; } = false;
-        public ulong Distance { readonly get; set; } = ulong.MaxValue;
+        public byte Risk { get; init; }
+        public int Distance { get; set; } = int.MaxValue;
     }
 
     private static (Node[,], int width, int height) Parse(string input)
@@ -49,11 +48,12 @@ class Solution : Solver
         }
     }
 
-    private static ulong Solve((Node[,] risks, int width, int height) input)
+    private static int Solve((Node[,] risks, int width, int height) input)
     {
-        return Dijkstra(input.risks, input.width, input.height);
+        Dijkstra((Dictionary<(int x, int y), Node>)input.risks.ToDictionary(), input.width, input.height);
+        return input.risks[input.width - 1, input.height - 1].Distance;
 
-        static ulong Dijkstra(Node[,] risks, int width, int height)
+        static void Dijkstra(Dictionary<(int x, int y), Node> nodes, int width, int height)
         {
             ReadOnlySpan<(int x, int y)> offsets = stackalloc[]
             {
@@ -62,35 +62,30 @@ class Solution : Solver
                 (-1, 0),
                 (0, -1),
             };
-            risks[0, 0] = risks[0, 0] with { Distance = 0, IsVisited = true };
-            var visitedNodes = width * height - 1;
-            while (visitedNodes > 0)
+            nodes[(0, 0)].Distance = 0;
+            while (nodes.Count > 0)
             {
-                ref var s1 = ref GetMin(risks, width, height, out var pos);
-                s1.IsVisited = true;
-                visitedNodes--;
+                var s1 = GetMin(nodes, out var pos);
+                nodes.Remove(pos);
                 foreach (var (x, y) in offsets)
-                    if (pos.x + x >= 0 && pos.x + x < width && pos.y + y >= 0 && pos.y + y < height)
-                        UpdateWeight(in s1, ref risks[pos.x + x, pos.y + y]);
+                    if (nodes.ContainsKey((pos.x + x, pos.y + y)))
+                        UpdateWeight(s1, nodes[(pos.x + x, pos.y + y)]);
             }
-            return risks[width - 1, height - 1].Distance;
         }
 
-        static ref Node GetMin(Node[,] graph, int width, int height, out (int x, int y) pos)
+        static Node GetMin(IReadOnlyDictionary<(int, int), Node> nodes, out (int x, int y) pos)
         {
-            var min = ulong.MaxValue;
-            pos = (0, 0);
-            for (int x = 0; x < width; x++)
-                for (int y = 0; y < height; y++)
-                    if (!graph[x, y].IsVisited && graph[x, y].Distance < min)
-                        (pos, min) = ((x, y), graph[x, y].Distance);
-            return ref graph[pos.x, pos.y];
+            (pos, var min) = nodes.First();
+            foreach (var (position, node) in nodes)
+                if (node.Distance < min.Distance)
+                    (pos, min) = (position, node);
+            return min;
         }
 
-        static void UpdateWeight(in Node from, ref Node to)
+        static void UpdateWeight(Node from, Node to)
         {
-            if (to.Distance > checked(from.Distance + to.Risk))
-                to.Distance = checked(from.Distance + to.Risk);
+            if (to.Distance > from.Distance + to.Risk)
+                to.Distance = from.Distance + to.Risk;
         }
     }
 }
