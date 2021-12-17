@@ -101,7 +101,10 @@ class Runner {
         {
             if (!Directory.Exists(dir))
                 continue;
-            foreach (var file in Directory.EnumerateFiles(dir).Where(file => file.EndsWith(".in")))
+            var searchOption = dir.EndsWith("test")
+                ? SearchOption.AllDirectories
+                : SearchOption.TopDirectoryOnly;
+            foreach (var file in Directory.EnumerateFiles(dir, "*.in", searchOption).OrderBy(file => file))
                 try
                 {
                     Console.WriteLine("  " + file + ":");
