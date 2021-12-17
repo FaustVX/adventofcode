@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
@@ -9,24 +10,28 @@ namespace AdventOfCode;
 
 public static class Extensions
 {
+    [DebuggerStepThrough]
     public static void Deconstruct<T>(this Span<T> span, out T head, out Span<T> tail)
     {
         head = span[0];
         tail = span[1..];
     }
 
+    [DebuggerStepThrough]
     public static void Deconstruct<T>(this ReadOnlySpan<T> span, out T head, out ReadOnlySpan<T> tail)
     {
         head = span[0];
         tail = span[1..];
     }
 
+    [DebuggerStepThrough]
     public static void Deconstruct(this string span, out char head, out ReadOnlySpan<char> tail)
     {
         head = span[0];
         tail = span.AsSpan(1);
     }
 
+    [DebuggerStepThrough]
     public static void Deconstruct<T>(this T[] span, out T head, out Span<T> tail)
     {
         head = span[0];
@@ -34,21 +39,26 @@ public static class Extensions
     }
 
     [MethodImpl(MethodImplOptions.AggressiveOptimization | MethodImplOptions.AggressiveInlining)]
+    [DebuggerStepThrough]
     public static T[] ParseToArrayOfT<T>(this string input, Func<string, T> parser)
         => input.SplitLine().Select(parser).ToArray();
 
     [MethodImpl(MethodImplOptions.AggressiveOptimization | MethodImplOptions.AggressiveInlining)]
+    [DebuggerStepThrough]
     public static T[] ParseToArrayOfT<T>(this string[] inputs, Func<string, T> parser)
         => inputs.Select(parser).ToArray();
 
     [MethodImpl(MethodImplOptions.AggressiveOptimization | MethodImplOptions.AggressiveInlining)]
+    [DebuggerStepThrough]
     public static IEnumerable<T> ParseToIEnumOfT<T>(this string input, Func<string, T> parser)
         => input.SplitLine().Select(parser);
 
     [MethodImpl(MethodImplOptions.AggressiveOptimization | MethodImplOptions.AggressiveInlining)]
+    [DebuggerStepThrough]
     public static IEnumerable<T> ParseToIEnumOfT<T>(this string[] inputs, Func<string, T> parser)
         => inputs.Select(parser);
 
+    [DebuggerStepThrough]
     public static (T[,], int width, int height) Parse2D<T>(this string input, Func<char, T> creator)
     {
         var lines = input.SplitLine();
@@ -63,9 +73,11 @@ public static class Extensions
         return (datas, width, height);
     }
 
+    [DebuggerStepThrough]
     public static Queue<T> ToQueue<T>(this IEnumerable<T> source)
         => new(source);
 
+    [DebuggerStepThrough]
     public static IReadOnlyDictionary<(int x, int y), T> ToDictionary<T>(this T[,] array)
     {
         var (w, h) = (array.GetLength(0), array.GetLength(1));
