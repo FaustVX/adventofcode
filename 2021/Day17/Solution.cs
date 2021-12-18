@@ -67,6 +67,25 @@ class Solution : Solver
 
     public object PartTwo(string input)
     {
-        return 0;
+        var world = Parse(input);
+        var count = 0;
+        for (int yVelocity = -1000; yVelocity < 1000; yVelocity++)
+            for (int xVelocity = 1; xVelocity < 1000; xVelocity++)
+            {
+                var (max, isValid) = (0, false);
+                foreach (var (x, y) in world.CalculateTrajectory(xVelocity, yVelocity))
+                {
+                    if (y > max)
+                        max = y;
+                    if (x >= world.Left && x <= world.Right && y >= world.Bottom && y <= world.Top)
+                    {
+                        isValid = true;
+                        break;
+                    }
+                }
+                if (isValid)
+                    count++;
+            }
+        return count;
     }
 }
