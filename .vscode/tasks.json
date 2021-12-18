@@ -21,9 +21,6 @@
                 "${input:year}/${input:day}"
             ],
             "problemMatcher": [],
-            "dependsOn": [
-                "build"
-            ]
         },
         {
             "label": "run today",
@@ -35,9 +32,6 @@
                 "today"
             ],
             "problemMatcher": [],
-            "dependsOn": [
-                "build"
-            ]
         },
         {
             "label": "upload",
