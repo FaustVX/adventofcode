@@ -4,7 +4,6 @@
     <TargetFramework>net6.0</TargetFramework>
     <LangVersion>10</LangVersion>
     <EnablePreviewFeatures>True</EnablePreviewFeatures>
-    <!-- <Nullable>enable</Nullable> -->
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="AngleSharp" Version="0.13.0"/>
@@ -13,5 +12,6 @@
     <PackageReference Include="System.Reflection.Emit" Version="4.3.0"/>
     <PackageReference Include="System.ValueTuple" Version="4.4.0"/>
     <PackageReference Include="RegExtract" Version="0.9.24"/>
+    <PackageReference Include="LibGit2Sharp" Version="0.26.2"/>
   </ItemGroup>
 </Project>

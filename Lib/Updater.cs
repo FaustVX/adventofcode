@@ -12,6 +12,7 @@ using AdventOfCode.Generator;
 using AdventOfCode.Model;
 using AngleSharp;
 using AngleSharp.Io;
+using Git = LibGit2Sharp;
 
 namespace AdventOfCode;
 
@@ -28,6 +29,10 @@ class Updater {
             .WithDefaultCookies()
         );
         context.SetCookie(new Url(baseAddress.ToString()), "session=" + session);
+        using var repo = new Git.Repository(".git");
+        var main = repo.Branches["main"] ?? repo.Branches["master"];
+        var branch = repo.Branches[$"problems/Y{year}/D{day}"] ?? repo.Branches.Add($"problems/Y{year}/D{day}", main.Tip, allowOverwrite: true);
+        var today = Git.Commands.Checkout(repo, branch);
 
         var calendar = await DownloadCalendar(context, baseAddress, year);
         var problem = await DownloadProblem(context, baseAddress, year, day);
@@ -48,6 +53,10 @@ class Updater {
         UpdateInput(problem);
         UpdateRefout(problem);
         UpdateSolutionTemplate(problem);
+
+        Git.Commands.Stage(repo, "*");
+        var signature = new Git.Signature(repo.Config.Get<string>("user.name").Value, repo.Config.Get<string>("user.email").Value, DateTime.Now);
+        repo.Commit($"Initial commit for Y{year}D{day}", signature, signature, new());
     }
 
     private Uri GetBaseAddress() {
@@ -125,27 +134,36 @@ class Updater {
             article = Regex.Replace(article, @"\(You guessed.*", "", RegexOptions.Singleline);
             article = Regex.Replace(article, @"  ", "\n", RegexOptions.Singleline);
 
-            if (article.StartsWith("That's the right answer") || article.Contains("You've finished every puzzle")) {
-                Console.ForegroundColor = ConsoleColor.Green;
-                Console.WriteLine(article);
-                Console.ForegroundColor = color;
-                Console.WriteLine();
-                await Update(solver.Year(), solver.Day());
-            } else if (article.StartsWith("That's not the right answer")) {
-                Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine(article);
-                Console.ForegroundColor = color;
-                Console.WriteLine();
-            } else if (article.StartsWith("You gave an answer too recently")) {
-                Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine(article);
-                Console.ForegroundColor = color;
-                Console.WriteLine();
-            } else {
-                Console.ForegroundColor = ConsoleColor.White;
-                Console.WriteLine(article);
-                Console.ForegroundColor = color;
-            }
+            using (var repo = new Git.Repository(".git"))
+                if (article.StartsWith("That's the right answer") || article.Contains("You've finished every puzzle")) {
+                    Git.Commands.Stage(repo, "*");
+
+                    Console.ForegroundColor = ConsoleColor.Green;
+                    Console.WriteLine(article);
+                    Console.ForegroundColor = color;
+                    Console.WriteLine();
+                    await Update(solver.Year(), solver.Day());
+
+                    Git.Commands.Stage(repo, article.StartsWith('T') /* Is first part ? */ ? "**/input.refout" : "*");
+                    var signature = new Git.Signature(repo.Config.Get<string>("user.name").Value, repo.Config.Get<string>("user.email").Value, DateTime.Now);
+                    repo.Commit($"P{solverResult.answers.Length}", signature, signature, new());
+                } else if (article.StartsWith("That's not the right answer")) {
+                    Git.Commands.Stage(repo, "*");
+
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    Console.WriteLine(article);
+                    Console.ForegroundColor = color;
+                    Console.WriteLine();
+                } else if (article.StartsWith("You gave an answer too recently")) {
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    Console.WriteLine(article);
+                    Console.ForegroundColor = color;
+                    Console.WriteLine();
+                } else {
+                    Console.ForegroundColor = ConsoleColor.White;
+                    Console.WriteLine(article);
+                    Console.ForegroundColor = color;
+                }
         }
     }
 
