@@ -1,7 +1,3 @@
-using System.Collections.Generic;
-using System.Text;
-using AngleSharp.Text;
-
 namespace AdventOfCode;
 
 public static class OCR
@@ -176,7 +172,7 @@ public static class OCR
                     for (int j = 0; j < T.Height; j++)
                     {
                         var a = d[i, j];
-                        var b = !lines[j][i + x].IsSpaceCharacter();
+                        var b = !char.IsWhiteSpace(lines[j][i + x]);
                         if (a != b)
                             return false;
                     }

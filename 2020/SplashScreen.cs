@@ -1,6 +1,3 @@
-
-using System;
-
 namespace AdventOfCode.Y2020;
 
 class SplashScreenImpl : SplashScreen {

@@ -1,4 +1,3 @@
-using System.Text;
 namespace AdventOfCode;
 
 public class AocCommuncationError : System.Exception {

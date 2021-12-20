@@ -1,6 +1,3 @@
-using System;
-using System.Collections.Generic;
-
 namespace AdventOfCode;
 
 public class DefaultableDictionary<TKey, TValue> : Dictionary<TKey, TValue>, IDictionary<TKey, TValue>, IReadOnlyDictionary<TKey, TValue>

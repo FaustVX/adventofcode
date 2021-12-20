@@ -1,11 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.Immutable;
-using System.Linq;
-using System.Text.RegularExpressions;
-using System.Text;
-
-namespace AdventOfCode.Y2020.Day08;
+﻿namespace AdventOfCode.Y2020.Day08;
 
 [ProblemName("Handheld Halting")]
 class Solution : Solver

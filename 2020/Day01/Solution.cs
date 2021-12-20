@@ -1,9 +1,3 @@
-using System.Collections.Generic;
-using System.Collections.Immutable;
-using System.Linq;
-using System.Text.RegularExpressions;
-using System.Text;
-
 namespace AdventOfCode.Y2020.Day01;
 
 [ProblemName("Report Repair")]

@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Immutable;
-using System.Linq;
-using System.Text.RegularExpressions;
-using System.Text;
-
-namespace AdventOfCode.Y2020.Day06;
+﻿namespace AdventOfCode.Y2020.Day06;
 
 [ProblemName("Custom Customs")]
 class Solution : Solver

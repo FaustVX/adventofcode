@@ -1,6 +1,3 @@
-using System;
-using System.Linq;
-using System.Text;
 using AdventOfCode.Model;
 
 namespace AdventOfCode.Generator;
@@ -9,8 +6,6 @@ class SplashScreenGenerator {
     public string Generate(Calendar calendar) {
         string calendarPrinter = CalendarPrinter(calendar);
         return $@"
-            |using System;
-            |
             |namespace AdventOfCode.Y{calendar.Year};
             |
             |class SplashScreenImpl : SplashScreen {{

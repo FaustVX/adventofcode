@@ -1,11 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.Immutable;
-using System.Linq;
-using System.Text.RegularExpressions;
-using System.Text;
-
-namespace AdventOfCode.Y2020.Day09;
+﻿namespace AdventOfCode.Y2020.Day09;
 
 [ProblemName("Encoding Error")]
 class Solution : Solver

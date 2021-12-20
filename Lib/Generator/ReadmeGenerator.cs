@@ -1,4 +1,3 @@
-using System.Linq;
 using AdventOfCode.Model;
 
 namespace AdventOfCode.Generator;
@@ -54,7 +53,7 @@ class ProjectReadmeGenerator {
 
            > ## Working in Visual Studio Code
            > If you prefer, you can work directly in VSCode as well. 
- 
+
            >  Open the command Palette (⇧ ⌘ P), select `Tasks: Run Task` then e.g. `update today`.
            > 
            >  Work on part 1. Check the solution with the `upload today` task. Continue with part 2.
@@ -72,7 +71,7 @@ class ReadmeGeneratorForYear {
            > Check out https://adventofcode.com/{calendar.Year}.
 
            > <a href=""https://adventofcode.com/{calendar.Year}""><img src=""calendar.svg"" width=""80%"" /></a>
-           
+
            > ".StripMargin("> ");
     }
 }

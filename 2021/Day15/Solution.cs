@@ -1,9 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Collections.Immutable;
-using System.Linq;
-using System.Text.RegularExpressions;
-using System.Text;
 using System.Runtime.CompilerServices;
 
 namespace AdventOfCode.Y2021.Day15;
