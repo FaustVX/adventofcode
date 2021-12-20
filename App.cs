@@ -127,8 +127,8 @@ Action Command(string[] args, string[] regexes, Func<string[], Action> parse) {
     }
     try {
 
-        return parse(matches.SelectMany(m => 
-                m.Groups.Count > 1 ? m.Groups.Cast<Group>().Skip(1).Select(g => g.Value) 
+        return parse(matches.SelectMany(m =>
+                m.Groups.Count > 1 ? m.Groups.Cast<Group>().Skip(1).Select(g => g.Value)
                                    : new[] { m.Value }
             ).ToArray());
     } catch {
@@ -154,7 +154,7 @@ class Usage {
             >  calendars             Show the calendars
 
             > 2) To start working on new problems:
-            > login to https://adventofcode.com, then copy your session cookie, and export 
+            > login to https://adventofcode.com, then copy your session cookie, and export
             > it in your console like this
 
             >  export SESSION=73a37e9a72a...

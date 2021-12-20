@@ -112,7 +112,7 @@ class SplashScreenImpl : SplashScreen {
             Write(0x666666, false, "                                                            23\n                                     ");
             Write(0x666666, false, "                         24\n                                                              25\n       ");
             Write(0x666666, false, "    \n");
-            
+
         Console.ForegroundColor = color;
         Console.WriteLine();
     }

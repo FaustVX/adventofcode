@@ -17,10 +17,10 @@ class Problem {
         foreach (var article in document.QuerySelectorAll("article")) {
             md += UnparseList("", article) + "\n";
 
-            var answerNode = article.NextSibling; 
-            while (answerNode != null && !( 
-                answerNode.NodeName == "P" 
-                && ((IElement)answerNode).QuerySelector("code") != null 
+            var answerNode = article.NextSibling;
+            while (answerNode != null && !(
+                answerNode.NodeName == "P"
+                && ((IElement)answerNode).QuerySelector("code") != null
                 && answerNode.TextContent.Contains("answer"))
             ) {
                 answerNode = answerNode.NextSibling as IElement;
