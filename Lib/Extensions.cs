@@ -34,6 +34,22 @@ public static class Extensions
         tail = span.AsSpan(1);
     }
 
+    [DebuggerStepThrough]
+    public static void Deconstruct<T>(this IEnumerable<T> enumarable, out T head, out IEnumerator<T> tail)
+    {
+        tail = enumarable.GetEnumerator();
+        tail.MoveNext();
+        head = tail.Current;
+    }
+
+    [DebuggerStepThrough]
+    public static void Deconstruct<T>(this IEnumerator<T> enumerator, out T head, out IEnumerator<T> tail)
+    {
+        tail = enumerator;
+        tail.MoveNext();
+        head = tail.Current;
+    }
+
     [MethodImpl(MethodImplOptions.AggressiveOptimization | MethodImplOptions.AggressiveInlining)]
     [DebuggerStepThrough]
     public static T[] ParseToArrayOfT<T>(this string input, Func<string, T> parser)
