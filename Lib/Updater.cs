@@ -25,10 +25,6 @@ class Updater {
             .WithDefaultCookies()
         );
         context.SetCookie(new Url(baseAddress.ToString()), "session=" + session);
-        using var repo = new Git.Repository(".git");
-        var main = repo.Branches["main"] ?? repo.Branches["master"];
-        var branch = repo.Branches[$"problems/Y{year}/D{day}"] ?? repo.Branches.Add($"problems/Y{year}/D{day}", main.Tip, allowOverwrite: true);
-        var today = Git.Commands.Checkout(repo, branch);
 
         var calendar = await DownloadCalendar(context, baseAddress, year);
         var problem = await DownloadProblem(context, baseAddress, year, day);
@@ -49,10 +45,6 @@ class Updater {
         UpdateInput(problem);
         UpdateRefout(problem);
         UpdateSolutionTemplate(problem);
-
-        Git.Commands.Stage(repo, "*");
-        var signature = new Git.Signature(repo.Config.Get<string>("user.name").Value, repo.Config.Get<string>("user.email").Value, DateTime.Now);
-        repo.Commit($"Initial commit for Y{year}D{day}", signature, signature, new());
     }
 
     private Uri GetBaseAddress() {
