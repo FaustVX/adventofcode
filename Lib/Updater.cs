@@ -132,9 +132,19 @@ class Updater {
                     Console.WriteLine();
                     await Update(solver.Year(), solver.Day());
 
-                    Git.Commands.Stage(repo, article.StartsWith('T') /* Is first part ? */ ? "**/input.refout" : "*");
                     var signature = new Git.Signature(repo.Config.Get<string>("user.name").Value, repo.Config.Get<string>("user.email").Value, DateTime.Now);
-                    repo.Commit($"P{solverResult.answers.Length}", signature, signature, new());
+                    if (article.StartsWith('T'))
+                    {
+                        Git.Commands.Stage(repo, "**/input.refout");
+                        repo.Commit($"Solved P1", signature, signature, new());
+                        Git.Commands.Stage(repo, "*");
+                        repo.Commit("P2", signature, signature, new());
+                    }
+                    else
+                    {
+                        Git.Commands.Stage(repo, "*");
+                        repo.Commit($"Solved P2", signature, signature, new());
+                    }
                 } else if (article.StartsWith("That's not the right answer")) {
                     Git.Commands.Stage(repo, "*");
 
