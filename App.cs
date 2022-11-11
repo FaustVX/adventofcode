@@ -19,7 +19,7 @@ var action =
             var today = Git.Commands.Checkout(repo, branch);
             new Updater().Update(year, day).Wait();
 
-            Git.Commands.Stage(repo, "*");
+            Git.Commands.Stage(repo, year.ToString());
             var signature = new Git.Signature(repo.Config.Get<string>("user.name").Value, repo.Config.Get<string>("user.email").Value, DateTime.Now);
             repo.Commit($"Initial commit for Y{year}D{day}", signature, signature, new());
         };
@@ -35,7 +35,7 @@ var action =
                 var today = Git.Commands.Checkout(repo, branch);
                 new Updater().Update(dt.Year, dt.Day).Wait();
 
-                Git.Commands.Stage(repo, "*");
+                Git.Commands.Stage(repo, dt.Year.ToString());
                 var signature = new Git.Signature(repo.Config.Get<string>("user.name").Value, repo.Config.Get<string>("user.email").Value, DateTime.Now);
                 repo.Commit($"Initial commit for Y{dt.Year}D{dt.Day}", signature, signature, new());
             };

@@ -18,12 +18,12 @@
         },
     ],
     "terminal.integrated.env.windows": {
-        "SESSION": "Put Your Cookie Here"
+        "SESSION": "53616c7465645f5f3fe61d6f9f1d03b8f09577321bff855d7f4562b3ef6e1085e6afa2d0413daf5d4120f6776318dce269c360f0dc26d27b9f39ea593bf936af"
     },
     "terminal.integrated.env.linux": {
-        "SESSION": "Put Your Cookie Here"
+        "SESSION": "53616c7465645f5f3fe61d6f9f1d03b8f09577321bff855d7f4562b3ef6e1085e6afa2d0413daf5d4120f6776318dce269c360f0dc26d27b9f39ea593bf936af"
     },
     "terminal.integrated.env.osx": {
-        "SESSION": "Put Your Cookie Here"
+        "SESSION": "53616c7465645f5f3fe61d6f9f1d03b8f09577321bff855d7f4562b3ef6e1085e6afa2d0413daf5d4120f6776318dce269c360f0dc26d27b9f39ea593bf936af"
     },
 }
