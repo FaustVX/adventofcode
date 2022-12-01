@@ -1,24 +1,28 @@
-﻿using System.IO;
-using System.Reflection;
+﻿using System.Reflection;
 
 namespace AdventOfCode;
 
 [AttributeUsage(AttributeTargets.Class)]
-class ProblemName : Attribute {
+class ProblemName : Attribute
+{
     public readonly string Name;
-    public ProblemName(string name) {
+    public ProblemName(string name)
+    {
         Name = name;
     }
 }
 
-interface Solver {
+interface Solver
+{
     object PartOne(string input);
     object PartTwo(string input) => null;
 }
 
-static class SolverExtensions {
+static class SolverExtensions
+{
 
-    public static IEnumerable<object> Solve(this Solver solver, string input) {
+    public static IEnumerable<object> Solve(this Solver solver, string input)
+    {
         yield return solver.PartOne(input);
         var res = solver.PartTwo(input);
         if (res != null) {
@@ -26,7 +30,8 @@ static class SolverExtensions {
         }
     }
 
-    public static string GetName(this Solver solver) {
+    public static string GetName(this Solver solver)
+    {
         return (
             solver
                 .GetType()
@@ -34,38 +39,32 @@ static class SolverExtensions {
         ).Name;
     }
 
-    public static string DayName(this Solver solver) {
-        return $"Day {solver.Day()}";
-    }
+    public static string DayName(this Solver solver)
+    => $"Day {solver.Day()}";
 
-    public static int Year(this Solver solver) {
-        return Year(solver.GetType());
-    }
+    public static int Year(this Solver solver)
+    => Year(solver.GetType());
 
-    public static int Year(Type t) {
-        return int.Parse(t.FullName.Split('.')[1][1..]);
-    }
-    public static int Day(this Solver solver) {
-        return Day(solver.GetType());
-    }
+    public static int Year(Type t)
+    => int.Parse(t.FullName.Split('.')[1][1..]);
 
-    public static int Day(Type t) {
-        return int.Parse(t.FullName.Split('.')[2][3..]);
-    }
+    public static int Day(this Solver solver)
+    => Day(solver.GetType());
 
-    public static string WorkingDir(int year) {
-        return Path.Combine(year.ToString());
-    }
+    public static int Day(Type t)
+    => int.Parse(t.FullName.Split('.')[2][3..]);
 
-    public static string WorkingDir(int year, int day) {
-        return Path.Combine(WorkingDir(year), "Day" + day.ToString("00"));
-    }
+    public static string WorkingDir(int year)
+    => Path.Combine(year.ToString());
 
-    public static string WorkingDir(this Solver solver) {
-        return WorkingDir(solver.Year(), solver.Day());
-    }
+    public static string WorkingDir(int year, int day)
+    => Path.Combine(WorkingDir(year), "Day" + day.ToString("00"));
 
-    public static SplashScreen SplashScreen(this Solver solver) {
+    public static string WorkingDir(this Solver solver)
+    => WorkingDir(solver.Year(), solver.Day());
+
+    public static SplashScreen SplashScreen(this Solver solver)
+    {
         var tsplashScreen = Assembly.GetEntryAssembly().GetTypes()
              .Where(t => t.GetTypeInfo().IsClass && typeof(SplashScreen).IsAssignableFrom(t))
              .Single(t => Year(t) == solver.Year());
@@ -75,9 +74,11 @@ static class SolverExtensions {
 
 record SolverResult(string[] answers, string[] errors);
 
-class Runner {
+class Runner
+{
 
-    private static string GetNormalizedInput(string file) {
+    private static string GetNormalizedInput(string file)
+    {
         var input = File.ReadAllText(file);
         if (input.EndsWith("\r\n"))
             return input[0..^2];
@@ -86,7 +87,8 @@ class Runner {
         return input;
     }
 
-    public static SolverResult RunSolver(Solver solver) {
+    public static SolverResult RunSolver(Solver solver)
+    {
 
         var workingDir = solver.WorkingDir();
         var indent = "    ";
@@ -146,7 +148,8 @@ class Runner {
         return solverResult ?? throw new Exception();
     }
 
-    public static void RunAll(params Solver[] solvers) {
+    public static void RunAll(params Solver[] solvers)
+    {
         var errors = new List<string>();
 
         var lastYear = -1;
@@ -168,10 +171,11 @@ class Runner {
         }
     }
 
-    private static void WriteLine(ConsoleColor color = ConsoleColor.Gray, string text = "") {
-        Write(color, text + "\n");
-    }
-    private static void Write(ConsoleColor color = ConsoleColor.Gray, string text = "") {
+    private static void WriteLine(ConsoleColor color = ConsoleColor.Gray, string text = "")
+    => Write(color, text + "\n");
+
+    private static void Write(ConsoleColor color = ConsoleColor.Gray, string text = "")
+    {
         var c = Console.ForegroundColor;
         Console.ForegroundColor = color;
         Console.Write(text);

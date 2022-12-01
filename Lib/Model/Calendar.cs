@@ -22,26 +22,25 @@ class Calendar {
 
         // anglesharp bug, it doesn't handle external stylehseets well.
         var q = document.CreateElement("style");
-        q.SetInnerText($@"
-            .calendar > span {{
-                color: #333333;
-            }}
-            .calendar > a {{
-                text-decoration: none;
-                color: #666666;
-                outline: none;
-                cursor: default;
-            }}
+        q.SetInnerText("""
+    .calendar > span {
+        color: #333333;
+    }
+    .calendar > a {
+        text-decoration: none;
+        color: #666666;
+        outline: none;
+        cursor: default;
+    }
 
-            .calendar .calendar-day {{ color: #666666; }}
-            .calendar a .calendar-day {{ color: #cccccc; }}
-            .calendar a .calendar-mark-complete,
-            .calendar a .calendar-mark-verycomplete {{visibility: hidden;}}
-            .calendar a.calendar-complete     .calendar-mark-complete,
-            .calendar a.calendar-verycomplete .calendar-mark-complete {{ visibility: visible; color: #ffff66; }}
-            .calendar a.calendar-verycomplete .calendar-mark-verycomplete {{ visibility: visible; color: #ffff66; }}
-
-        ");
+    .calendar .calendar-day { color: #666666; }
+    .calendar a .calendar-day { color: #cccccc; }
+    .calendar a .calendar-mark-complete,
+    .calendar a .calendar-mark-verycomplete {visibility: hidden;}
+    .calendar a.calendar-complete     .calendar-mark-complete,
+    .calendar a.calendar-verycomplete .calendar-mark-complete { visibility: visible; color: #ffff66; }
+    .calendar a.calendar-verycomplete .calendar-mark-verycomplete { visibility: visible; color: #ffff66; }
+""");
 
         document.Head.Append(q);
 
@@ -174,17 +173,18 @@ class Calendar {
         var sb = new StringBuilder();
         var height = 0;
         var width = 0;
-        sb.AppendLine($@"
-                <style>
-                    @font-face {{
-                        font-family: ""SourceCodePro"";
-                        src: url(""data:application/font-woff;charset=utf-8;base64,{font}"");
-                    }}
-                    text {{
-                         font-family: SourceCodePro;
-                         font-size: 13.2px;
-                    }}
-                </style>");
+        sb.AppendLine("""
+<style>
+    @font-face {
+        font-family: ""SourceCodePro"";
+        src: url(""data:application/font-woff;charset=utf-8;base64,{font}"");
+    }
+    text {
+            font-family: SourceCodePro;
+            font-size: 13.2px;
+    }
+</style>
+""");
         sb.AppendLine(@"<text xml:space=""preserve"">");
         foreach (var line in Lines) {
             sb.Append($@"<tspan x=""0"" dy=""1.2em"">");
@@ -203,8 +203,6 @@ class Calendar {
             height++;
         }
         sb.AppendLine("</text>");
-        return $@"<svg viewBox=""-16 -16 {(width+4) * 8} {(height+2) *16}"" style=""background-color:black"" xmlns=""http://www.w3.org/2000/svg"">
-            {sb}
-        </svg>";
+        return $"""<svg viewBox="-16 -16 {(width+4) * 8} {(height+2) *16}" style="background-color:black" xmlns="http://www.w3.org/2000/svg">{sb}</svg>""";
     }
 }
