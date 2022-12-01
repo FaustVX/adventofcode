@@ -5,10 +5,14 @@ class Solution : Solver
 {
 
     public object PartOne(string input)
-        => input.Split2Lines().Select(static elf => elf.Split().Select(int.Parse).Aggregate(0ul, static (acc, v) => acc + (ulong)v)).Max();
+        => input.Split2Lines()
+            .Select(static elf => elf.Split().Select(int.Parse).Sum())
+            .Max();
 
     public object PartTwo(string input)
-    {
-        return 0;
-    }
+        => input.Split2Lines()
+            .Select(static elf => elf.Split().Select(int.Parse).Sum())
+            .OrderDescending()
+            .Take(3)
+            .Sum();
 }
