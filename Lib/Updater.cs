@@ -16,16 +16,8 @@ class Updater {
 
     public async Task Update(int year, int day) {
 
-        var session = GetSession();
-        var baseAddress = new Uri("https://adventofcode.com/");
-
-        var context = BrowsingContext.New(Configuration.Default
-            .WithDefaultLoader()
-            .WithCss()
-            .WithDefaultCookies()
-        );
-        context.SetCookie(new Url(baseAddress.ToString()), "session=" + session);
-
+        var baseAddress = GetBaseAddress();
+        var context = GetContext();
         var calendar = await DownloadCalendar(context, baseAddress, year);
         var problem = await DownloadProblem(context, baseAddress, year, day);
 
@@ -60,6 +52,7 @@ class Updater {
     private IBrowsingContext GetContext() {
 
         var context = BrowsingContext.New(Configuration.Default
+            .With(new DefaultHttpRequester("github.com/FaustVX/adventofcode"))
             .WithDefaultLoader()
             .WithCss()
             .WithDefaultCookies()
