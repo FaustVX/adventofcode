@@ -5,9 +5,7 @@ class Solution : Solver
 {
 
     public object PartOne(string input)
-    {
-        return 0;
-    }
+        => input.Split2Lines().Select(static elf => elf.Split().Select(int.Parse).Aggregate(0ul, static (acc, v) => acc + (ulong)v)).Max();
 
     public object PartTwo(string input)
     {
