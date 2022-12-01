@@ -2,30 +2,30 @@ using AdventOfCode.Model;
 
 namespace AdventOfCode.Generator;
 
-class SplashScreenGenerator {
-    public string Generate(Calendar calendar) {
+static class SplashScreenGenerator {
+    public static string Generate(Calendar calendar) {
         string calendarPrinter = CalendarPrinter(calendar);
-        return $@"
-            |namespace AdventOfCode.Y{calendar.Year};
-            |
-            |class SplashScreenImpl : SplashScreen {{
-            |
-            |    public void Show() {{
-            |
-            |        var color = Console.ForegroundColor;
-            |        {calendarPrinter.Indent(12)}
-            |        Console.ForegroundColor = color;
-            |        Console.WriteLine();
-            |    }}
-            |
-            |   private static void Write(int rgb, bool bold, string text){{
-            |       Console.Write($""\u001b[38;2;{{(rgb>>16)&255}};{{(rgb>>8)&255}};{{rgb&255}}{{(bold ? "";1"" : """")}}m{{text}}"");
-            |   }}
-            |}}
-            |".StripMargin();
+        return $$"""
+namespace AdventOfCode.Y{{calendar.Year}};
+
+class SplashScreenImpl : SplashScreen {
+
+    public void Show() {
+
+        var color = Console.ForegroundColor;
+        {{calendarPrinter.Indent(12)}}
+        Console.ForegroundColor = color;
+        Console.WriteLine();
     }
 
-    private string CalendarPrinter(Calendar calendar) {
+    private static void Write(int rgb, bool bold, string text){
+        Console.Write($"\u001b[38;2;{(rgb>>16)&255};{(rgb>>8)&255};{rgb&255}{(bold ? ";1" : "")}m{text}");
+    }
+}
+""";
+    }
+
+    private static string CalendarPrinter(Calendar calendar) {
 
         var lines = calendar.Lines.Select(line =>
             new[] { new CalendarToken { Text = "           " } }.Concat(line)).ToList();
@@ -41,7 +41,7 @@ class SplashScreenGenerator {
         return bw.GetContent();
     }
 
-    bool Matches(string[] selector, object x){
+    private static bool Matches(string[] selector, object x){
         return true;
     }
 
