@@ -5,14 +5,42 @@ class Solution : Solver
 {
 
     public object PartOne(string input)
-        => input.Split2Lines()
-            .Select(static elf => elf.Split().Select(int.Parse).Sum())
-            .Max();
+    {
+        var max = 0;
+        var current = 0;
+        foreach (var line in input.SplitLine())
+        {
+            if (line == "")
+            {
+                if (current > max)
+                    max = current;
+                current = 0;
+                continue;
+            }
+            current += int.Parse(line);
+        }
+        return max;
+    }
 
     public object PartTwo(string input)
-        => input.Split2Lines()
-            .Select(static elf => elf.Split().Select(int.Parse).Sum())
-            .OrderDescending()
-            .Take(3)
-            .Sum();
+    {
+        var (max1, max2, max3) = (0, 0, 0);
+        var current = 0;
+        foreach (var line in input.SplitLine())
+        {
+            if (line == "")
+            {
+                if (current > max1)
+                    (current, max1) = (max1, current);
+                if (current > max2)
+                    (current, max2) = (max2, current);
+                if (current > max3)
+                    max3 = current;
+                current = 0;
+                continue;
+            }
+            current += int.Parse(line);
+        }
+        return max1 + max2 + max3;
+    }
 }
