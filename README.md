@@ -1,9 +1,9 @@
 
-# Advent of Code (2020-2021)
+# Advent of Code (2020-2022)
 C# solutions to the Advent of Code problems.
 Check out https://adventofcode.com.
 
-<a href="https://adventofcode.com"><img src="2021/calendar.svg" width="80%" /></a>
+<a href="https://adventofcode.com"><img src="2022/calendar.svg" width="80%" /></a>
 
 The goal is to keep my C# knowledge fresh and to follow the latest changes of the language.
 
@@ -53,7 +53,7 @@ Usage: dotnet run [arguments]
  calendars             Show the calendars
 
 2) To start working on new problems:
-login to https://adventofcode.com, then copy your session cookie, and export 
+login to https://adventofcode.com, then copy your session cookie, and export
 it in your console like this
 
  export SESSION=73a37e9a72a...
@@ -75,10 +75,10 @@ set up your SESSION variable as above.
 
 ## Working in Visual Studio Code
 If you prefer, you can work directly in VSCode as well. 
- 
- Open the command Palette (⇧ ⌘ P), select `Tasks: Run Task` then e.g. `update today`.
 
- Work on part 1. Check the solution with the `upload today` task. Continue with part 2.
+Open the command Palette (⇧ ⌘ P), select `Tasks: Run Task` then e.g. `update today`.
 
- **Note:** this feature relies on the "Memento Inputs" extension to store your session cookie, you need 
- to set it up in advance from the Command Palette with `Install Extensions`.
+Work on part 1. Check the solution with the `upload today` task. Continue with part 2.
+
+**Note:** this feature relies on the "Memento Inputs" extension to store your session cookie, you need 
+to set it up in advance from the Command Palette with `Install Extensions`.
