@@ -10,7 +10,6 @@ namespace AdventOfCode.Y{{problem.Year}}.Day{{problem.Day:00}};
 [ProblemName("{{problem.Title}}")]
 class Solution : Solver
 {
-
     public object PartOne(string input)
     {
         return 0;
