@@ -5,42 +5,30 @@ class Solution : Solver
 {
 
     public object PartOne(string input)
-    {
-        var max = 0;
-        var current = 0;
-        foreach (var line in input.SplitLine())
-        {
-            if (line == "")
-            {
-                if (current > max)
-                    max = current;
-                current = 0;
-                continue;
-            }
-            current += int.Parse(line);
-        }
-        return max;
-    }
+        => GetFirsts(1, input);
 
     public object PartTwo(string input)
+        => GetFirsts(3, input);
+
+    private static int GetFirsts(int count, string input)
     {
-        var (max1, max2, max3) = (0, 0, 0);
+        Span<int> firsts = stackalloc int[count];
         var current = 0;
-        foreach (var line in input.SplitLine())
+        foreach (var line in (input.TrimEnd() + "\n\n").SplitLine())
         {
             if (line == "")
             {
-                if (current > max1)
-                    (current, max1) = (max1, current);
-                if (current > max2)
-                    (current, max2) = (max2, current);
-                if (current > max3)
-                    max3 = current;
+                for (int i = 0; i < count; i++)
+                    if (current > firsts[i])
+                        (current, firsts[i]) = (firsts[i], current);
                 current = 0;
                 continue;
             }
             current += int.Parse(line);
         }
-        return max1 + max2 + max3;
+        var sum = 0;
+        foreach (var first in firsts)
+            sum += first;
+        return sum;
     }
 }
