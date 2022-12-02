@@ -40,12 +40,7 @@ class Solution : Solver
                 'C' => 2,
             };
 
-            var draw = rule[0] switch
-            {
-                'A' => 1,
-                'B' => 2,
-                'C' => 3,
-            };
+            var draw = rule[0] - 'A' + 1;
 
             var win = rule[0] switch
             {
@@ -53,11 +48,11 @@ class Solution : Solver
                 'B' => 3,
                 'C' => 1,
             };
-            sum += rule switch
+            sum += rule[2] switch
             {
-                ['A', _, 'X'] or ['B', _, 'X'] or ['C', _, 'X'] => 0 + loose,
-                ['A', _, 'Y'] or ['B', _, 'Y'] or ['C', _, 'Y'] => 3 + draw,
-                ['A', _, 'Z'] or ['B', _, 'Z'] or ['C', _, 'Z'] => 6 + win,
+                'X' => 0 + loose,
+                'Y' => 3 + draw,
+                'Z' => 6 + win,
             };
         }
         return sum;
