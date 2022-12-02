@@ -9,7 +9,7 @@ static class ProjectReadmeGenerator {
 C# solutions to the Advent of Code problems.
 Check out https://adventofcode.com.
 
-<a href=""https://adventofcode.com""><img src=""{lastYear}/calendar.svg"" width=""80%"" /></a>
+<a href="https://adventofcode.com"><img src="{lastYear}/calendar.svg" width="80%" /></a>
 
 The goal is to keep my C# knowledge fresh and to follow the latest changes of the language.
 
@@ -55,7 +55,7 @@ Open the command Palette (⇧ ⌘ P or Ctrl P), select `Tasks: Run Task` then e.
 
 Work on part 1. Check the solution with the `upload today` task. Continue with part 2.
 
-**Note:** this feature relies on the ""Memento Inputs"" extension to store your session cookie, you need
+**Note:** this feature relies on the "Memento Inputs" extension to store your session cookie, you need
 to set it up in advance from the Command Palette with `Install Extensions`.
 """;
 }
@@ -66,7 +66,7 @@ static class ReadmeGeneratorForYear {
 # Advent of Code ({calendar.Year})
 Check out https://adventofcode.com/{calendar.Year}.
 
-<a href=""https://adventofcode.com/{calendar.Year}""><img src=""calendar.svg"" width=""80%"" /></a>
+<a href="https://adventofcode.com/{calendar.Year}"><img src="calendar.svg" width="80%" /></a>
 
 """;
 }
