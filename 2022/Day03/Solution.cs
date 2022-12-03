@@ -11,7 +11,16 @@ class Solution : Solver
 
     public object PartTwo(string input)
     {
-        return 0;
+        var sum = 0;
+        var lines = input.SplitLine();
+        for (var i = 0; i < lines.Length; i += 3)
+            foreach (var item in lines[i])
+                if (lines[i+1].Contains(item) && lines[i+2].Contains(item))
+                {
+                    sum += GetItemPriority(item);
+                    break;
+                }
+        return sum;
     }
 
     private static char FindCommonItem(string sack)
