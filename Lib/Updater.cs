@@ -8,10 +8,10 @@ using Git = LibGit2Sharp;
 
 namespace AdventOfCode;
 
-class Updater
+static class Updater
 {
 
-    public async Task UpdateWithGit(int year, int day)
+    public static async Task UpdateWithGit(int year, int day)
     {
         using var repo = new Git.Repository(".git");
         var main = repo.Branches["main"] ?? repo.Branches["master"];
@@ -26,7 +26,7 @@ class Updater
         repo.Tags.Add($"Y{year}D{day}P1", commit);
     }
 
-    public async Task Update(int year, int day)
+    public static async Task Update(int year, int day)
     {
         var session = GetSession();
         var baseAddress = new Uri("https://adventofcode.com/");
@@ -60,16 +60,16 @@ class Updater
         UpdateSolutionTemplate(problem);
     }
 
-    private Uri GetBaseAddress()
+    private static Uri GetBaseAddress()
     => new Uri("https://adventofcode.com");
 
-    private string GetSession()
+    private static string GetSession()
     {
         if (!Environment.GetEnvironmentVariables().Contains("SESSION"))
             throw new AocCommuncationError("Specify SESSION environment variable", null);
         return Environment.GetEnvironmentVariable("SESSION");
     }
-    private IBrowsingContext GetContext()
+    private static IBrowsingContext GetContext()
     {
         var context = BrowsingContext.New(Configuration.Default
             .WithDefaultLoader()
@@ -80,7 +80,7 @@ class Updater
         return context;
     }
 
-    public async Task Upload(Solver solver)
+    public static async Task Upload(Solver solver)
     {
 
         var color = Console.ForegroundColor;
@@ -201,16 +201,16 @@ class Updater
         }
     }
 
-    void WriteFile(string file, string content)
+    private static void WriteFile(string file, string content)
     {
         Console.WriteLine($"Writing {file}");
         File.WriteAllText(file, content);
     }
 
-    string Dir(int year, int day)
+    private static string Dir(int year, int day)
     => SolverExtensions.WorkingDir(year, day);
 
-    async Task<Calendar> DownloadCalendar(IBrowsingContext context, Uri baseUri, int year)
+    private static async Task<Calendar> DownloadCalendar(IBrowsingContext context, Uri baseUri, int year)
     {
         var document = await context.OpenAsync(baseUri.ToString() + year);
         if (document.StatusCode != HttpStatusCode.OK)
@@ -218,7 +218,8 @@ class Updater
         return Calendar.Parse(year, document);
     }
 
-    async Task<Problem> DownloadProblem(IBrowsingContext context, Uri baseUri, int year, int day){
+    private static async Task<Problem> DownloadProblem(IBrowsingContext context, Uri baseUri, int year, int day)
+    {
         var uri = baseUri + $"{year}/day/{day}";
         var color = Console.ForegroundColor;
         Console.ForegroundColor = ConsoleColor.Green;
@@ -235,13 +236,13 @@ class Updater
         );
     }
 
-    void UpdateReadmeForDay(Problem problem)
+    private static void UpdateReadmeForDay(Problem problem)
     {
         var file = Path.Combine(Dir(problem.Year, problem.Day), "README.md");
         WriteFile(file, problem.ContentMd);
     }
 
-    void UpdateSolutionTemplate(Problem problem)
+    private static void UpdateSolutionTemplate(Problem problem)
     {
         var file = Path.Combine(Dir(problem.Year, problem.Day), "Solution.cs");
         if (!File.Exists(file)) {
@@ -249,13 +250,13 @@ class Updater
         }
     }
 
-    void UpdateProjectReadme(int firstYear, int lastYear)
+    private static void UpdateProjectReadme(int firstYear, int lastYear)
     {
         var file = Path.Combine("README.md");
         WriteFile(file, ProjectReadmeGenerator.Generate(firstYear, lastYear));
     }
 
-    void UpdateReadmeForYear(Calendar calendar)
+    private static void UpdateReadmeForYear(Calendar calendar)
     {
         var file = Path.Combine(SolverExtensions.WorkingDir(calendar.Year), "README.md");
         WriteFile(file, ReadmeGeneratorForYear.Generate(calendar));
@@ -264,13 +265,13 @@ class Updater
         WriteFile(svg, calendar.ToSvg());
     }
 
-    void UpdateSplashScreen(Calendar calendar)
+    private static void UpdateSplashScreen(Calendar calendar)
     {
         var file = Path.Combine(SolverExtensions.WorkingDir(calendar.Year), "SplashScreen.cs");
         WriteFile(file, SplashScreenGenerator.Generate(calendar));
     }
 
-    void UpdateInput(Problem problem)
+    private static void UpdateInput(Problem problem)
     {
         var file = Path.Combine(Dir(problem.Year, problem.Day), "input.in");
         WriteFile(file, problem.Input);
@@ -283,7 +284,7 @@ class Updater
         WriteFile(test, "");
     }
 
-    void UpdateRefout(Problem problem)
+    private static void UpdateRefout(Problem problem)
     {
         var file = Path.Combine(Dir(problem.Year, problem.Day), "input.refout");
         if (problem.Answers.Any())

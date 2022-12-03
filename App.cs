@@ -10,12 +10,12 @@ var action =
     Command(args, Args("update", "([0-9]+)/([0-9]+)"), m => {
         var year = int.Parse(m[1]);
         var day = int.Parse(m[2]);
-        return () => new Updater().UpdateWithGit(year, day).Wait();
+        return Updater.UpdateWithGit(year, day).Wait;
     }) ??
     Command(args, Args("update", "today"), m => {
         var dt = DateTime.UtcNow.AddHours(-5);
         if (dt is { Month: 12, Day: >= 1 and <= 25 }) {
-            return () => new Updater().UpdateWithGit(dt.Year, dt.Day).Wait();
+            return Updater.UpdateWithGit(dt.Year, dt.Day).Wait;
         } else {
             throw new AocCommuncationError("Event is not active. This option works in Dec 1-25 only)");
         }
@@ -28,7 +28,7 @@ var action =
                 SolverExtensions.Year(tsolver) == year &&
                 SolverExtensions.Day(tsolver) == day);
 
-            new Updater().Upload(GetSolvers(tsolver)[0]).Wait();
+            Updater.Upload(GetSolvers(tsolver)[0]).Wait();
         };
     }) ??
     Command(args, Args("upload", "today"), m => {
@@ -39,8 +39,7 @@ var action =
                 SolverExtensions.Year(tsolver) == dt.Year &&
                 SolverExtensions.Day(tsolver) == dt.Day);
 
-            return () =>
-                new Updater().Upload(GetSolvers(tsolver)[0]).Wait();
+            return Updater.Upload(GetSolvers(tsolver)[0]).Wait;
 
         } else {
             throw new AocCommuncationError("Event is not active. This option works in Dec 1-25 only)");
