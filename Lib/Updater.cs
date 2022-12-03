@@ -160,7 +160,6 @@ static class Updater
                         var initial = (Git.Commit)tag.Target;
                         var duration = signature.When - initial.Committer.When;
                         Git.Commands.Stage(repo, "**/input.refout");
-                        repo.Tags.Remove(tag);
                         var commit = repo.Commit($"Solved P1 in {duration:h\\:mm\\:ss}", signature, signature, new());
                         repo.Tags.Add($"Y{problem.Year}D{problem.Day}P2", commit);
                         Git.Commands.Stage(repo, "*");
@@ -173,6 +172,23 @@ static class Updater
                         var duration = signature.When - initial.Committer.When;
                         Git.Commands.Stage(repo, "*");
                         repo.Commit($"Solved P2 in {duration:h\\:mm\\:ss}", signature, signature, new());
+                        repo.Tags.Remove(tag);
+                        var branch = repo.Head;
+                        var main = repo.Branches["main"] ?? repo.Branches["master"];
+                        Git.Commands.Checkout(repo, main);
+                        var merge = repo.Merge(branch, signature, new()
+                            {
+                                FastForwardStrategy = Git.FastForwardStrategy.NoFastForward,
+                                CommitOnSuccess = false,
+                            });
+                        tag = repo.Tags[$"Y{problem.Year}D{problem.Day}P1"];
+                        initial = (Git.Commit)tag.Target;
+                        duration = signature.When - initial.Committer.When;
+                        repo.Commit($"Solved Y{problem.Year}D{problem.Day} in {duration:h\\:mm\\:ss}", signature, signature, new()
+                            {
+                                AllowEmptyCommit = true
+                            });
+                        Git.Commands.Checkout(repo, branch);
                         repo.Tags.Remove(tag);
                     }
                 }
