@@ -21,7 +21,8 @@ var action =
 
             Git.Commands.Stage(repo, year.ToString());
             var signature = new Git.Signature(repo.Config.Get<string>("user.name").Value, repo.Config.Get<string>("user.email").Value, DateTime.Now);
-            repo.Commit($"Initial commit for Y{year}D{day}", signature, signature, new());
+            var commit = repo.Commit($"Initial commit for Y{year}D{day}", signature, signature, new());
+            repo.Tags.Add($"Y{year}D{day}P1", commit);
         };
     }) ??
     Command(args, Args("update", "today"), m => {
@@ -37,7 +38,8 @@ var action =
 
                 Git.Commands.Stage(repo, dt.Year.ToString());
                 var signature = new Git.Signature(repo.Config.Get<string>("user.name").Value, repo.Config.Get<string>("user.email").Value, DateTime.Now);
-                repo.Commit($"Initial commit for Y{dt.Year}D{dt.Day}", signature, signature, new());
+                var commit = repo.Commit($"Initial commit for Y{dt.Year}D{dt.Day}", signature, signature, new());
+                repo.Tags.Add($"Y{dt.Year}D{dt.Day}P1", commit);
             };
         } else {
             throw new AocCommuncationError("Event is not active. This option works in Dec 1-25 only)");

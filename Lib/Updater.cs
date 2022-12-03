@@ -142,15 +142,24 @@ class Updater
                     var signature = new Git.Signature(repo.Config.Get<string>("user.name").Value, repo.Config.Get<string>("user.email").Value, DateTime.Now);
                     if (article.StartsWith('T'))
                     {
+                        var tag = repo.Tags[$"Y{problem.Year}D{problem.Day}P1"];
+                        var initial = (Git.Commit)tag.Target;
+                        var duration = signature.When - initial.Committer.When;
                         Git.Commands.Stage(repo, "**/input.refout");
-                        repo.Commit($"Solved P1", signature, signature, new());
+                        repo.Tags.Remove(tag);
+                        var commit = repo.Commit($"Solved P1 in {duration:h\\:mm\\:ss}", signature, signature, new());
+                        repo.Tags.Add($"Y{problem.Year}D{problem.Day}P2", commit);
                         Git.Commands.Stage(repo, "*");
                         repo.Commit("P2", signature, signature, new());
                     }
                     else
                     {
+                        var tag = repo.Tags[$"Y{problem.Year}D{problem.Day}P2"];
+                        var initial = (Git.Commit)tag.Target;
+                        var duration = signature.When - initial.Committer.When;
                         Git.Commands.Stage(repo, "*");
-                        repo.Commit($"Solved P2", signature, signature, new());
+                        repo.Commit($"Solved P2 in {duration:h\\:mm\\:ss}", signature, signature, new());
+                        repo.Tags.Remove(tag);
                     }
                 }
                 else if (article.StartsWith("That's not the right answer"))
