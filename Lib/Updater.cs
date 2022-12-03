@@ -154,7 +154,7 @@ class Updater
                     await Update(solver.Year(), solver.Day());
 
                     var signature = new Git.Signature(repo.Config.Get<string>("user.name").Value, repo.Config.Get<string>("user.email").Value, DateTime.Now);
-                    if (article.StartsWith('T'))
+                    if (problem.Answers.Length == 1)
                     {
                         var tag = repo.Tags[$"Y{problem.Year}D{problem.Day}P1"];
                         var initial = (Git.Commit)tag.Target;
