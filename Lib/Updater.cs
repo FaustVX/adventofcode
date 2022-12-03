@@ -11,9 +11,23 @@ namespace AdventOfCode;
 class Updater
 {
 
+    public async Task UpdateWithGit(int year, int day)
+    {
+        using var repo = new Git.Repository(".git");
+        var main = repo.Branches["main"] ?? repo.Branches["master"];
+        var branch = repo.Branches[$"problems/Y{year}/D{day}"] ?? repo.Branches.Add($"problems/Y{year}/D{day}", main.Tip, allowOverwrite: true);
+        var today = Git.Commands.Checkout(repo, branch);
+
+        await Update(year, day);
+
+        Git.Commands.Stage(repo, year.ToString());
+        var signature = new Git.Signature(repo.Config.Get<string>("user.name").Value, repo.Config.Get<string>("user.email").Value, DateTime.Now);
+        var commit = repo.Commit($"Initial commit for Y{year}D{day}", signature, signature, new());
+        repo.Tags.Add($"Y{year}D{day}P1", commit);
+    }
+
     public async Task Update(int year, int day)
     {
-
         var session = GetSession();
         var baseAddress = new Uri("https://adventofcode.com/");
 

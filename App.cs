@@ -1,6 +1,5 @@
 using System.Reflection;
 using AdventOfCode;
-using Git = LibGit2Sharp;
 
 var tsolvers = Assembly.GetEntryAssembly()!.GetTypes()
     .Where(t => t.GetTypeInfo().IsClass && typeof(Solver).IsAssignableFrom(t))
@@ -11,36 +10,12 @@ var action =
     Command(args, Args("update", "([0-9]+)/([0-9]+)"), m => {
         var year = int.Parse(m[1]);
         var day = int.Parse(m[2]);
-        return () =>
-        {
-            using var repo = new Git.Repository(".git");
-            var main = repo.Branches["main"] ?? repo.Branches["master"];
-            var branch = repo.Branches[$"problems/Y{year}/D{day}"] ?? repo.Branches.Add($"problems/Y{year}/D{day}", main.Tip, allowOverwrite: true);
-            var today = Git.Commands.Checkout(repo, branch);
-            new Updater().Update(year, day).Wait();
-
-            Git.Commands.Stage(repo, year.ToString());
-            var signature = new Git.Signature(repo.Config.Get<string>("user.name").Value, repo.Config.Get<string>("user.email").Value, DateTime.Now);
-            var commit = repo.Commit($"Initial commit for Y{year}D{day}", signature, signature, new());
-            repo.Tags.Add($"Y{year}D{day}P1", commit);
-        };
+        return () => new Updater().UpdateWithGit(year, day).Wait();
     }) ??
     Command(args, Args("update", "today"), m => {
         var dt = DateTime.UtcNow.AddHours(-5);
         if (dt is { Month: 12, Day: >= 1 and <= 25 }) {
-            return () =>
-            {
-                using var repo = new Git.Repository(".git");
-                var main = repo.Branches["main"] ?? repo.Branches["master"];
-                var branch = repo.Branches[$"problems/Y{dt.Year}/D{dt.Day}"] ?? repo.Branches.Add($"problems/Y{dt.Year}/D{dt.Day}", main.Tip, allowOverwrite: true);
-                var today = Git.Commands.Checkout(repo, branch);
-                new Updater().Update(dt.Year, dt.Day).Wait();
-
-                Git.Commands.Stage(repo, dt.Year.ToString());
-                var signature = new Git.Signature(repo.Config.Get<string>("user.name").Value, repo.Config.Get<string>("user.email").Value, DateTime.Now);
-                var commit = repo.Commit($"Initial commit for Y{dt.Year}D{dt.Day}", signature, signature, new());
-                repo.Tags.Add($"Y{dt.Year}D{dt.Day}P1", commit);
-            };
+            return () => new Updater().UpdateWithGit(dt.Year, dt.Day).Wait();
         } else {
             throw new AocCommuncationError("Event is not active. This option works in Dec 1-25 only)");
         }
