@@ -18,6 +18,12 @@ interface Solver
     object PartTwo(string input) => null;
 }
 
+interface IDisplay
+{
+    void DisplayPartOne(string input);
+    void DisplayPartTwo(string input);
+}
+
 static class SolverExtensions
 {
 
@@ -148,6 +154,35 @@ class Runner
         return solverResult ?? throw new Exception();
     }
 
+    public static void DisplaySolver(IDisplay display)
+    {
+        var workingDir = (display as Solver)?.WorkingDir();
+        if (workingDir is null)
+            return;
+        foreach (var dir in new[] { Path.Combine(workingDir, "test"), workingDir })
+        {
+            if (!Directory.Exists(dir))
+                continue;
+            var searchOption = dir.EndsWith("test")
+                ? SearchOption.AllDirectories
+                : SearchOption.TopDirectoryOnly;
+            foreach (var file in Directory.EnumerateFiles(dir, "*.in", searchOption).OrderBy(file => file))
+            {
+                var input = GetNormalizedInput(file);
+
+                Console.WriteLine("Press any key to start P1 ...");
+                Console.ReadLine();
+                Console.Clear();
+                display.DisplayPartOne(input);
+
+                Console.WriteLine("Press any key to continue to P2 ...");
+                Console.ReadLine();
+                Console.Clear();
+                display.DisplayPartTwo(input);
+            }
+        }
+    }
+
     public static void RunAll(params Solver[] solvers)
     {
         var errors = new List<string>();
@@ -169,6 +204,17 @@ class Runner
         if (errors.Any()) {
             WriteLine(ConsoleColor.Red, "Errors:\n" + string.Join("\n", errors));
         }
+    }
+
+    public static void DisplayAll(params IDisplay[] displays)
+    {
+        foreach (var solver in displays)
+        {
+            DisplaySolver(solver);
+            WriteLine();
+        }
+
+        WriteLine();
     }
 
     private static void WriteLine(ConsoleColor color = ConsoleColor.Gray, string text = "")

@@ -8,7 +8,7 @@ static class SolutionTemplateGenerator {
 namespace AdventOfCode.Y{{problem.Year}}.Day{{problem.Day:00}};
 
 [ProblemName("{{problem.Title}}")]
-class Solution : Solver
+class Solution : Solver //, IDisplay
 {
     public object PartOne(string input)
     {

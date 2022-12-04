@@ -24,4 +24,16 @@ public static class StringExtensions {
     [DebuggerStepThrough]
     public static string[] Split2Lines(this string st)
         => Regex.Split(st, "\r?\n\r?\n");
+
+    [DebuggerStepThrough]
+    public static void TypeString(this StringBuilder input, TimeSpan maxTotalDuration)
+    {
+        var offset = maxTotalDuration / input.Length;
+        foreach (var chunk in input.GetChunks())
+            foreach (var letter in chunk.Span)
+            {
+                Thread.Sleep(Random.Shared.NextDouble() * offset);
+                Console.Write(letter);
+            }
+    }
 }

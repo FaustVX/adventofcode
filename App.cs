@@ -45,6 +45,33 @@ var action =
             throw new AocCommuncationError("Event is not active. This option works in Dec 1-25 only)");
         }
     }) ??
+    Command(args, Args("display", "([0-9]+)/([0-9]+)"), m => {
+        var year = int.Parse(m[1]);
+        var day = int.Parse(m[2]);
+        return () => {
+            var tsolver = tsolvers.FirstOrDefault(tsolver =>
+                tsolver.IsAssignableTo(typeof(IDisplay)) &&
+                SolverExtensions.Year(tsolver) == year &&
+                SolverExtensions.Day(tsolver) == day);
+
+            Runner.DisplayAll(GetDisplays(tsolver));
+        };
+    }) ??
+    Command(args, Args("display", "today"), m => {
+        var dt = DateTime.UtcNow.AddHours(-5);
+        if (dt is { Month: 12, Day: >= 1 and <= 25 }) {
+
+            var tsolver = tsolvers.First(tsolver =>
+                tsolver.IsAssignableTo(typeof(IDisplay)) &&
+                SolverExtensions.Year(tsolver) == dt.Year &&
+                SolverExtensions.Day(tsolver) == dt.Day);
+
+            return () => Runner.DisplayAll(GetDisplays(tsolver));
+
+        } else {
+            throw new AocCommuncationError("Event is not active. This option works in Dec 1-25 only)");
+        }
+    }) ??
     Command(args, Args("([0-9]+)/([0-9]+)"), m => {
         var year = int.Parse(m[0]);
         var day = int.Parse(m[1]);
@@ -114,6 +141,10 @@ try {
 
 Solver[] GetSolvers(params Type[] tsolver) {
     return tsolver.Select(t => Activator.CreateInstance(t) as Solver).ToArray();
+}
+
+IDisplay[] GetDisplays(params Type[] tdisplay) {
+    return tdisplay.Select(t => Activator.CreateInstance(t) as IDisplay).ToArray();
 }
 
 Action Command(string[] args, string[] regexes, Func<string[], Action> parse) {

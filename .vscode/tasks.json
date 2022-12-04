@@ -77,6 +77,26 @@
             ],
             "problemMatcher": []
         },
+        {
+            "label": "display",
+            "command": "dotnet",
+            "args": [
+                "run",
+                "display",
+                "${input:year}/${input:day}"
+            ],
+            "problemMatcher": []
+        },
+        {
+            "label": "display today",
+            "command": "dotnet",
+            "args": [
+                "run",
+                "display",
+                "today"
+            ],
+            "problemMatcher": []
+        },
     ],
     "inputs": [
         {
