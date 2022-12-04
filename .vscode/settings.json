@@ -17,13 +17,4 @@
             "codicon": "repo-push"
         },
     ],
-    "terminal.integrated.env.windows": {
-        "SESSION": "53616c7465645f5fd8323c694f53fee8f5e51f2d84799276f639717eefcd760027598ffd2afd7aa557d38450ffa2c2e2c2a5f53c311aa7d8304549bbc9826738"
-    },
-    "terminal.integrated.env.linux": {
-        "SESSION": "53616c7465645f5fd8323c694f53fee8f5e51f2d84799276f639717eefcd760027598ffd2afd7aa557d38450ffa2c2e2c2a5f53c311aa7d8304549bbc9826738"
-    },
-    "terminal.integrated.env.osx": {
-        "SESSION": "53616c7465645f5fd8323c694f53fee8f5e51f2d84799276f639717eefcd760027598ffd2afd7aa557d38450ffa2c2e2c2a5f53c311aa7d8304549bbc9826738"
-    },
 }
