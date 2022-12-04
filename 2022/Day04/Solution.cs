@@ -18,6 +18,17 @@ class Solution : Solver //, IDisplay
 
     public object PartTwo(string input)
     {
-        return 0;
+        var count = 0;
+        foreach (var assigment in input.SplitLine())
+        {
+            var sections = assigment.Split(',').SelectMany(static section => section.Split('-').Select(int.Parse)).ToArray();
+            var (startA, endA, startB, endB) = (sections[0], sections[1], sections[2], sections[3]);
+            if ((startA <= startB && startB <= endA)
+                || (startA <= endB && endB <= endA)
+                || (startB <= startA && startA <= endB)
+                || (startB <= endA && endA <= endB))
+                count++;
+        }
+        return count;
     }
 }
