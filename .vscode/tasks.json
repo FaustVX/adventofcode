@@ -9,18 +9,27 @@
                 "build",
                 "${workspaceFolder}/adventofcode.csproj"
             ],
-            "problemMatcher": "$msCompile"
+            "problemMatcher": "$msCompile",
+            "options": {
+                "statusbar": {
+                    "hide": true,
+                }
+            }
         },
         {
-            "label": "run",
+            "label": "update today",
             "command": "dotnet",
             "args": [
                 "run",
-                "--configuration=Release",
-                "--",
-                "${input:year}/${input:day}"
+                "update",
+                "today"
             ],
             "problemMatcher": [],
+            "options": {
+                "statusbar": {
+                    "tooltip": "Retrive datas from AoC"
+                }
+            }
         },
         {
             "label": "run today",
@@ -30,18 +39,6 @@
                 "--configuration=Release",
                 "--",
                 "today"
-            ],
-            "problemMatcher": [],
-        },
-        {
-            "label": "upload",
-            "command": "dotnet",
-            "args": [
-                "run",
-                "--configuration=Release",
-                "--",
-                "upload",
-                "${input:year}/${input:day}",
             ],
             "problemMatcher": [],
         },
@@ -58,6 +55,16 @@
             "problemMatcher": [],
         },
         {
+            "label": "display today",
+            "command": "dotnet",
+            "args": [
+                "run",
+                "display",
+                "today"
+            ],
+            "problemMatcher": []
+        },
+        {
             "label": "update",
             "command": "dotnet",
             "args": [
@@ -65,17 +72,35 @@
                 "update",
                 "${input:year}/${input:day}"
             ],
-            "problemMatcher": []
+            "problemMatcher": [],
+            "options": {
+                "statusbar": {
+                    "tooltip": "Retrive datas from AoC"
+                }
+            }
         },
         {
-            "label": "update today",
+            "label": "run",
             "command": "dotnet",
             "args": [
                 "run",
-                "update",
-                "today"
+                "--configuration=Release",
+                "--",
+                "${input:year}/${input:day}"
             ],
-            "problemMatcher": []
+            "problemMatcher": [],
+        },
+        {
+            "label": "upload",
+            "command": "dotnet",
+            "args": [
+                "run",
+                "--configuration=Release",
+                "--",
+                "upload",
+                "${input:year}/${input:day}",
+            ],
+            "problemMatcher": [],
         },
         {
             "label": "display",
@@ -84,16 +109,6 @@
                 "run",
                 "display",
                 "${input:year}/${input:day}"
-            ],
-            "problemMatcher": []
-        },
-        {
-            "label": "display today",
-            "command": "dotnet",
-            "args": [
-                "run",
-                "display",
-                "today"
             ],
             "problemMatcher": []
         },

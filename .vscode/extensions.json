@@ -1,6 +1,7 @@
 {
     "recommendations": [
         "spadin.memento-inputs",
-        "gruntfuggly.activitusbar"
+        "gruntfuggly.activitusbar",
+        "actboy168.tasks"
     ]
 }
