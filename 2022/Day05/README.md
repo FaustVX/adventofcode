@@ -71,3 +71,68 @@ The Elves just need to know <em>which crate will end up on top of each stack</em
 <em>After the rearrangement procedure completes, what crate ends up on top of each stack?</em>
 
 
+## --- Part Two ---
+As you watch the crane operator expertly rearrange the crates, you notice the process isn't following your prediction.
+
+Some mud was covering the writing on the side of the crane, and you quickly wipe it away. The crane isn't a CrateMover 9000 - it's a <em>CrateMover 9001</em>.
+
+The CrateMover 9001 is notable for many new and exciting features: air conditioning, leather seats, an extra cup holder, and <em>the ability to pick up and move multiple crates at once</em>.
+
+Again considering the example above, the crates begin in the same configuration:
+
+<pre>
+<code>    [D]    
+[N] [C]    
+[Z] [M] [P]
+ 1   2   3 
+</code>
+</pre>
+
+Moving a single crate from stack 2 to stack 1 behaves the same as before:
+
+<pre>
+<code>[D]        
+[N] [C]    
+[Z] [M] [P]
+ 1   2   3 
+</code>
+</pre>
+
+However, the action of moving three crates from stack 1 to stack 3 means that those three moved crates <em>stay in the same order</em>, resulting in this new configuration:
+
+<pre>
+<code>        [D]
+        [N]
+    [C] [Z]
+    [M] [P]
+ 1   2   3
+</code>
+</pre>
+
+Next, as both crates are moved from stack 2 to stack 1, they <em>retain their order</em> as well:
+
+<pre>
+<code>        [D]
+        [N]
+[C]     [Z]
+[M]     [P]
+ 1   2   3
+</code>
+</pre>
+
+Finally, a single crate is still moved from stack 1 to stack 2, but now it's crate <code>C</code> that gets moved:
+
+<pre>
+<code>        [<em>D</em>]
+        [N]
+        [Z]
+[<em>M</em>] [<em>C</em>] [P]
+ 1   2   3
+</code>
+</pre>
+
+In this example, the CrateMover 9001 has put the crates in a totally different order: <code><em>MCD</em></code>.
+
+Before the rearrangement process finishes, update your simulation so that the Elves know where they should stand to be ready to unload the final supplies. <em>After the rearrangement procedure completes, what crate ends up on top of each stack?</em>
+
+
