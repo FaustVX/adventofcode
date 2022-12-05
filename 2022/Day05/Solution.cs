@@ -5,12 +5,13 @@ class Solution : Solver //, IDisplay
 {
     public object PartOne(string input)
     {
-        var (map, (instructions, _)) = input.Split2Lines();
-        var stacks = ParseStacks(map.SplitLine());
-        foreach (var (qty, from, to) in ParseInstruction(instructions.SplitLine()))
+        return Execute(input, Action);
+
+        static void Action(int qty, int from, int to, Stack<char>[] stacks)
+        {
             for (int i = 0; i < qty; i++)
                 stacks[to].Push(stacks[from].Pop());
-        return string.Concat(stacks.Select(static stack => stack.Peek()));
+        }
     }
 
     Stack<char>[] ParseStacks(string[] lines)
@@ -51,11 +52,21 @@ class Solution : Solver //, IDisplay
         }
     }
 
-    public object PartTwo(string input)
+    string Execute(string input, Action<int, int, int, Stack<char>[]> action)
     {
         var (map, (instructions, _)) = input.Split2Lines();
         var stacks = ParseStacks(map.SplitLine());
         foreach (var (qty, from, to) in ParseInstruction(instructions.SplitLine()))
+            action(qty, from, to, stacks);
+        return string.Concat(stacks.Select(static stack => stack.Peek()));
+    }
+
+    public object PartTwo(string input)
+    {
+        return Execute(input, Action);
+
+        static void Action(int qty, int from, int to, Stack<char>[] stacks)
+        {
             if (qty == 1)
                 stacks[to].Push(stacks[from].Pop());
             else
@@ -66,6 +77,6 @@ class Solution : Solver //, IDisplay
                 for (int i = 0; i < qty; i++)
                     stacks[to].Push(queue.Pop());
             }
-        return string.Concat(stacks.Select(static stack => stack.Peek()));
+        }
     }
 }
