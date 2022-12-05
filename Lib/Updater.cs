@@ -148,16 +148,14 @@ static class Updater
                     await Update(solver.Year(), solver.Day());
 
                     var signature = new Git.Signature(repo.Config.Get<string>("user.name").Value, repo.Config.Get<string>("user.email").Value, DateTime.Now);
-                    if (problem.Answers.Length == 1)
+                    if (problem.Answers.Length == 0)
                     {
                         var tag = repo.Tags[$"Y{problem.Year}D{problem.Day}P1"];
                         var initial = (Git.Commit)tag.Target;
                         var duration = signature.When - initial.Committer.When;
-                        Git.Commands.Stage(repo, "**/input.refout");
+                        Git.Commands.Stage(repo, "*");
                         var commit = repo.Commit($"Solved P1 in {duration:h\\:mm\\:ss}", signature, signature, new());
                         repo.Tags.Add($"Y{problem.Year}D{problem.Day}P2", commit);
-                        Git.Commands.Stage(repo, "*");
-                        repo.Commit("P2", signature, signature, new());
                     }
                     else
                     {
