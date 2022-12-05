@@ -1,17 +1,15 @@
 namespace AdventOfCode.Y2022.Day05;
 
 [ProblemName("Supply Stacks")]
-class Solution : Solver //, IDisplay
+class Solution : Solver, IDisplay
 {
     public object PartOne(string input)
-    {
-        return Execute(input, Action);
+        => Execute(input, Action1);
 
-        static void Action(int qty, int from, int to, Stack<char>[] stacks)
-        {
-            for (int i = 0; i < qty; i++)
-                stacks[to].Push(stacks[from].Pop());
-        }
+    private static void Action1(int qty, int from, int to, Stack<char>[] stacks)
+    {
+        for (int i = 0; i < qty; i++)
+            stacks[to].Push(stacks[from].Pop());
     }
 
     Stack<char>[] ParseStacks(string[] lines)
@@ -62,21 +60,61 @@ class Solution : Solver //, IDisplay
     }
 
     public object PartTwo(string input)
-    {
-        return Execute(input, Action);
+        => Execute(input, Action2);
 
-        static void Action(int qty, int from, int to, Stack<char>[] stacks)
+    private static void Action2(int qty, int from, int to, Stack<char>[] stacks)
+    {
+        if (qty == 1)
+            stacks[to].Push(stacks[from].Pop());
+        else
         {
-            if (qty == 1)
-                stacks[to].Push(stacks[from].Pop());
-            else
-            {
-                var queue = new Stack<char>(qty);
-                for (int i = 0; i < qty; i++)
-                    queue.Push(stacks[from].Pop());
-                for (int i = 0; i < qty; i++)
-                    stacks[to].Push(queue.Pop());
-            }
+            var queue = new Stack<char>(qty);
+            for (int i = 0; i < qty; i++)
+                queue.Push(stacks[from].Pop());
+            for (int i = 0; i < qty; i++)
+                stacks[to].Push(queue.Pop());
         }
     }
+
+    private void Display(string input, Action<int, int, int, Stack<char>[]> action)
+    {
+        Console.CursorVisible = false;
+        Console.WriteLine(Execute(input, Action));
+        Console.CursorVisible = true;
+
+        void Action(int qty, int from, int to, IEnumerable<char>[] stacks)
+        {
+            action(qty, from, to, (Stack<char>[])stacks);
+            stacks = stacks.Select(static stack => stack.Reverse().ToArray()).ToArray();
+            var totalCrates = stacks.Sum(static stack => stack.Count());
+            Console.Clear();
+            var back = Console.BackgroundColor;
+            for (int i = totalCrates - 1; i >= 0 ; i--)
+            {
+                for (int s = 0; s < stacks.Length; s++)
+                {
+                    var stack = (char[])stacks[s];
+                    if (stack.Length <= i)
+                        Console.Write(' ');
+                    else
+                    {
+                        Console.BackgroundColor
+                            = s == from ? ConsoleColor.Red
+                            : s == to ? ConsoleColor.Green
+                            : back;
+                        Console.Write(stack[i]);
+                        Console.BackgroundColor = back;
+                    }
+                }
+                Console.WriteLine();
+            }
+            Thread.Sleep(TimeSpan.FromSeconds(.5));
+        }
+    }
+
+    public void DisplayPartOne(string input)
+        => Display(input, Action1);
+
+    public void DisplayPartTwo(string input)
+        => Display(input, Action2);
 }
