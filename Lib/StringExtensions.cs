@@ -22,8 +22,38 @@ public static class StringExtensions {
         => Regex.Split(st, "\r?\n");
 
     [DebuggerStepThrough]
+    public static IReadOnlyList<ReadOnlyMemory<char>> SplitLine(this ReadOnlyMemory<char> st)
+    {
+        var matches = Regex.EnumerateMatches(st.Span, "\r?\n");
+        var start = 0;
+        var list = new List<ReadOnlyMemory<char>>();
+        foreach (var match in matches)
+        {
+            list.Add(st[start..match.Index]);
+            start = match.Index + match.Length;
+        }
+        list.Add(st[start..]);
+        return list.AsReadOnly();
+    }
+
+    [DebuggerStepThrough]
     public static string[] Split2Lines(this string st)
         => Regex.Split(st, "\r?\n\r?\n");
+
+    [DebuggerStepThrough]
+    public static IReadOnlyList<ReadOnlyMemory<char>> Split2Lines(this ReadOnlyMemory<char> st)
+    {
+        var matches = Regex.EnumerateMatches(st.Span, "(\r?\n){2}");
+        var start = 0;
+        var list = new List<ReadOnlyMemory<char>>();
+        foreach (var match in matches)
+        {
+            list.Add(st[start..match.Index]);
+            start = match.Index + match.Length;
+        }
+        list.Add(st[start..]);
+        return list.AsReadOnly();
+    }
 
     [DebuggerStepThrough]
     public static void TypeString(this StringBuilder input, TimeSpan maxTotalDuration)
