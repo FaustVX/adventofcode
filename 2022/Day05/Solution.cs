@@ -58,6 +58,19 @@ class Solution : Solver //, IDisplay
 
     public object PartTwo(string input)
     {
-        return 0;
+        var enumerator = input.SplitLine().AsEnumerable().GetEnumerator();
+        var stacks = ParseStacks(enumerator);
+        foreach (var (qty, from, to) in ParseInstruction(enumerator))
+            if (qty == 1)
+                stacks[to].Push(stacks[from].Pop());
+            else
+            {
+                var queue = new Stack<char>(qty);
+                for (int i = 0; i < qty; i++)
+                    queue.Push(stacks[from].Pop());
+                for (int i = 0; i < qty; i++)
+                    stacks[to].Push(queue.Pop());
+            }
+        return string.Concat(stacks.Select(static stack => stack.Peek()));
     }
 }
