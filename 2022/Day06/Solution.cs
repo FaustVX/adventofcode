@@ -5,6 +5,10 @@ class Solution : Solver //, IDisplay
 {
     public object PartOne(string input)
     => Execute(input, 4);
+
+    public object PartTwo(string input)
+    => Execute(input, 14);
+
     public object Execute(ReadOnlySpan<char> input, int length)
     {
         for (int i = 0; i < input.Length; i++)
@@ -21,7 +25,4 @@ class Solution : Solver //, IDisplay
             return true;
         }
     }
-
-    public object PartTwo(string input)
-    => Execute(input, 14);
 }
