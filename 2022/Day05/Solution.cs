@@ -38,15 +38,11 @@ class Solution : Solver, IDisplay
     {
         foreach (var line in input)
         {
-            var instruction = line[5..];
-            var space = instruction.Span.IndexOf(' ');
-            var qty = int.Parse(instruction[..space].Span);
-            instruction = instruction[(space + 6)..];
-            space = instruction.Span.IndexOf(' ');
-            var from = int.Parse(instruction[..space].Span) - 1;
-            instruction = instruction[(space + 4)..];
-            var to = int.Parse(instruction.Span) - 1;
-            yield return (qty, from, to);
+            var (qty, from, to) = (0, 0, 0);
+            if (line.ParseFormated($"move {qty:\\d+} from {from:\\d+} to {to:\\d+}", allowTrailling: false))
+                yield return (qty, from - 1, to - 1);
+            else
+                throw new UnreachableException(line.ToString());
         }
     }
 
