@@ -57,7 +57,13 @@ class Solution : Solver, IDisplay
         return sum;
     }
 
-    public void DisplayPartOne(string input)
+    public IEnumerable<(string name, Action<string> action)> GetDisplays()
+    {
+        yield return ("Part1", DisplayPartOne);
+        yield return ("Part2", DisplayPartTwo);
+    }
+
+    static void DisplayPartOne(string input)
     {
         var sum = 0;
         foreach (var rule in input.SplitLine())
@@ -99,7 +105,7 @@ class Solution : Solver, IDisplay
         }
     }
 
-    public void DisplayPartTwo(string input)
+    static void DisplayPartTwo(string input)
     {
         var sum = 0;
         foreach (var rule in input.SplitLine())

@@ -20,8 +20,7 @@ interface Solver
 
 interface IDisplay
 {
-    void DisplayPartOne(string input);
-    void DisplayPartTwo(string input);
+    public abstract IEnumerable<(string name, Action<string> action)> GetDisplays();
 }
 
 static class SolverExtensions
@@ -170,15 +169,13 @@ class Runner
             {
                 var input = GetNormalizedInput(file);
 
-                Console.WriteLine("Press any key to start P1 ...");
-                Console.ReadLine();
-                Console.Clear();
-                display.DisplayPartOne(input);
-
-                Console.WriteLine("Press any key to continue to P2 ...");
-                Console.ReadLine();
-                Console.Clear();
-                display.DisplayPartTwo(input);
+                foreach (var (name, action) in display.GetDisplays())
+                {
+                    Console.WriteLine($"Press any key to start '{name}' ...");
+                    Console.ReadLine();
+                    Console.Clear();
+                    action(input);
+                }
             }
         }
     }

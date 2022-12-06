@@ -112,9 +112,15 @@ class Solution : Solver, IDisplay
         }
     }
 
-    public void DisplayPartOne(string input)
+    private void DisplayPartOne(string input)
         => Display(input, Action1);
 
-    public void DisplayPartTwo(string input)
+    private void DisplayPartTwo(string input)
         => Display(input, Action2);
+
+    public IEnumerable<(string name, Action<string> action)> GetDisplays()
+    {
+        yield return ("Part1", DisplayPartOne);
+        yield return ("Part2", DisplayPartTwo);
+    }
 }

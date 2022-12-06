@@ -3,7 +3,12 @@ namespace AdventOfCode.Y2022.Day04;
 [ProblemName("Camp Cleanup")]
 class Solution : Solver, IDisplay
 {
-    public void DisplayPartTwo(string input)
+    public IEnumerable<(string name, Action<string> action)> GetDisplays()
+    {
+        yield return ("Display", Display);
+    }
+
+    private static void Display(string input)
     {
         var length = 0;
         foreach (var assigment in input.SplitLine())
@@ -95,17 +100,6 @@ class Solution : Solver, IDisplay
                 yield return new() { Input = $" [{startA}-{endA},{startB}-{endB}]\n" };
             }
         }
-    }
-
-    public void DisplayPartOne(string input)
-    {
-        var sb = new StringBuilder();
-        for (var sA = 1; sA < 9; sA++)
-            for (var eA = sA; eA < 9; eA++)
-                for (var sB = 1; sB < 9; sB++)
-                    for (var eB = sB; eB < 9; eB++)
-                        sb.AppendFormat("{0}-{1},{2}-{3}\r\n", sA, eA, sB, eB);
-        // DisplayPartTwo(sb.ToString().TrimEnd());
     }
 
     public object PartOne(string input)
