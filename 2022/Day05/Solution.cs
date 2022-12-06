@@ -12,7 +12,7 @@ class Solution : Solver, IDisplay
             stacks[to].Push(stacks[from].Pop());
     }
 
-    Stack<char>[] ParseStacks(string[] lines)
+    Stack<char>[] ParseStacks(IReadOnlyList<ReadOnlyMemory<char>> lines)
     {
         var capacity = (lines[0].Length + 1) / 4;
         var stacks = new Stack<char>[capacity];
@@ -21,7 +21,7 @@ class Solution : Solver, IDisplay
 
         foreach (var line in lines)
             for (int i = 0; i < capacity; i++)
-                switch (line.AsSpan(i * 4, 3))
+                switch (line.Slice(i * 4, 3).Span)
                 {
                     case ['[', var c, ']']:
                         stacks[i].Push(c);
@@ -34,27 +34,27 @@ class Solution : Solver, IDisplay
         throw new UnreachableException();
     }
 
-    IEnumerable<(int qty, int from, int to)> ParseInstruction(string[] input)
+    IEnumerable<(int qty, int from, int to)> ParseInstruction(IEnumerable<ReadOnlyMemory<char>> input)
     {
-        for (int i = 0; i < input.Length; i++)
+        foreach (var line in input)
         {
-            var line = input[i].AsMemory(5);
-            var space = line.Span.IndexOf(' ');
-            var qty = int.Parse(line[..space].Span);
-            line = line[(space + 6)..];
-            space = line.Span.IndexOf(' ');
-            var from = int.Parse(line[..space].Span) - 1;
-            line = line[(space + 4)..];
-            var to = int.Parse(line.Span) - 1;
+            var instruction = line[5..];
+            var space = instruction.Span.IndexOf(' ');
+            var qty = int.Parse(instruction[..space].Span);
+            instruction = instruction[(space + 6)..];
+            space = instruction.Span.IndexOf(' ');
+            var from = int.Parse(instruction[..space].Span) - 1;
+            instruction = instruction[(space + 4)..];
+            var to = int.Parse(instruction.Span) - 1;
             yield return (qty, from, to);
         }
     }
 
     string Execute(string input, Action<int, int, int, Stack<char>[]> action)
     {
-        var (map, (instructions, _)) = input.Split2Lines();
-        var stacks = ParseStacks(map.SplitLine());
-        foreach (var (qty, from, to) in ParseInstruction(instructions.SplitLine()))
+        var groups = input.AsMemory().Split2Lines();
+        var stacks = ParseStacks(groups[0].SplitLine());
+        foreach (var (qty, from, to) in ParseInstruction(groups[1].SplitLine()))
             action(qty, from, to, stacks);
         return string.Concat(stacks.Select(static stack => stack.Peek()));
     }
