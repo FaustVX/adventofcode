@@ -35,3 +35,20 @@ Here are a few more examples:
 <em>How many characters need to be processed before the first start-of-packet marker is detected?</em>
 
 
+## --- Part Two ---
+Your device's communication system is correctly detecting packets, but still isn't working. It looks like it also needs to look for <em>messages</em>.
+
+A <em>start-of-message marker</em> is just like a start-of-packet marker, except it consists of <em>14 distinct characters</em> rather than 4.
+
+Here are the first positions of start-of-message markers for all of the above examples:
+
+
+ - <code>mjqjpqmgbljsphdztnvjfqwrcgsmlb</code>: first marker after character <code><em>19</em></code>
+ - <code>bvwbjplbgvbhsrlpgdmjqwftvncz</code>: first marker after character <code><em>23</em></code>
+ - <code>nppdvjthqldpwncqszvftbrmjlhg</code>: first marker after character <code><em>23</em></code>
+ - <code>nznrnfrfntjfmvfwmzdfjlvtqnbhcprsg</code>: first marker after character <code><em>29</em></code>
+ - <code>zcfzfwzzqfrljwzlrfnpqdbhtmscgvjw</code>: first marker after character <code><em>26</em></code>
+
+<em>How many characters need to be processed before the first start-of-message marker is detected?</em>
+
+
