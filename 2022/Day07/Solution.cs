@@ -101,6 +101,12 @@ class Solution : Solver //, IDisplay
 
     public object PartTwo(string input)
     {
-        return 0;
+        var root = Dir.CreateRoot();
+        var allDir = ParseTree(input, root);
+        var totalUsedSize = allDir[0].Size;
+        var freeSpaceSize = 70_000_000 - totalUsedSize;
+        var sizeToFreeUp = 30_000_000 - freeSpaceSize;
+        return allDir.OrderBy(static dir => dir.Size).First(dir => dir.Size >= sizeToFreeUp).Size;
+
     }
 }
