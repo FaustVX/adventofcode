@@ -97,28 +97,45 @@ public static class StringExtensions
         }
     }
 
-    public static bool ParseFormated(this ReadOnlyMemory<char> input, [InterpolatedStringHandlerArgument(nameof(input))] ParserInterpolatedHandler handler, bool allowTrailling)
-    => handler.IsValid && allowTrailling || handler.Trailling == 0;
-
-    public static bool ParseFormated(this ReadOnlySpan<char> input, [InterpolatedStringHandlerArgument(nameof(input))] ParserInterpolatedHandler handler, bool allowTrailling)
-    => handler.IsValid && allowTrailling || handler.Trailling == 0;
+    public static bool TryParseFormated<T>(this ReadOnlyMemory<char> input, [InterpolatedStringHandlerArgument(nameof(input))] ParserInterpolatedHandler<T> handler, out T values, bool allowTrailling = false)
+    where T : struct, ITuple
+    {
+        values = (T)handler.Values;
+        return handler.IsValid && (allowTrailling || !handler.HasTrailling);
+    }
 }
 
 [InterpolatedStringHandler]
-public ref struct ParserInterpolatedHandler
+public ref struct ParserInterpolatedHandler<T>
+where T : struct, ITuple
 {
+    private static readonly List<System.Reflection.FieldInfo> _fields;
+    public readonly object Values = default(T);
     private ReadOnlySpan<char> _input;
-    public ParserInterpolatedHandler(int literalLength, int formattedCount, ReadOnlyMemory<char> input)
+    private int _fieldIndex;
+
+    static ParserInterpolatedHandler()
     {
-        _input = input.Span;
+        var type = typeof(T);
+        _fields = new(default(T).Length);
+        for (int i = 0; i < default(T).Length; i++)
+            _fields.Add(type.GetField($"Item{i + 1}")!);
     }
+
+    public ParserInterpolatedHandler(int literalLength, int formattedCount, ReadOnlyMemory<char> input)
+    : this(literalLength, formattedCount, input.Span)
+    { }
+
     public ParserInterpolatedHandler(int literalLength, int formattedCount, ReadOnlySpan<char> input)
     {
         _input = input;
     }
 
+    private void SetValue<U>(U value)
+    => _fields[_fieldIndex++].SetValue(Values, value);
+
     public bool IsValid { get; private set; } = true;
-    public int Trailling => _input.Length;
+    public bool HasTrailling => _input.Length != 0;
 
     public bool AppendLiteral(string s)
     {
@@ -128,32 +145,61 @@ public ref struct ParserInterpolatedHandler
         return true;
     }
 
-    public bool AppendFormatted<T>(in T t)
-        where T : INumber<T>
-    {
-        for (int i = _input.Length - 1; i >= 0; i--)
-            if (T.TryParse(_input.Slice(0, i), null, out var o))
-            {
-                _input = _input.Slice(i);
-                Unsafe.AsRef(in t) = o;
-                return true;
-            }
-        return IsValid = false;
-    }
+    public bool AppendFormatted(byte t)
+    => AppendFormatted(t, """\d+""");
 
-    public bool AppendFormatted<T>(in T t, string format)
-        where T : INumber<T>
+    public bool AppendFormatted(sbyte t)
+    => AppendFormatted(t, """\d+""");
+
+    public bool AppendFormatted(short t)
+    => AppendFormatted(t, """\d+""");
+
+    public bool AppendFormatted(ushort t)
+    => AppendFormatted(t, """\d+""");
+
+    public bool AppendFormatted(int t)
+    => AppendFormatted(t, """\d+""");
+
+    public bool AppendFormatted(uint t)
+    => AppendFormatted(t, """\d+""");
+
+    public bool AppendFormatted(long t)
+    => AppendFormatted(t, """\d+""");
+
+    public bool AppendFormatted(ulong t)
+    => AppendFormatted(t, """\d+""");
+
+    public bool AppendFormatted(float t)
+    => AppendFormatted(t, """[-+]?[0-9]*\.?[0-9]+([eE][-+]?[0-9]+)?""");
+
+    public bool AppendFormatted(double t)
+    => AppendFormatted(t, """[-+]?[0-9]*\.?[0-9]+([eE][-+]?[0-9]+)?""");
+
+    public bool AppendFormatted<U>(U t, string format)
+        where U : ISpanParsable<U>
     {
         var matches = Regex.EnumerateMatches(_input, format);
         if (!matches.MoveNext() || matches.Current.Index != 0)
             return IsValid = false;
         if (matches.Current.Length == 0)
             return true;
-        if (!T.TryParse(_input.Slice(0, matches.Current.Length), null, out var o))
+        if (!U.TryParse(_input.Slice(0, matches.Current.Length), null, out var o))
             return IsValid = false;
 
         _input = _input.Slice(matches.Current.Length);
-        Unsafe.AsRef(in t) = o;
+        SetValue(o);
+        return true;
+    }
+
+    public bool AppendFormatted(string pattern)
+    {
+        var matches = Regex.EnumerateMatches(_input, pattern);
+        if (!matches.MoveNext() || matches.Current.Index != 0)
+            return IsValid = false;
+        if (matches.Current.Length == 0)
+            return true;
+
+        _input = _input.Slice(matches.Current.Length);
         return true;
     }
 }

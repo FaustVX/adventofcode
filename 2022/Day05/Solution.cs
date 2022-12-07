@@ -4,9 +4,9 @@ namespace AdventOfCode.Y2022.Day05;
 class Solution : Solver, IDisplay
 {
     public object PartOne(string input)
-        => Execute(input, Action1);
+        => Execute(input, CraneMover9000);
 
-    private static void Action1(int qty, int from, int to, Stack<char>[] stacks)
+    private static void CraneMover9000(int qty, int from, int to, Stack<char>[] stacks)
     {
         for (int i = 0; i < qty; i++)
             stacks[to].Push(stacks[from].Pop());
@@ -14,36 +14,25 @@ class Solution : Solver, IDisplay
 
     Stack<char>[] ParseStacks(IReadOnlyList<ReadOnlyMemory<char>> lines)
     {
-        var capacity = (lines[0].Length + 1) / 4;
+        var capacity = (lines[^1].Length + 2) / 4; // ^1 and +2: if lines are trimmed
         var stacks = new Stack<char>[capacity];
         for (int i = 0; i < capacity; i++)
             stacks[i] = new();
 
-        foreach (var line in lines)
+        foreach (var line in lines.Reverse().Skip(1))
             for (int i = 0; i < capacity; i++)
-                switch (line.Slice(i * 4, 3).Span)
-                {
-                    case ['[', var c, ']']:
-                        stacks[i].Push(c);
-                        break;
-                    case not [' ', ' ', ' ']:
-                        for (int j = 0; j < capacity; j++)
-                            stacks[j] = new(stacks[j]); // Reverse the stacks
-                        return stacks;
-                }
-        throw new UnreachableException();
+                if (line.Slice(i * 4, 3).Span is ['[', var c, ']'])
+                    stacks[i].Push(c);
+        return stacks;
     }
 
     IEnumerable<(int qty, int from, int to)> ParseInstruction(IEnumerable<ReadOnlyMemory<char>> input)
     {
         foreach (var line in input)
-        {
-            var (qty, from, to) = (0, 0, 0);
-            if (line.ParseFormated($"move {qty:\\d+} from {from:\\d+} to {to:\\d+}", allowTrailling: false))
-                yield return (qty, from - 1, to - 1);
+            if (line.TryParseFormated<(int qty, int from, int to)>($"move {0} from {0} to {0}", out var values))
+                yield return (values.qty, values.from - 1, values.to - 1);
             else
                 throw new UnreachableException(line.ToString());
-        }
     }
 
     string Execute(string input, Action<int, int, int, Stack<char>[]> action)
@@ -56,9 +45,9 @@ class Solution : Solver, IDisplay
     }
 
     public object PartTwo(string input)
-        => Execute(input, Action2);
+        => Execute(input, CraneMover9001);
 
-    private static void Action2(int qty, int from, int to, Stack<char>[] stacks)
+    private static void CraneMover9001(int qty, int from, int to, Stack<char>[] stacks)
     {
         if (qty == 1)
             stacks[to].Push(stacks[from].Pop());
@@ -109,10 +98,10 @@ class Solution : Solver, IDisplay
     }
 
     private void DisplayPartOne(string input)
-        => Display(input, Action1);
+        => Display(input, CraneMover9000);
 
     private void DisplayPartTwo(string input)
-        => Display(input, Action2);
+        => Display(input, CraneMover9001);
 
     public IEnumerable<(string name, Action<string> action)> GetDisplays()
     {

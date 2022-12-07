@@ -13,18 +13,16 @@ class Solution : Solver, IDisplay
         var length = 0;
         foreach (var assigment in input.SplitLine())
         {
-            var sb = new StringBuilder();
-            var sections = assigment.Split(',').SelectMany(static section => section.Split('-').Select(int.Parse)).ToArray();
-            var (endA, endB) = (sections[1], sections[3]);
-            length = Math.Max(length, Math.Max(endA, endB));
+            if (!assigment.AsMemory().TryParseFormated<(int endA, int endB)>($"{"\\d+"}-{0},{"\\d+"}-{0}", out var values))
+                throw new UnreachableException();
+            length = Math.Max(length, Math.Max(values.endA, values.endB));
         }
 
         foreach (var assigment in input.SplitLine())
         {
-            var sb = new StringBuilder();
-            var sections = assigment.Split(',').SelectMany(static section => section.Split('-').Select(int.Parse)).ToArray();
-            var (startA, endA, startB, endB) = (sections[0], sections[1], sections[2], sections[3]);
-            Compute(startA, endA, startB, endB, length).TypeString(TimeSpan.FromSeconds(.1));
+            if (!assigment.AsMemory().TryParseFormated<(int startA, int endA, int startB, int endB)>($"{0}-{0},{0}-{0}", out var values))
+                throw new UnreachableException();
+            Compute(values.startA, values.endA, values.startB, values.endB, length).TypeString(TimeSpan.FromSeconds(.15));
             Console.WriteLine();
 
             static IEnumerable<TypedString> Compute(int startA, int endA, int startB, int endB, int length)
@@ -107,9 +105,9 @@ class Solution : Solver, IDisplay
         var count = 0;
         foreach (var assigment in input.SplitLine())
         {
-            var sections = assigment.Split(',').SelectMany(static section => section.Split('-').Select(int.Parse)).ToArray();
-            var (startA, endA, startB, endB) = (sections[0], sections[1], sections[2], sections[3]);
-            if ((startA <= startB && endA >= endB) || (startA >= startB && endA <= endB))
+            if (!assigment.AsMemory().TryParseFormated<(int startA, int endA, int startB, int endB)>($"{0}-{0},{0}-{0}", out var values))
+                throw new UnreachableException();
+            if ((values.startA <= values.startB && values.endA >= values.endB) || (values.startA >= values.startB && values.endA <= values.endB))
                 count++;
         }
         return count;
@@ -120,12 +118,12 @@ class Solution : Solver, IDisplay
         var count = 0;
         foreach (var assigment in input.SplitLine())
         {
-            var sections = assigment.Split(',').SelectMany(static section => section.Split('-').Select(int.Parse)).ToArray();
-            var (startA, endA, startB, endB) = (sections[0], sections[1], sections[2], sections[3]);
-            if ((startA <= startB && startB <= endA)
-                || (startA <= endB && endB <= endA)
-                || (startB <= startA && startA <= endB)
-                || (startB <= endA && endA <= endB))
+            if (!assigment.AsMemory().TryParseFormated<(int startA, int endA, int startB, int endB)>($"{0}-{0},{0}-{0}", out var values))
+                throw new UnreachableException();
+            if ((values.startA <= values.startB && values.startB <= values.endA)
+                || (values.startA <= values.endB && values.endB <= values.endA)
+                || (values.startB <= values.startA && values.startA <= values.endB)
+                || (values.startB <= values.endA && values.endA <= values.endB))
                 count++;
         }
         return count;
