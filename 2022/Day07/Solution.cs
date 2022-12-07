@@ -3,12 +3,7 @@ namespace AdventOfCode.Y2022.Day07;
 [ProblemName("No Space Left On Device")]
 class Solution : Solver //, IDisplay
 {
-    interface IData
-    {
-        int Size { get; }
-        ReadOnlyMemory<char> Name { get; }
-    }
-    sealed class Dir : IData
+    sealed class Dir
     {
         [System.Diagnostics.CodeAnalysis.SetsRequiredMembers]
         private Dir(ReadOnlyMemory<char> rootName)
@@ -22,11 +17,13 @@ class Solution : Solver //, IDisplay
 
         public static Dir CreateRoot()
             => new("/".AsMemory());
-        public int Size => Datas.Sum(static data => data.Value.Size);
+
+        private int fileSize;
+        public int Size => Datas.Sum(static data => data.Value.Size) + fileSize;
 
         public required ReadOnlyMemory<char> Name { get; init; }
 
-        public Dictionary<ReadOnlyMemory<char>, IData> Datas { get; } = new();
+        public Dictionary<ReadOnlyMemory<char>, Dir> Datas { get; } = new();
         public required Dir Parent { get; init; }
         public Dir CreateChild(ReadOnlyMemory<char> name)
         {
@@ -39,26 +36,19 @@ class Solution : Solver //, IDisplay
             return dir;
         }
 
-        public void AddFile(File file)
-        => Datas.Add(file.Name, file);
-    }
-
-    sealed class File : IData
-    {
-        public required int Size { get; init; }
-
-        public required ReadOnlyMemory<char> Name { get; init; }
+        public void AddFile(int size)
+        => fileSize += size;
     }
 
     public object PartOne(string input)
     {
-        var root = Dir.CreateRoot();
-        var allDir = ParseTree(input, root);
+        var allDir = ParseTree(input);
         return allDir.Where(static dir => dir.Size <= 100_000).Sum(static dir => dir.Size);
     }
 
-    private static List<Dir> ParseTree(string input, Dir root)
+    private static List<Dir> ParseTree(string input)
     {
+        var root = Dir.CreateRoot();
         var currentDir = root;
         var isLS = false;
         var allDir = new List<Dir>()
@@ -91,7 +81,7 @@ class Solution : Solver //, IDisplay
                 if (line.Span.StartsWith("dir"))
                     allDir.Add(currentDir.CreateChild(name));
                 else if (int.TryParse(line.Span[..space], out var size))
-                    currentDir.AddFile(new() { Name = name, Size = size });
+                    currentDir.AddFile(size);
             }
 
         return allDir;
@@ -99,8 +89,7 @@ class Solution : Solver //, IDisplay
 
     public object PartTwo(string input)
     {
-        var root = Dir.CreateRoot();
-        var allDir = ParseTree(input, root);
+        var allDir = ParseTree(input);
         var totalUsedSize = allDir[0].Size;
         var freeSpaceSize = 70_000_000 - totalUsedSize;
         var sizeToFreeUp = 30_000_000 - freeSpaceSize;
