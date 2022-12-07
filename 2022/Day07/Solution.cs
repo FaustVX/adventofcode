@@ -67,7 +67,6 @@ class Solution : Solver //, IDisplay
         };
 
         foreach (var line in input.AsMemory().SplitLine().Skip(1))
-        {
             if (line.Span.StartsWith("$ "))
             {
                 isLS = false;
@@ -94,7 +93,6 @@ class Solution : Solver //, IDisplay
                 else if (int.TryParse(line.Span[..space], out var size))
                     currentDir.AddFile(new() { Name = name, Size = size });
             }
-        }
 
         return allDir;
     }
@@ -107,6 +105,5 @@ class Solution : Solver //, IDisplay
         var freeSpaceSize = 70_000_000 - totalUsedSize;
         var sizeToFreeUp = 30_000_000 - freeSpaceSize;
         return allDir.OrderBy(static dir => dir.Size).First(dir => dir.Size >= sizeToFreeUp).Size;
-
     }
 }
