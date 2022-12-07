@@ -39,7 +39,7 @@ public static class StringExtensions
             start = match.Index + match.Length;
         }
         list.Add(st[start..]);
-        return list.AsReadOnly();
+        return list;
     }
 
     [DebuggerStepThrough]
