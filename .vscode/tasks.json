@@ -104,7 +104,10 @@
                 "display",
                 "today"
             ],
-            "problemMatcher": []
+            "problemMatcher": [],
+            "presentation": {
+                "focus": true,
+            },
         },
         {
             "label": "update",
@@ -194,7 +197,10 @@
                 "display",
                 "${input:year}/${input:day}"
             ],
-            "problemMatcher": []
+            "problemMatcher": [],
+            "presentation": {
+                "focus": true,
+            },
         },
     ],
     "inputs": [
