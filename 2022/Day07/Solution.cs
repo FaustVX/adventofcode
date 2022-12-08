@@ -2,7 +2,7 @@
 namespace AdventOfCode.Y2022.Day07;
 
 [ProblemName("No Space Left On Device")]
-class Solution : Solver //, IDisplay
+class Solution : Solver , IDisplay
 {
     public object PartOne(string input)
     {
@@ -67,5 +67,27 @@ class Solution : Solver //, IDisplay
         var freeSpaceSize = 70_000_000 - totalUsedSize;
         var sizeToFreeUp = 30_000_000 - freeSpaceSize;
         return allDir.Where(dir => dir >= sizeToFreeUp).Min();
+    }
+
+    public IEnumerable<(string name, Action<string> action)> GetDisplays()
+    {
+        yield return ("Tree-Like", TreeDisplay);
+    }
+
+    private void TreeDisplay(string input)
+    {
+        var span = System.Runtime.InteropServices.CollectionsMarshal.AsSpan((List<ReadOnlyMemory<char>>)input.AsMemory().SplitLine())[1..];
+        var allDir = new List<int>();
+
+        var indent = 0;
+        var totalUsedSize = ParseTree(span, ImmutableStack.Create("".AsMemory()), out _
+        , dirOpened: name =>
+        {
+            Console.WriteLine((indent >= 1 ? string.Concat(Enumerable.Repeat("|  ", indent - 1)) + "|--" : "") + name.Peek() + "/");
+            indent++;
+        }
+        , fileCreated: (name, _) => Console.WriteLine((indent >= 1 ? string.Concat(Enumerable.Repeat("|  ", indent - 1)) + "|--" : "") + name.Peek())
+        , dirClosed: (_, _) => indent--
+        );
     }
 }
