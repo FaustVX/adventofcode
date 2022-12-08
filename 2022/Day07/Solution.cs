@@ -29,15 +29,17 @@ class Solution : Solver //, IDisplay
     {
         var span = System.Runtime.InteropServices.CollectionsMarshal.AsSpan((List<ReadOnlyMemory<char>>)input.AsMemory().SplitLine())[1..];
         var root = new Dir() { Name = "/".AsMemory() };
-        var allDir = new List<Dir>()
+        var allDirSize = 0;
+        ParseTree(span, root, dir =>
         {
-            root,
-        };
-        ParseTree(span, root, allDir);
-        return allDir.Where(static dir => dir.Size <= 100_000).Sum(static dir => dir.Size);
+            var size = dir.Size;
+            if (size <= 100_000)
+                allDirSize += size;
+        });
+        return allDirSize;
     }
 
-    private static int ParseTree(ReadOnlySpan<ReadOnlyMemory<char>> input, Dir currentDir, List<Dir> allDir)
+    private static int ParseTree(ReadOnlySpan<ReadOnlyMemory<char>> input, Dir currentDir, Action<Dir> dirCreated)
     {
         var length = input.Length;
         if (input[0].Span is not "$ ls")
@@ -45,18 +47,22 @@ class Solution : Solver //, IDisplay
         for (input = input[1..]; !input.IsEmpty && input[0].Span[0] != '$'; input = input[1..])
         {
             if (input[0].Span.StartsWith("dir "))
-                allDir.Add(currentDir.CreateChild(input[0][4..]));
+                currentDir.CreateChild(input[0][4..]);
             else if (input[0].TryParseFormated<ValueTuple<int>>($"{0} {".*"}", out var values))
                 currentDir.AddFile(values.Item1);
         }
         while (!input.IsEmpty)
         {
             if (input[0].Span is "$ cd ..")
+            {
+                dirCreated(currentDir);
                 return length - input.Length + 1;
+            }
             var dirName = input[0].Slice(5);
-            var newLength = ParseTree(input[1..], currentDir.Datas.Find(dir => dir.Name.Span.Equals(dirName.Span, StringComparison.InvariantCulture)) ?? throw new UnreachableException(), allDir);
+            var newLength = ParseTree(input[1..], currentDir.Datas.Find(dir => dir.Name.Span.Equals(dirName.Span, StringComparison.InvariantCulture)) ?? throw new UnreachableException(), dirCreated);
             input = input[(newLength + 1)..];
         }
+        dirCreated(currentDir);
         return length;
     }
 
@@ -64,11 +70,8 @@ class Solution : Solver //, IDisplay
     {
         var span = System.Runtime.InteropServices.CollectionsMarshal.AsSpan((List<ReadOnlyMemory<char>>)input.AsMemory().SplitLine())[1..];
         var root = new Dir() { Name = "/".AsMemory() };
-        var allDir = new List<Dir>()
-        {
-            root,
-        };
-        ParseTree(span, root, allDir);
+        var allDir = new List<Dir>();
+        ParseTree(span, root, allDir.Add);
         var totalUsedSize = root.Size;
         var freeSpaceSize = 70_000_000 - totalUsedSize;
         var sizeToFreeUp = 30_000_000 - freeSpaceSize;
