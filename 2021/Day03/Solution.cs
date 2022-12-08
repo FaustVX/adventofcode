@@ -1,7 +1,7 @@
 namespace AdventOfCode.Y2021.Day03;
 
 [ProblemName("Binary Diagnostic")]
-class Solution : Solver
+public class Solution : Solver
 {
     private static byte[][] Parse(string input)
         => input.ParseToArrayOfT(static l => l.Select(static s => (byte)(s - '0')).ToArray());

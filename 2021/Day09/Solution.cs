@@ -4,7 +4,7 @@ using System.Runtime.CompilerServices;
 namespace AdventOfCode.Y2021.Day09;
 
 [ProblemName("Smoke Basin")]
-class Solution : Solver
+public class Solution : Solver
 {
     private static ((byte height, int? basin)[,] datas, int width, int height) Parse(string input)
         => input.Parse2D(static c => ((byte)(c - '0'), default(int?)));

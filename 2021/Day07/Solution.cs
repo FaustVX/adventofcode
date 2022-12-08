@@ -1,7 +1,7 @@
 namespace AdventOfCode.Y2021.Day07;
 
 [ProblemName("The Treachery of Whales")]
-class Solution : Solver
+public class Solution : Solver
 {
     private static int[] Parse(string input)
         => input.Split(',').ParseToArrayOfT(int.Parse);

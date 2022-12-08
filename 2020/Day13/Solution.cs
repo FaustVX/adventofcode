@@ -3,7 +3,7 @@
 namespace AdventOfCode.Y2020.Day13;
 
 [ProblemName("Shuttle Search")]
-class Solution : Solver
+public class Solution : Solver
 {
     public object PartOne(string input)
     {

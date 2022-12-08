@@ -9,7 +9,7 @@ sealed record Concat(Expr Left, Expr Right) : Expr;
 sealed record Or(Expr Left, Expr Right) : Expr;
 
 [ProblemName("Monster Messages")]
-class Solution : Solver
+public class Solution : Solver
 {
     public object PartOne(string input)
     {

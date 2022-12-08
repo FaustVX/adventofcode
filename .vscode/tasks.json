@@ -110,6 +110,18 @@
             },
         },
         {
+            "label": "benchmark today",
+            "command": "dotnet",
+            "args": [
+                "run",
+                "--configuration=Release",
+                "--",
+                "bench",
+                "today"
+            ],
+            "problemMatcher": [],
+        },
+        {
             "label": "update",
             "command": "dotnet",
             "args": [
@@ -201,6 +213,18 @@
             "presentation": {
                 "focus": true,
             },
+        },
+        {
+            "label": "benchmark",
+            "command": "dotnet",
+            "args": [
+                "run",
+                "--configuration=Release",
+                "--",
+                "bench",
+                "${input:year}/${input:day}"
+            ],
+            "problemMatcher": [],
         },
     ],
     "inputs": [

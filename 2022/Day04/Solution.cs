@@ -1,7 +1,7 @@
 namespace AdventOfCode.Y2022.Day04;
 
 [ProblemName("Camp Cleanup")]
-class Solution : Solver, IDisplay
+public class Solution : Solver, IDisplay
 {
     public IEnumerable<(string name, Action<string> action)> GetDisplays()
     {
@@ -103,9 +103,9 @@ class Solution : Solver, IDisplay
     public object PartOne(string input)
     {
         var count = 0;
-        foreach (var assigment in input.SplitLine())
+        foreach (var assigment in input.AsMemory().SplitLine())
         {
-            if (!assigment.AsMemory().TryParseFormated<(int startA, int endA, int startB, int endB)>($"{0}-{0},{0}-{0}", out var values))
+            if (!assigment.TryParseFormated<(int startA, int endA, int startB, int endB)>($"{0}-{0},{0}-{0}", out var values))
                 throw new UnreachableException();
             if ((values.startA <= values.startB && values.endA >= values.endB) || (values.startA >= values.startB && values.endA <= values.endB))
                 count++;
@@ -116,9 +116,9 @@ class Solution : Solver, IDisplay
     public object PartTwo(string input)
     {
         var count = 0;
-        foreach (var assigment in input.SplitLine())
+        foreach (var assigment in input.AsMemory().SplitLine())
         {
-            if (!assigment.AsMemory().TryParseFormated<(int startA, int endA, int startB, int endB)>($"{0}-{0},{0}-{0}", out var values))
+            if (!assigment.TryParseFormated<(int startA, int endA, int startB, int endB)>($"{0}-{0},{0}-{0}", out var values))
                 throw new UnreachableException();
             if ((values.startA <= values.startB && values.startB <= values.endA)
                 || (values.startA <= values.endB && values.endB <= values.endA)

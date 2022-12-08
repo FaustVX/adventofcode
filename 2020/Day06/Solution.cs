@@ -1,7 +1,7 @@
 ﻿namespace AdventOfCode.Y2020.Day06;
 
 [ProblemName("Custom Customs")]
-class Solution : Solver
+public class Solution : Solver
 {
     public object PartOne(string input)
         => Regex.Split(input, "\r?\n\r?\n").Select(group => group.SplitLine().SelectMany(l => l).ToHashSet().Count).Sum();

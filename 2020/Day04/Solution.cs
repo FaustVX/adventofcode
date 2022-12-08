@@ -1,7 +1,7 @@
 namespace AdventOfCode.Y2020.Day04;
 
 [ProblemName("Passport Processing")]
-class Solution : Solver
+public class Solution : Solver
 {
     private delegate bool TryParse<T>(string input, out T output);
 

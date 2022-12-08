@@ -1,7 +1,7 @@
 ﻿namespace AdventOfCode.Y2020.Day17;
 
 [ProblemName("Conway Cubes")]
-class Solution : Solver
+public class Solution : Solver
 {
     public object PartOne(string input)
     {

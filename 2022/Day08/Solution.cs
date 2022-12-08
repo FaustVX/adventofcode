@@ -1,7 +1,7 @@
 namespace AdventOfCode.Y2022.Day08;
 
 [ProblemName("Treetop Tree House")]
-class Solution : Solver //, IDisplay
+public class Solution : Solver //, IDisplay
 {
     public object PartOne(string input)
     {

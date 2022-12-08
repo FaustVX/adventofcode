@@ -3,7 +3,7 @@ using AngleSharp.Text;
 namespace AdventOfCode.Y2021.Day12;
 
 [ProblemName("Passage Pathing")]
-class Solution : Solver
+public class Solution : Solver
 {
     record class Cave(string Name)
     {

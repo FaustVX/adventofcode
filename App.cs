@@ -72,6 +72,29 @@ var action =
             throw new AocCommuncationError("Event is not active. This option works in Dec 1-25 only)");
         }
     }) ??
+    Command(args, Args("bench(mark)?", "([0-9]+)/([0-9]+)"), m => {
+        var year = int.Parse(m[1]);
+        var day = int.Parse(m[2]);
+        return () => {
+            var tsolver = tsolvers.First(tsolver =>
+                SolverExtensions.Year(tsolver) == year &&
+                SolverExtensions.Day(tsolver) == day);
+                Runner.RunBenchmark(tsolver);
+        };
+    }) ??
+    Command(args, Args("bench(mark)?", "today"), m => {
+        var dt = DateTime.UtcNow.AddHours(-5);
+        if (dt is { Month: 12, Day: >= 1 and <= 25 }) {
+
+            var tsolver = tsolvers.First(tsolver =>
+                SolverExtensions.Year(tsolver) == dt.Year &&
+                SolverExtensions.Day(tsolver) == dt.Day);
+
+            return () => Runner.RunBenchmark(tsolver);
+        } else {
+            throw new AocCommuncationError("Event is not active. This option works in Dec 1-25 only)");
+        }
+    }) ??
     Command(args, Args("([0-9]+)/([0-9]+)"), m => {
         var year = int.Parse(m[0]);
         var day = int.Parse(m[1]);

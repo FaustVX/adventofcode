@@ -1,7 +1,7 @@
 namespace AdventOfCode.Y2021.Day06;
 
 [ProblemName("Lanternfish")]
-class Solution : Solver
+public class Solution : Solver
 {
     private static int[] Parse(string input)
         => input.Split(',')

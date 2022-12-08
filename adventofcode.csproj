@@ -13,6 +13,7 @@
     <PackageReference Include="System.ValueTuple" Version="4.5.0"/>
     <PackageReference Include="RegExtract" Version="1.0.18"/>
     <PackageReference Include="LibGit2Sharp" Version="0.26.2"/>
+    <PackageReference Include="BenchmarkDotNet" Version="0.13.2"/>
   </ItemGroup>
   <ItemGroup>
   <!--

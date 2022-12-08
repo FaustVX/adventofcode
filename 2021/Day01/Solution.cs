@@ -1,7 +1,7 @@
 namespace AdventOfCode.Y2021.Day01;
 
 [ProblemName("Sonar Sweep")]
-class Solution : Solver
+public class Solution : Solver
 {
     public object PartOne(string input)
         => Solve(input, i => i);

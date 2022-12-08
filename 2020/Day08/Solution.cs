@@ -1,7 +1,7 @@
 ﻿namespace AdventOfCode.Y2020.Day08;
 
 [ProblemName("Handheld Halting")]
-class Solution : Solver
+public class Solution : Solver
 {
     public object PartOne(string input)
     {

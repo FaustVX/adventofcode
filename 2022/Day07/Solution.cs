@@ -2,7 +2,7 @@
 namespace AdventOfCode.Y2022.Day07;
 
 [ProblemName("No Space Left On Device")]
-class Solution : Solver , IDisplay
+public class Solution : Solver , IDisplay
 {
     public object PartOne(string input)
     {

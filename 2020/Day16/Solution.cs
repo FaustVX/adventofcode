@@ -3,7 +3,7 @@
 namespace AdventOfCode.Y2020.Day16;
 
 [ProblemName("Ticket Translation")]
-class Solution : Solver
+public class Solution : Solver
 {
     private static (IEnumerable<(string name, (int min, int max) lower, (int min, int maw) upper)> rules, List<int> ticket, IEnumerable<List<int>> tickets) Parse(string input)
     {

@@ -1,7 +1,7 @@
 namespace AdventOfCode.Y2021.Day14;
 
 [ProblemName("Extended Polymerization")]
-class Solution : Solver
+public class Solution : Solver
 {
     private static (string template, IReadOnlyDictionary<(char, char), char> rules) Parse(string input)
     {

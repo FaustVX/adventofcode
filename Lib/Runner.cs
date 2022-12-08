@@ -12,7 +12,7 @@ class ProblemName : Attribute
     }
 }
 
-interface Solver
+public interface Solver
 {
     object PartOne(string input);
     object PartTwo(string input) => null;
@@ -68,6 +68,9 @@ static class SolverExtensions
     public static string WorkingDir(this Solver solver)
     => WorkingDir(solver.Year(), solver.Day());
 
+    public static string WorkingDir(Type solver)
+    => WorkingDir(Year(solver), Day(solver));
+
     public static SplashScreen SplashScreen(this Solver solver)
     {
         var tsplashScreen = Assembly.GetEntryAssembly().GetTypes()
@@ -82,7 +85,7 @@ record SolverResult(string[] answers, string[] errors);
 class Runner
 {
 
-    private static string GetNormalizedInput(string file)
+    public static string GetNormalizedInput(string file)
     {
         var input = File.ReadAllText(file);
         if (input.EndsWith("\r\n"))
@@ -90,6 +93,12 @@ class Runner
         if (input.EndsWith("\n"))
             return input[0..^1];
         return input;
+    }
+
+    public static void RunBenchmark(Type solver)
+    {
+        BenchmarkDotNet.Running.BenchmarkRunner.Run(typeof(Bench<>).MakeGenericType(solver));
+        File.Copy("BenchmarkDotNet.Artifacts/results/Bench_Solution_-report-github.md", Path.Combine(SolverExtensions.WorkingDir(solver), "benchmark.md"), overwrite: true);
     }
 
     public static SolverResult RunSolver(Solver solver)

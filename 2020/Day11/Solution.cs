@@ -3,7 +3,7 @@
 namespace AdventOfCode.Y2020.Day11;
 
 [ProblemName("Seating System")]
-class Solution : Solver
+public class Solution : Solver
 {
     private readonly string _location;
 

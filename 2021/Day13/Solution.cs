@@ -1,7 +1,7 @@
 namespace AdventOfCode.Y2021.Day13;
 
 [ProblemName("Transparent Origami")]
-class Solution : Solver
+public class Solution : Solver
 {
     private static (HashSet<(int x, int y)> paper, Queue<(char dir, int value)> folds) Parse(string input)
     {

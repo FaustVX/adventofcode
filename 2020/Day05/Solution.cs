@@ -1,7 +1,7 @@
 ﻿namespace AdventOfCode.Y2020.Day05;
 
 [ProblemName("Binary Boarding")]
-class Solution : Solver
+public class Solution : Solver
 {
     public object PartOne(string input)
         => input.SplitLine().Select(CalculateSeatId).Max();

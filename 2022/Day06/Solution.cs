@@ -1,7 +1,7 @@
 namespace AdventOfCode.Y2022.Day06;
 
 [ProblemName("Tuning Trouble")]
-class Solution : Solver, IDisplay
+public class Solution : Solver, IDisplay
 {
     public object PartOne(string input)
     => Execute(input, 4);

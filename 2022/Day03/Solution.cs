@@ -1,7 +1,7 @@
 namespace AdventOfCode.Y2022.Day03;
 
 [ProblemName("Rucksack Reorganization")]
-class Solution : Solver
+public class Solution : Solver
 {
     public object PartOne(string input)
         => input.SplitLine()

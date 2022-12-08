@@ -1,7 +1,7 @@
 namespace AdventOfCode.Y2021.Day05;
 
 [ProblemName("Hydrothermal Venture")]
-class Solution : Solver
+public class Solution : Solver
 {
     public static IEnumerable<((int x, int y) pos1, (int x, int y) pos2)> Parse(string input)
     {

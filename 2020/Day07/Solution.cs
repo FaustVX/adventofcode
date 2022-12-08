@@ -56,7 +56,7 @@ class Bag
 }
 
 [ProblemName("Handy Haversacks")]
-class Solution : Solver
+public class Solution : Solver
 {
     public object PartOne(string input)
     {

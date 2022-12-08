@@ -3,7 +3,7 @@ using System.Runtime.CompilerServices;
 namespace AdventOfCode.Y2021.Day15;
 
 [ProblemName("Chiton")]
-class Solution : Solver
+public class Solution : Solver
 {
     private class Node
     {

@@ -165,6 +165,9 @@ static class Updater
                         Git.Commands.Stage(repo, "*");
                         repo.Commit($"Solved P2 in {duration:h\\:mm\\:ss}", signature, signature, new());
                         repo.Tags.Remove(tag);
+                        Runner.RunBenchmark(solver.GetType());
+                        Git.Commands.Stage(repo, "*");
+                        repo.Commit("Added Benchmarks", signature, signature, new());
                         var branch = repo.Head;
                         var main = repo.Branches["main"] ?? repo.Branches["master"];
                         Git.Commands.Checkout(repo, main);

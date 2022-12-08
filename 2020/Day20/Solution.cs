@@ -31,7 +31,7 @@ record Tile(int Id, string Top, string Bot, string Left, string Right, bool Flip
 }
 
 [ProblemName("Jurassic Jigsaw")]
-class Solution : Solver
+public class Solution : Solver
 {
     public object PartOne(string input)
     {

@@ -1,7 +1,7 @@
 ﻿namespace AdventOfCode.Y2020.Day09;
 
 [ProblemName("Encoding Error")]
-class Solution : Solver
+public class Solution : Solver
 {
     private long _partOne;
 

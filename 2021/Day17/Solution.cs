@@ -1,7 +1,7 @@
 namespace AdventOfCode.Y2021.Day17;
 
 [ProblemName("Trick Shot")]
-class Solution : Solver
+public class Solution : Solver
 {
     struct World
     {

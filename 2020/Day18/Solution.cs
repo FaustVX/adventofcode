@@ -3,7 +3,7 @@
 namespace AdventOfCode.Y2020.Day18;
 
 [ProblemName("Operation Order")]
-class Solution : Solver
+public class Solution : Solver
 {
     public object PartOne(string input)
         => Solve(input, Calculate1);

@@ -3,7 +3,7 @@ using System.Runtime.InteropServices;
 namespace AdventOfCode.Y2021.Day08;
 
 [ProblemName("Seven Segment Search")]
-class Solution : Solver
+public class Solution : Solver
 {
     private class Entry
     {

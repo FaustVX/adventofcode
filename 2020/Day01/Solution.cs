@@ -1,7 +1,7 @@
 namespace AdventOfCode.Y2020.Day01;
 
 [ProblemName("Report Repair")]
-class Solution : Solver
+public class Solution : Solver
 {
 
     public object PartOne(string input)

@@ -1,7 +1,7 @@
 ﻿namespace AdventOfCode.Y2020.Day03;
 
 [ProblemName("Toboggan Trajectory")]
-class Solution : Solver
+public class Solution : Solver
 {
     private static bool[][] GetTerrain(string input)
         => input.SplitLine().Select(line => line.Select(c => c is '.').ToArray()).ToArray();

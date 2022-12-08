@@ -4,7 +4,7 @@ using System.Diagnostics.CodeAnalysis;
 namespace AdventOfCode.Y2021.Day11;
 
 [ProblemName("Dumbo Octopus")]
-class Solution : Solver
+public class Solution : Solver
 {
     private struct Octopus
     {

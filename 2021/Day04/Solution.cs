@@ -1,7 +1,7 @@
 namespace AdventOfCode.Y2021.Day04;
 
 [ProblemName("Giant Squid")]
-class Solution : Solver
+public class Solution : Solver
 {
     class Board
     {

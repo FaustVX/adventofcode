@@ -3,7 +3,7 @@
 namespace AdventOfCode.Y2020.Day14;
 
 [ProblemName("Docking Data")]
-class Solution : Solver
+public class Solution : Solver
 {
     private static IEnumerable<(string mask, IEnumerable<(long addr, long value)> mem)> Parse(string input)
     {

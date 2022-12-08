@@ -1,7 +1,7 @@
 namespace AdventOfCode.Y2021.Day10;
 
 [ProblemName("Syntax Scoring")]
-class Solution : Solver
+public class Solution : Solver
 {
     class Chunck
     {

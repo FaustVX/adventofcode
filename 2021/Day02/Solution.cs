@@ -1,7 +1,7 @@
 namespace AdventOfCode.Y2021.Day02;
 
 [ProblemName("Dive!")]
-class Solution : Solver
+public class Solution : Solver
 {
     private enum Direction
     {
