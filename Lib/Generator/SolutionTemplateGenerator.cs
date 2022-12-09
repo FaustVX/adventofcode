@@ -5,6 +5,7 @@ namespace AdventOfCode.Generator;
 static class SolutionTemplateGenerator {
     public static string Generate(Problem problem)
         => $$"""
+#nullable enable
 namespace AdventOfCode.Y{{problem.Year}}.Day{{problem.Day:00}};
 
 [ProblemName("{{problem.Title}}")]
@@ -20,5 +21,6 @@ public class Solution : Solver //, IDisplay
         return 0;
     }
 }
+
 """;
 }
