@@ -22,7 +22,9 @@ public class Solution : Solver
                     90 => (a.e, a.n - l, a.o),
                     180 => (a.e - l, a.n, a.o),
                     270 => (a.e, a.n + l, a.o),
-                }
+                    _ => throw new UnreachableException(),
+                },
+                _ => throw new UnreachableException(),
             }, a => Math.Abs(a.e) + Math.Abs(a.n));
 
     public object PartTwo(string input)
@@ -38,5 +40,6 @@ public class Solution : Solver
                 ('R', 90) or ('L', 270) => (a.e, a.n, (a.w.n, -a.w.e)),
                 ('L' or 'R', 180) => (a.e, a.n, (-a.w.e, -a.w.n)),
                 ('F', var l) => (a.e + l * a.w.e, a.n + l * a.w.n, a.w),
+                _ => throw new UnreachableException(),
             }, a => Math.Abs(a.e) + Math.Abs(a.n));
 }

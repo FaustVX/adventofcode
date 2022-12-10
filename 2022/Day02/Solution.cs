@@ -18,6 +18,7 @@ public class Solution : Solver, IDisplay
                 ['A', _, 'X'] or ['B', _, 'Y'] or ['C', _, 'Z'] => 3,
                 ['A', _, 'Y'] or ['B', _, 'Z'] or ['C', _, 'X'] => 6,
                 ['A', _, 'Z'] or ['B', _, 'X'] or ['C', _, 'Y'] => 0,
+                _ => throw new UnreachableException(),
             };
         }
         return sum;
@@ -37,6 +38,7 @@ public class Solution : Solver, IDisplay
                 'A' => 3,
                 'B' => 1,
                 'C' => 2,
+                _ => throw new UnreachableException(),
             };
 
             var draw = rule[0] - 'A' + 1;
@@ -46,12 +48,14 @@ public class Solution : Solver, IDisplay
                 'A' => 2,
                 'B' => 3,
                 'C' => 1,
+                _ => throw new UnreachableException(),
             };
             sum += rule[2] switch
             {
                 'X' => 0 + loose,
                 'Y' => 3 + draw,
                 'Z' => 6 + win,
+                _ => throw new UnreachableException(),
             };
         }
         return sum;
@@ -74,6 +78,7 @@ public class Solution : Solver, IDisplay
                 'A' => "   Rock ",
                 'B' => "  Paper ",
                 'C' => "Scisors ",
+                _ => throw new UnreachableException(),
             });
             sb.Append(" vs. ");
             sb.Append(rule[2] switch
@@ -81,6 +86,7 @@ public class Solution : Solver, IDisplay
                 'X' => "Rock    ",
                 'Y' => "Paper   ",
                 'Z' => "Scisors ",
+                _ => throw new UnreachableException(),
             });
             sb.Append(".");
             sb.Append(".");
@@ -90,6 +96,7 @@ public class Solution : Solver, IDisplay
                 ['A', _, 'X'] or ['B', _, 'Y'] or ['C', _, 'Z'] => " Draw     ",
                 ['A', _, 'Y'] or ['B', _, 'Z'] or ['C', _, 'X'] => " You win  ",
                 ['A', _, 'Z'] or ['B', _, 'X'] or ['C', _, 'Y'] => " You Lose ",
+                _ => throw new UnreachableException(),
             });
 
             var me = rule[2] - 'X' + 1;
@@ -98,6 +105,7 @@ public class Solution : Solver, IDisplay
                 ['A', _, 'X'] or ['B', _, 'Y'] or ['C', _, 'Z'] => 3,
                 ['A', _, 'Y'] or ['B', _, 'Z'] or ['C', _, 'X'] => 6,
                 ['A', _, 'Z'] or ['B', _, 'X'] or ['C', _, 'Y'] => 0,
+                _ => throw new UnreachableException(),
             };
 
             sb.Append($"[{me} + {outcome} => {sum += me + outcome}]\n");
@@ -116,6 +124,7 @@ public class Solution : Solver, IDisplay
                 'A' => "   Rock ",
                 'B' => "  Paper ",
                 'C' => "Scisors ",
+                _ => throw new UnreachableException(),
             });
             sb.Append(" vs. ");
             sb.Append(rule[2] switch
@@ -123,6 +132,7 @@ public class Solution : Solver, IDisplay
                 'X' => "Rock    ",
                 'Y' => "Paper   ",
                 'Z' => "Scisors ",
+                _ => throw new UnreachableException(),
             });
             sb.Append(".");
             sb.Append(".");
@@ -133,6 +143,7 @@ public class Solution : Solver, IDisplay
                 'A' => 3,
                 'B' => 1,
                 'C' => 2,
+                _ => throw new UnreachableException(),
             };
 
             var draw = rule[0] - 'A' + 1;
@@ -142,12 +153,14 @@ public class Solution : Solver, IDisplay
                 'A' => 2,
                 'B' => 3,
                 'C' => 1,
+                _ => throw new UnreachableException(),
             };
             var outcome = rule[2] switch
             {
                 'X' => 0 + loose,
                 'Y' => 3 + draw,
                 'Z' => 6 + win,
+                _ => throw new UnreachableException(),
             };
 
             sb.Append($"[{draw} + {outcome} => {sum += outcome}]\n");

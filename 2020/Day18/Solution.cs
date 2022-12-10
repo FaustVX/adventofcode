@@ -29,6 +29,7 @@ public class Solution : Solver
         {
             (var other, '+', var n) => Calculate1(other) + n,
             (var other, '*', var n) => Calculate1(other) * n,
+            _ => throw new UnreachableException(),
         };
 
     static long Calculate2(string formula)

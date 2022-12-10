@@ -25,6 +25,7 @@ namespace AdventOfCode.Y2020
                 ("nop", var v) => new Nop(v),
                 ("acc", var v) => new Acc(v),
                 ("jmp", var o) => new Jmp(o),
+                _ => throw new UnreachableException(),
             };
 
         protected virtual string GetDebuggerDisplay()

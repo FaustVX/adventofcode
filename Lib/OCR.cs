@@ -42,6 +42,7 @@ public static class OCR
                 2 => data2,
                 3 => data3,
                 4 => data4,
+                _ => throw new UnreachableException(),
             };
 
         private readonly byte data0, data1, data2, data3, data4;
@@ -161,6 +162,7 @@ public static class OCR
                 3 => data3,
                 4 => data4,
                 5 => data5,
+                _ => throw new UnreachableException(),
             };
 
         public Char4x6(byte d0, byte d1, byte d2, byte d3, byte d4, byte d5)
