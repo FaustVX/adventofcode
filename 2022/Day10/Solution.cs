@@ -3,7 +3,7 @@
 namespace AdventOfCode.Y2022.Day10;
 
 [ProblemName("Cathode-Ray Tube")]
-public class Solution : Solver //, IDisplay
+public class Solution : Solver, IDisplay
 {
     public object PartOne(string input)
     {
@@ -57,6 +57,26 @@ public class Solution : Solver //, IDisplay
         {
             var line = screen[y];
             return (line & (1L << x)) != 0;
+        }
+    }
+
+    public IEnumerable<(string name, Action<string> action)> GetDisplays()
+    {
+        yield return ("Print", Print);
+    }
+
+    private void Print(string input)
+    {
+        var cpu = new CPU(input.AsMemory().SplitLine());
+        foreach (var cycle in cpu.Run())
+        {
+            var line = Math.DivRem(cycle - 1, 40, out var index);
+            Console.SetCursorPosition(index, line);
+            if (index >= cpu.X - 1 && index <= cpu.X + 1)
+            {
+                Console.Write("#");
+            }
+            Thread.Sleep(TimeSpan.FromSeconds(.1));
         }
     }
 }
