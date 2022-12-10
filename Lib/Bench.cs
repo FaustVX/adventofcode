@@ -10,6 +10,7 @@ where T : Solver, new()
 
     public Bench()
     {
+        Globals.CurrentRunMode = Mode.Benchmark;
         _instance = new();
         _input = Runner.GetNormalizedInput(Path.Combine("..", "..", "..", "..", "..", "..", "..",_instance.WorkingDir(), "input.in"));
     }

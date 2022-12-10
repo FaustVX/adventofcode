@@ -214,6 +214,7 @@ class Runner
 
     public static void DisplayAll(params IDisplay[] displays)
     {
+        Globals.CurrentRunMode = Mode.Display;
         foreach (var solver in displays)
         {
             DisplaySolver(solver);

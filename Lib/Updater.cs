@@ -76,7 +76,7 @@ static class Updater
 
     public static async Task Upload(Solver solver)
     {
-
+        Globals.CurrentRunMode = Mode.Upload;
         var color = Console.ForegroundColor;
         Console.WriteLine();
         var solverResult = Runner.RunSolver(solver);

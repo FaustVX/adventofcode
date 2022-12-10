@@ -34,9 +34,11 @@ public class Solution : Solver, IDisplay
             for (int x = 0; x < 40; x++)
             {
                 var c = lines[y][x] = GetPixel(screen, x, y) ? '#' : ' ';
-                Console.Write(c);
+                if (Globals.CurrentRunMode != Mode.Benchmark)
+                    Console.Write(c);
             }
-            Console.WriteLine();
+            if (Globals.CurrentRunMode != Mode.Benchmark)
+                Console.WriteLine();
         }
         try
         {
