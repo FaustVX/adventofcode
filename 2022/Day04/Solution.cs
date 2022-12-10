@@ -103,7 +103,7 @@ public class Solution : Solver, IDisplay
     public object PartOne(string input)
     {
         var count = 0;
-        foreach (var assigment in input.AsMemory().SplitLine())
+        foreach (var assigment in input.AsMemory().SplitLine().Span)
         {
             if (!assigment.TryParseFormated<(int startA, int endA, int startB, int endB)>($"{0}-{0},{0}-{0}", out var values))
                 throw new UnreachableException();
@@ -116,7 +116,7 @@ public class Solution : Solver, IDisplay
     public object PartTwo(string input)
     {
         var count = 0;
-        foreach (var assigment in input.AsMemory().SplitLine())
+        foreach (var assigment in input.AsMemory().SplitLine().Span)
         {
             if (!assigment.TryParseFormated<(int startA, int endA, int startB, int endB)>($"{0}-{0},{0}-{0}", out var values))
                 throw new UnreachableException();
