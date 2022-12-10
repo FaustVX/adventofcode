@@ -27,13 +27,25 @@ public class Solution : Solver //, IDisplay
             if (index >= cpu.X - 1 && index <= cpu.X + 1)
                 SetPixel(screen, index, line);
         }
+        var lines = new char[6][];
         for (int y = 0; y < screen.Length; y++)
         {
+            lines[y] = new char[40];
             for (int x = 0; x < 40; x++)
-                Console.Write(GetPixel(screen, x, y) ? '#' : ' ');
+            {
+                var c = lines[y][x] = GetPixel(screen, x, y) ? '#' : ' ';
+                Console.Write(c);
+            }
             Console.WriteLine();
         }
-        return Console.ReadLine()!;
+        try
+        {
+            return OCR.GetOCR<OCR.Char4x6>(lines, 1);
+        }
+        catch
+        {
+            return "";
+        }
 
         static void SetPixel(long[] screen, int x, int y)
         {
