@@ -43,6 +43,21 @@ public static class StringExtensions
     }
 
     [DebuggerStepThrough]
+    public static IReadOnlyList<ReadOnlyMemory<char>> SplitSpace(this ReadOnlyMemory<char> st)
+    {
+        var matches = Regex.EnumerateMatches(st.Span, "\\s");
+        var start = 0;
+        var list = new List<ReadOnlyMemory<char>>();
+        foreach (var match in matches)
+        {
+            list.Add(st[start..match.Index]);
+            start = match.Index + match.Length;
+        }
+        list.Add(st[start..]);
+        return list;
+    }
+
+    [DebuggerStepThrough]
     public static string[] Split2Lines(this string st)
         => Regex.Split(st, "\r?\n\r?\n");
 
