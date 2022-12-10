@@ -1,5 +1,6 @@
 namespace AdventOfCode.Y2021.Day05;
 
+#pragma warning disable CS0612 // 'StringExtensions.SplitLine(string)' is Obsolete
 [ProblemName("Hydrothermal Venture")]
 public class Solution : Solver
 {

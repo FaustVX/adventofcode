@@ -8,6 +8,7 @@ sealed record Reference(int Ref) : Expr;
 sealed record Concat(Expr Left, Expr Right) : Expr;
 sealed record Or(Expr Left, Expr Right) : Expr;
 
+#pragma warning disable CS0612 // 'StringExtensions.SplitLine(string)' is Obsolete
 [ProblemName("Monster Messages")]
 public class Solution : Solver
 {

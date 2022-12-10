@@ -11,16 +11,16 @@ public class Solution : Solver, IDisplay
     private static void Display(string input)
     {
         var length = 0;
-        foreach (var assigment in input.SplitLine())
+        foreach (var assigment in input.AsMemory().SplitLine().Span)
         {
-            if (!assigment.AsMemory().TryParseFormated<(int endA, int endB)>($"{"\\d+"}-{0},{"\\d+"}-{0}", out var values))
+            if (!assigment.TryParseFormated<(int endA, int endB)>($"{"\\d+"}-{0},{"\\d+"}-{0}", out var values))
                 throw new UnreachableException();
             length = Math.Max(length, Math.Max(values.endA, values.endB));
         }
 
-        foreach (var assigment in input.SplitLine())
+        foreach (var assigment in input.AsMemory().SplitLine().Span)
         {
-            if (!assigment.AsMemory().TryParseFormated<(int startA, int endA, int startB, int endB)>($"{0}-{0},{0}-{0}", out var values))
+            if (!assigment.TryParseFormated<(int startA, int endA, int startB, int endB)>($"{0}-{0},{0}-{0}", out var values))
                 throw new UnreachableException();
             Compute(values.startA, values.endA, values.startB, values.endB, length).TypeString(TimeSpan.FromSeconds(.15));
             Console.WriteLine();
@@ -103,7 +103,7 @@ public class Solution : Solver, IDisplay
     public object PartOne(string input)
     {
         var count = 0;
-        foreach (var assigment in input.AsMemory().SplitLine())
+        foreach (var assigment in input.AsMemory().SplitLine().Span)
         {
             if (!assigment.TryParseFormated<(int startA, int endA, int startB, int endB)>($"{0}-{0},{0}-{0}", out var values))
                 throw new UnreachableException();
@@ -116,7 +116,7 @@ public class Solution : Solver, IDisplay
     public object PartTwo(string input)
     {
         var count = 0;
-        foreach (var assigment in input.AsMemory().SplitLine())
+        foreach (var assigment in input.AsMemory().SplitLine().Span)
         {
             if (!assigment.TryParseFormated<(int startA, int endA, int startB, int endB)>($"{0}-{0},{0}-{0}", out var values))
                 throw new UnreachableException();

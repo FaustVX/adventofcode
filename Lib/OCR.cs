@@ -42,6 +42,7 @@ public static class OCR
                 2 => data2,
                 3 => data3,
                 4 => data4,
+                _ => throw new UnreachableException(),
             };
 
         private readonly byte data0, data1, data2, data3, data4;
@@ -74,6 +75,24 @@ public static class OCR
                 0b1001,
                 0b0110,
             },
+            ['G'] = new byte[6]
+            {
+                0b0110,
+                0b1001,
+                0b1000,
+                0b1011,
+                0b1001,
+                0b0111,
+            },
+            ['F'] = new byte[6]
+            {
+                0b1111,
+                0b1000,
+                0b1110,
+                0b1000,
+                0b1000,
+                0b1000,
+            },
             ['H'] = new byte[6]
             {
                 0b1001,
@@ -100,6 +119,15 @@ public static class OCR
                 0b1010,
                 0b1010,
                 0b1001,
+            },
+            ['L'] = new byte[6]
+            {
+                0b1000,
+                0b1000,
+                0b1000,
+                0b1000,
+                0b1000,
+                0b1111,
             },
             ['U'] = new byte[6]
             {
@@ -134,6 +162,7 @@ public static class OCR
                 3 => data3,
                 4 => data4,
                 5 => data5,
+                _ => throw new UnreachableException(),
             };
 
         public Char4x6(byte d0, byte d1, byte d2, byte d3, byte d4, byte d5)

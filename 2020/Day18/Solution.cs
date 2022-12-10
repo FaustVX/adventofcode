@@ -2,6 +2,7 @@
 
 namespace AdventOfCode.Y2020.Day18;
 
+#pragma warning disable CS0612 // 'StringExtensions.SplitLine(string)' is Obsolete
 [ProblemName("Operation Order")]
 public class Solution : Solver
 {
@@ -29,6 +30,7 @@ public class Solution : Solver
         {
             (var other, '+', var n) => Calculate1(other) + n,
             (var other, '*', var n) => Calculate1(other) * n,
+            _ => throw new UnreachableException(),
         };
 
     static long Calculate2(string formula)

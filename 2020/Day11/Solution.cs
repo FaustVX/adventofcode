@@ -1,7 +1,6 @@
-﻿using System.IO;
+﻿namespace AdventOfCode.Y2020.Day11;
 
-namespace AdventOfCode.Y2020.Day11;
-
+#pragma warning disable CS0612 // 'StringExtensions.SplitLine(string)' is Obsolete
 [ProblemName("Seating System")]
 public class Solution : Solver
 {

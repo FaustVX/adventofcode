@@ -1,5 +1,6 @@
 ﻿namespace AdventOfCode.Y2020.Day10;
 
+#pragma warning disable CS0612 // 'StringExtensions.SplitLine(string)' is Obsolete
 [ProblemName("Adapter Array")]
 public class Solution : Solver
 {

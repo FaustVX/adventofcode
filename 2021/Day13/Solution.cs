@@ -1,5 +1,6 @@
 namespace AdventOfCode.Y2021.Day13;
 
+#pragma warning disable CS0612 // 'StringExtensions.SplitLine(string)' is Obsolete
 [ProblemName("Transparent Origami")]
 public class Solution : Solver
 {

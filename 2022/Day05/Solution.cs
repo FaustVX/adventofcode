@@ -12,34 +12,34 @@ public class Solution : Solver, IDisplay
             stacks[to].Push(stacks[from].Pop());
     }
 
-    Stack<char>[] ParseStacks(IReadOnlyList<ReadOnlyMemory<char>> lines)
+    Stack<char>[] ParseStacks(ReadOnlyMemory<ReadOnlyMemory<char>> lines)
     {
-        var capacity = (lines[^1].Length + 2) / 4; // ^1 and +2: if lines are trimmed
+        var capacity = (lines.Span[^1].Length + 2) / 4; // ^1 and +2: if lines are trimmed
         var stacks = new Stack<char>[capacity];
         for (int i = 0; i < capacity; i++)
             stacks[i] = new();
 
-        foreach (var line in lines.Reverse().Skip(1))
+        for (var l = lines.Length - 2; l >= 0; l--)
             for (int i = 0; i < capacity; i++)
-                if (line.Slice(i * 4, 3).Span is ['[', var c, ']'])
+                if (lines.Span[l].Slice(i * 4, 3).Span is ['[', var c, ']'])
                     stacks[i].Push(c);
         return stacks;
     }
 
-    IEnumerable<(int qty, int from, int to)> ParseInstruction(IEnumerable<ReadOnlyMemory<char>> input)
+    IEnumerable<(int qty, int from, int to)> ParseInstruction(ReadOnlyMemory<ReadOnlyMemory<char>> input)
     {
-        foreach (var line in input)
-            if (line.TryParseFormated<(int qty, int from, int to)>($"move {0} from {0} to {0}", out var values))
+        for (var l = 0; l < input.Length; l++)
+            if (input.Span[l].TryParseFormated<(int qty, int from, int to)>($"move {0} from {0} to {0}", out var values))
                 yield return (values.qty, values.from - 1, values.to - 1);
             else
-                throw new UnreachableException(line.ToString());
+                throw new UnreachableException(input.Span[l].ToString());
     }
 
     string Execute(string input, Action<int, int, int, Stack<char>[]> action)
     {
         var groups = input.AsMemory().Split2Lines();
-        var stacks = ParseStacks(groups[0].SplitLine());
-        foreach (var (qty, from, to) in ParseInstruction(groups[1].SplitLine()))
+        var stacks = ParseStacks(groups.Span[0].SplitLine());
+        foreach (var (qty, from, to) in ParseInstruction(groups.Span[1].SplitLine()))
             action(qty, from, to, stacks);
         return string.Concat(stacks.Select(static stack => stack.Peek()));
     }

@@ -1,5 +1,6 @@
 namespace AdventOfCode.Y2021.Day04;
 
+#pragma warning disable CS0612 // 'StringExtensions.SplitLine(string)' is Obsolete
 [ProblemName("Giant Squid")]
 public class Solution : Solver
 {

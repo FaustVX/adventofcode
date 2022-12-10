@@ -2,6 +2,7 @@ using AngleSharp.Text;
 
 namespace AdventOfCode.Y2021.Day12;
 
+#pragma warning disable CS0612 // 'StringExtensions.SplitLine(string)' is Obsolete
 [ProblemName("Passage Pathing")]
 public class Solution : Solver
 {

@@ -2,6 +2,7 @@
 
 namespace AdventOfCode.Y2020.Day16;
 
+#pragma warning disable CS0612 // 'StringExtensions.SplitLine(string)' is Obsolete
 [ProblemName("Ticket Translation")]
 public class Solution : Solver
 {

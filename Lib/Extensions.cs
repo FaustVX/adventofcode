@@ -51,7 +51,9 @@ public static class Extensions
     [MethodImpl(MethodImplOptions.AggressiveOptimization | MethodImplOptions.AggressiveInlining)]
     [DebuggerStepThrough]
     public static T[] ParseToArrayOfT<T>(this string input, Func<string, T> parser)
+#pragma warning disable CS0612 // 'StringExtensions.SplitLine(string)' is Obsolete
         => input.SplitLine().Select(parser).ToArray();
+#pragma warning restore CS0612
 
     [MethodImpl(MethodImplOptions.AggressiveOptimization | MethodImplOptions.AggressiveInlining)]
     [DebuggerStepThrough]
@@ -61,7 +63,9 @@ public static class Extensions
     [MethodImpl(MethodImplOptions.AggressiveOptimization | MethodImplOptions.AggressiveInlining)]
     [DebuggerStepThrough]
     public static IEnumerable<T> ParseToIEnumOfT<T>(this string input, Func<string, T> parser)
+#pragma warning disable CS0612 // 'StringExtensions.SplitLine(string)' is Obsolete
         => input.SplitLine().Select(parser);
+#pragma warning restore CS0612
 
     [MethodImpl(MethodImplOptions.AggressiveOptimization | MethodImplOptions.AggressiveInlining)]
     [DebuggerStepThrough]
@@ -71,14 +75,14 @@ public static class Extensions
     [DebuggerStepThrough]
     public static (T[,], int width, int height) Parse2D<T>(this string input, Func<char, T> creator)
     {
-        var lines = input.SplitLine();
-        int width = lines[0].Length;
+        var lines = input.AsMemory().SplitLine();
+        int width = lines.Span[0].Length;
         int height = lines.Length;
         var datas = new T[width, height];
 
         for (var x = 0; x < width; x++)
             for (var y = 0; y < height; y++)
-                datas[x, y] = creator(lines[y][x]);
+                datas[x, y] = creator(lines.Span[y].Span[x]);
 
         return (datas, width, height);
     }

@@ -6,9 +6,9 @@ public class Solution : Solver , IDisplay
 {
     public object PartOne(string input)
     {
-        var span = System.Runtime.InteropServices.CollectionsMarshal.AsSpan((List<ReadOnlyMemory<char>>)input.AsMemory().SplitLine())[1..];
+        var span = input.AsMemory().SplitLine()[1..];
         var allDirSize = 0;
-        ParseTree(span, ImmutableStack.Create("/".AsMemory()),out _, dirClosed: (_, size) =>
+        ParseTree(span.Span, ImmutableStack.Create("/".AsMemory()),out _, dirClosed: (_, size) =>
         {
             if (size <= 100_000)
                 allDirSize += size;
@@ -61,9 +61,9 @@ public class Solution : Solver , IDisplay
 
     public object PartTwo(string input)
     {
-        var span = System.Runtime.InteropServices.CollectionsMarshal.AsSpan((List<ReadOnlyMemory<char>>)input.AsMemory().SplitLine())[1..];
+        var span = input.AsMemory().SplitLine()[1..];
         var allDir = new List<int>();
-        var totalUsedSize = ParseTree(span, ImmutableStack.Create("/".AsMemory()), out _, dirClosed: (_, size) => allDir.Add(size));
+        var totalUsedSize = ParseTree(span.Span, ImmutableStack.Create("/".AsMemory()), out _, dirClosed: (_, size) => allDir.Add(size));
         var freeSpaceSize = 70_000_000 - totalUsedSize;
         var sizeToFreeUp = 30_000_000 - freeSpaceSize;
         return allDir.Where(dir => dir >= sizeToFreeUp).Min();
@@ -76,11 +76,11 @@ public class Solution : Solver , IDisplay
 
     private void TreeDisplay(string input)
     {
-        var span = System.Runtime.InteropServices.CollectionsMarshal.AsSpan((List<ReadOnlyMemory<char>>)input.AsMemory().SplitLine())[1..];
+        var span = input.AsMemory().SplitLine()[1..];
         var allDir = new List<int>();
 
         var indent = 0;
-        var totalUsedSize = ParseTree(span, ImmutableStack.Create("".AsMemory()), out _
+        var totalUsedSize = ParseTree(span.Span, ImmutableStack.Create("".AsMemory()), out _
         , dirOpened: name =>
         {
             Console.WriteLine((indent >= 1 ? string.Concat(Enumerable.Repeat("|  ", indent - 1)) + "|--" : "") + name.Peek() + "/");

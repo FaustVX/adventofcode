@@ -1,5 +1,6 @@
 ﻿namespace AdventOfCode.Y2020.Day08;
 
+#pragma warning disable CS0612 // 'StringExtensions.SplitLine(string)' is Obsolete
 [ProblemName("Handheld Halting")]
 public class Solution : Solver
 {

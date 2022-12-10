@@ -2,6 +2,7 @@
 
 namespace AdventOfCode.Y2020.Day14;
 
+#pragma warning disable CS0612 // 'StringExtensions.SplitLine(string)' is Obsolete
 [ProblemName("Docking Data")]
 public class Solution : Solver
 {

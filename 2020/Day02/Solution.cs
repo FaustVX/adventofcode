@@ -2,6 +2,7 @@ using RegExtract;
 
 namespace AdventOfCode.Y2020.Day02;
 
+#pragma warning disable CS0612 // 'StringExtensions.SplitLine(string)' is Obsolete
 [ProblemName("Password Philosophy")]
 public class Solution : Solver
 {

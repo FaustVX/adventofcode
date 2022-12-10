@@ -100,6 +100,7 @@ public class Solution : Solver
                 ']' => 57,
                 '}' => 1197,
                 '>' => 25137,
+                _ => throw new UnreachableException(),
             };
         }
         return sum;
@@ -123,6 +124,7 @@ public class Solution : Solver
                     ']' => 2,
                     '}' => 3,
                     '>' => 4,
+                    _ => throw new UnreachableException(),
                 };
             sums.Add(sum);
         }
