@@ -10,10 +10,10 @@ public class Solution : Solver //, IDisplay
         var cpu = new CPU(input.AsMemory().SplitLine());
         var signalStrength = 0;
         foreach (var cycle in cpu.Run())
-        {
-            if (cycle is >= 20 and <= 220 && ((cycle - 20) % 40) is 0)
+            if (cycle > 220)
+                break;
+            else if (cycle is >= 20 && ((cycle - 20) % 40) is 0)
                 signalStrength += cycle * cpu.X;
-        }
         return signalStrength;
     }
 
