@@ -19,8 +19,8 @@ public class Solution : Solver
         {
             var current = 0;
             var count = firsts.Length;
-            foreach (var line in (input.TrimEnd() + "\n\n").SplitLine())
-                if (line == "")
+            foreach (var line in (input.TrimEnd() + "\n\n").AsMemory().SplitLine().Span)
+                if (line.Span is "")
                 {
                     for (int i = 0; i < count; i++)
                         if (current > firsts[i])
@@ -28,7 +28,7 @@ public class Solution : Solver
                     current = 0;
                 }
                 else
-                    current += int.Parse(line);
+                    current += int.Parse(line.Span);
         }
 
         static int CalculateSum(Span<int> firsts)

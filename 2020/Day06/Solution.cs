@@ -1,5 +1,6 @@
 ﻿namespace AdventOfCode.Y2020.Day06;
 
+#pragma warning disable CS0612 // 'StringExtensions.SplitLine(string)' is Obsolete
 [ProblemName("Custom Customs")]
 public class Solution : Solver
 {

@@ -30,6 +30,7 @@ record Tile(int Id, string Top, string Bot, string Left, string Right, bool Flip
         => string.Concat(input.Reverse());
 }
 
+#pragma warning disable CS0612 // 'StringExtensions.SplitLine(string)' is Obsolete
 [ProblemName("Jurassic Jigsaw")]
 public class Solution : Solver
 {

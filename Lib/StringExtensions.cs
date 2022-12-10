@@ -1,4 +1,4 @@
-using System.Numerics;
+using System.ComponentModel;
 using System.Runtime.CompilerServices;
 
 namespace AdventOfCode;
@@ -8,22 +8,26 @@ public static class StringExtensions
     [DebuggerStepThrough]
     public static string StripMargin(this string st, string margin = "|")
     {
+#pragma warning disable CS0612 // 'StringExtensions.SplitLine(string)' is Obsolete
         return string.Join("\n",
             from line in st.SplitLine()
             select Regex.Replace(line, @"^\s*" + Regex.Escape(margin), "")
         );
+#pragma warning restore CS0612
     }
 
     [DebuggerStepThrough]
     public static string Indent(this string st, int l)
     {
         return string.Join("\n" + new string(' ', l),
+#pragma warning disable CS0612 // 'StringExtensions.SplitLine(string)' is Obsolete
             from line in st.SplitLine()
+#pragma warning restore CS0612
             select Regex.Replace(line, @"^\s*\|", "")
         );
     }
 
-    [DebuggerStepThrough, Obsolete]
+    [DebuggerStepThrough, Obsolete, EditorBrowsable(EditorBrowsableState.Never)]
     public static string[] SplitLine(this string st)
         => Regex.Split(st, "\r?\n");
 
@@ -43,6 +47,10 @@ public static class StringExtensions
         return list;
     }
 
+    [DebuggerStepThrough, Obsolete, EditorBrowsable(EditorBrowsableState.Never)]
+    public static string[] SplitSpace(this string st)
+        => Regex.Split(st, "\\s");
+
     [DebuggerStepThrough]
     public static Memory<ReadOnlyMemory<char>> SplitSpace(this ReadOnlyMemory<char> st)
     {
@@ -59,7 +67,7 @@ public static class StringExtensions
         return list;
     }
 
-    [DebuggerStepThrough, Obsolete]
+    [DebuggerStepThrough, Obsolete, EditorBrowsable(EditorBrowsableState.Never)]
     public static string[] Split2Lines(this string st)
         => Regex.Split(st, "\r?\n\r?\n");
 

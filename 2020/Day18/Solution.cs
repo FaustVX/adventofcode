@@ -2,6 +2,7 @@
 
 namespace AdventOfCode.Y2020.Day18;
 
+#pragma warning disable CS0612 // 'StringExtensions.SplitLine(string)' is Obsolete
 [ProblemName("Operation Order")]
 public class Solution : Solver
 {

@@ -1,5 +1,6 @@
 namespace AdventOfCode.Y2021.Day14;
 
+#pragma warning disable CS0612 // 'StringExtensions.SplitLine(string)' is Obsolete
 [ProblemName("Extended Polymerization")]
 public class Solution : Solver
 {

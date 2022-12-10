@@ -6,18 +6,18 @@ public class Solution : Solver, IDisplay
     public object PartOne(string input)
     {
         var sum = 0;
-        foreach (var rule in input.SplitLine())
+        foreach (var rule in input.AsMemory().SplitLine().Span)
         {
             // A X : Rock
             // B Y : Paper
             // C Z : Scissors
 
-            var me = rule[2] - 'X' + 1;
-            sum += me + rule switch
+            var me = rule.Span[2] - 'X' + 1;
+            sum += me + rule.Span switch
             {
-                ['A', _, 'X'] or ['B', _, 'Y'] or ['C', _, 'Z'] => 3,
-                ['A', _, 'Y'] or ['B', _, 'Z'] or ['C', _, 'X'] => 6,
-                ['A', _, 'Z'] or ['B', _, 'X'] or ['C', _, 'Y'] => 0,
+                "A X" or "B Y" or "C Z" => 3,
+                "A Y" or "B Z" or "C X" => 6,
+                "A Z" or "B X" or "C Y" => 0,
                 _ => throw new UnreachableException(),
             };
         }
@@ -27,13 +27,13 @@ public class Solution : Solver, IDisplay
     public object PartTwo(string input)
     {
         var sum = 0;
-        foreach (var rule in input.SplitLine())
+        foreach (var rule in input.AsMemory().SplitLine().Span)
         {
             // A : Rock
             // B : Paper
             // C : Scissors
 
-            var loose = rule[0] switch
+            var loose = rule.Span[0] switch
             {
                 'A' => 3,
                 'B' => 1,
@@ -41,16 +41,16 @@ public class Solution : Solver, IDisplay
                 _ => throw new UnreachableException(),
             };
 
-            var draw = rule[0] - 'A' + 1;
+            var draw = rule.Span[0] - 'A' + 1;
 
-            var win = rule[0] switch
+            var win = rule.Span[0] switch
             {
                 'A' => 2,
                 'B' => 3,
                 'C' => 1,
                 _ => throw new UnreachableException(),
             };
-            sum += rule[2] switch
+            sum += rule.Span[2] switch
             {
                 'X' => 0 + loose,
                 'Y' => 3 + draw,
@@ -70,10 +70,10 @@ public class Solution : Solver, IDisplay
     static void DisplayPartOne(string input)
     {
         var sum = 0;
-        foreach (var rule in input.SplitLine())
+        foreach (var rule in input.AsMemory().SplitLine().Span)
         {
             var sb = new StringBuilder();
-            sb.Append(rule[0] switch
+            sb.Append(rule.Span[0] switch
             {
                 'A' => "   Rock ",
                 'B' => "  Paper ",
@@ -81,7 +81,7 @@ public class Solution : Solver, IDisplay
                 _ => throw new UnreachableException(),
             });
             sb.Append(" vs. ");
-            sb.Append(rule[2] switch
+            sb.Append(rule.Span[2] switch
             {
                 'X' => "Rock    ",
                 'Y' => "Paper   ",
@@ -91,20 +91,20 @@ public class Solution : Solver, IDisplay
             sb.Append(".");
             sb.Append(".");
             sb.Append(".");
-            sb.Append(rule switch
+            sb.Append(rule.Span switch
             {
-                ['A', _, 'X'] or ['B', _, 'Y'] or ['C', _, 'Z'] => " Draw     ",
-                ['A', _, 'Y'] or ['B', _, 'Z'] or ['C', _, 'X'] => " You win  ",
-                ['A', _, 'Z'] or ['B', _, 'X'] or ['C', _, 'Y'] => " You Lose ",
+                "A X" or "B Y" or "C Z" => " Draw     ",
+                "A Y" or "B Z" or "C X" => " You win  ",
+                "A Z" or "B X" or "C Y" => " You Lose ",
                 _ => throw new UnreachableException(),
             });
 
-            var me = rule[2] - 'X' + 1;
-            var outcome = rule switch
+            var me = rule.Span[2] - 'X' + 1;
+            var outcome = rule.Span switch
             {
-                ['A', _, 'X'] or ['B', _, 'Y'] or ['C', _, 'Z'] => 3,
-                ['A', _, 'Y'] or ['B', _, 'Z'] or ['C', _, 'X'] => 6,
-                ['A', _, 'Z'] or ['B', _, 'X'] or ['C', _, 'Y'] => 0,
+                "A X" or "B Y" or "C Z" => 3,
+                "A Y" or "B Z" or "C X" => 6,
+                "A Z" or "B X" or "C Y" => 0,
                 _ => throw new UnreachableException(),
             };
 
@@ -116,10 +116,10 @@ public class Solution : Solver, IDisplay
     static void DisplayPartTwo(string input)
     {
         var sum = 0;
-        foreach (var rule in input.SplitLine())
+        foreach (var rule in input.AsMemory().SplitLine().Span)
         {
             var sb = new StringBuilder();
-            sb.Append(rule[0] switch
+            sb.Append(rule.Span[0] switch
             {
                 'A' => "   Rock ",
                 'B' => "  Paper ",
@@ -127,7 +127,7 @@ public class Solution : Solver, IDisplay
                 _ => throw new UnreachableException(),
             });
             sb.Append(" vs. ");
-            sb.Append(rule[2] switch
+            sb.Append(rule.Span[2] switch
             {
                 'X' => "Rock    ",
                 'Y' => "Paper   ",
@@ -138,7 +138,7 @@ public class Solution : Solver, IDisplay
             sb.Append(".");
             sb.Append(".");
 
-            var loose = rule[0] switch
+            var loose = rule.Span[0] switch
             {
                 'A' => 3,
                 'B' => 1,
@@ -146,16 +146,16 @@ public class Solution : Solver, IDisplay
                 _ => throw new UnreachableException(),
             };
 
-            var draw = rule[0] - 'A' + 1;
+            var draw = rule.Span[0] - 'A' + 1;
 
-            var win = rule[0] switch
+            var win = rule.Span[0] switch
             {
                 'A' => 2,
                 'B' => 3,
                 'C' => 1,
                 _ => throw new UnreachableException(),
             };
-            var outcome = rule[2] switch
+            var outcome = rule.Span[2] switch
             {
                 'X' => 0 + loose,
                 'Y' => 3 + draw,

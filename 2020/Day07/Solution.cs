@@ -55,6 +55,7 @@ class Bag
     }
 }
 
+#pragma warning disable CS0612 // 'StringExtensions.SplitLine(string)' is Obsolete
 [ProblemName("Handy Haversacks")]
 public class Solution : Solver
 {

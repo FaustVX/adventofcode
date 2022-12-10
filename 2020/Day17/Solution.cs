@@ -1,5 +1,6 @@
 ﻿namespace AdventOfCode.Y2020.Day17;
 
+#pragma warning disable CS0612 // 'StringExtensions.SplitLine(string)' is Obsolete
 [ProblemName("Conway Cubes")]
 public class Solution : Solver
 {

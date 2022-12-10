@@ -1,5 +1,6 @@
 ﻿namespace AdventOfCode.Y2020.Day05;
 
+#pragma warning disable CS0612 // 'StringExtensions.SplitLine(string)' is Obsolete
 [ProblemName("Binary Boarding")]
 public class Solution : Solver
 {

@@ -2,6 +2,7 @@
 
 namespace AdventOfCode.Y2020.Day12;
 
+#pragma warning disable CS0612 // 'StringExtensions.SplitLine(string)' is Obsolete
 [ProblemName("Rain Risk")]
 public class Solution : Solver
 {

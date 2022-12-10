@@ -1,5 +1,6 @@
 ﻿namespace AdventOfCode.Y2020.Day09;
 
+#pragma warning disable CS0612 // 'StringExtensions.SplitLine(string)' is Obsolete
 [ProblemName("Encoding Error")]
 public class Solution : Solver
 {

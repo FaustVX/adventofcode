@@ -1,5 +1,6 @@
 namespace AdventOfCode.Y2022.Day03;
 
+#pragma warning disable CS0612 // 'StringExtensions.SplitLine(string)' is Obsolete
 [ProblemName("Rucksack Reorganization")]
 public class Solution : Solver
 {
