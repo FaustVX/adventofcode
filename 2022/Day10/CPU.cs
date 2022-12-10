@@ -17,11 +17,9 @@ public class CPU
     public IEnumerable<int> Run()
     {
         foreach (var instruction in Program)
-            foreach (var _ in instruction.Execute(this))
-            {
-                yield return Cycle;
-                Cycle++;
-            }
+            foreach (var cycle in instruction.Execute(this))
+                for (int i = 0; i < cycle; i++)
+                    yield return Cycle++;
         yield return Cycle;
     }
 }

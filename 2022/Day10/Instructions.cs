@@ -1,5 +1,4 @@
 #nullable enable
-using System.Collections;
 
 namespace AdventOfCode.Y2022.Day10;
 
@@ -8,20 +7,24 @@ public abstract class Instruction
     public static Instruction Parse(ReadOnlyMemory<ReadOnlyMemory<char>> line)
         => line.Span switch
         {
-            [{ Span: "noop" }] => new Noop(),
+            [{ Span: "noop" }] => Noop.Instance,
             [{ Span: "addx"}, .. var args] => AddX.ParseArgs(args),
             _ => throw new UnreachableException(),
         };
-    public abstract IEnumerable Execute(CPU cpu);
+    public abstract IEnumerable<int> Execute(CPU cpu);
     public override abstract string ToString();
 }
 
 public sealed class Noop : Instruction
 {
-    public override IEnumerable Execute(CPU cpu)
+    public static Noop Instance { get; } = new();
+
+    private Noop()
+    { }
+
+    public override IEnumerable<int> Execute(CPU cpu)
     {
-        yield return null;
-        yield break;
+        yield return 1;
     }
 
     public override string ToString()
@@ -39,10 +42,9 @@ public sealed class AddX : Instruction
         _ => throw new UnreachableException(),
     };
 
-    public override IEnumerable Execute(CPU cpu)
+    public override IEnumerable<int> Execute(CPU cpu)
     {
-        yield return null;
-        yield return null;
+        yield return 2;
         cpu.X += Value;
         yield break;
     }
