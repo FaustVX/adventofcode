@@ -5,16 +5,16 @@ namespace AdventOfCode.Y2022.Day10;
 public class CPU
 {
     public List<Instruction> Program { get; }
-    public CPU(IEnumerable<ReadOnlyMemory<char>> lines)
+    public CPU(ReadOnlyMemory<ReadOnlyMemory<char>> lines)
     {
         Program = new();
-        foreach (var line in lines)
+        foreach (var line in lines.Span)
         {
-            var instruction = line.SplitSpace() switch
+            var instruction = line.SplitSpace().Span switch
             {
-                [{ Span: "noop" }] => (Instruction)new Noop(),
+                [{ Span: "noop"}] => (Instruction)new Noop(),
                 [{ Span: "addx"}, var a] when int.TryParse(a.Span, out var x) => new AddX(x),
-                var i => throw new UnreachableException(string.Join(" ", i)),
+                _ => throw new UnreachableException(),
             };
             Program.Add(instruction);
         }

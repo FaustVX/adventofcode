@@ -23,57 +23,60 @@ public static class StringExtensions
         );
     }
 
-    [DebuggerStepThrough]
+    [DebuggerStepThrough, Obsolete]
     public static string[] SplitLine(this string st)
         => Regex.Split(st, "\r?\n");
 
     [DebuggerStepThrough]
-    public static IReadOnlyList<ReadOnlyMemory<char>> SplitLine(this ReadOnlyMemory<char> st)
+    public static Memory<ReadOnlyMemory<char>> SplitLine(this ReadOnlyMemory<char> st)
     {
         var matches = Regex.EnumerateMatches(st.Span, "\r?\n");
         var start = 0;
-        var list = new List<ReadOnlyMemory<char>>();
+        var list = new ReadOnlyMemory<char>[Regex.Count(st.Span, "\r?\n") + 1];
+        var index = 0;
         foreach (var match in matches)
         {
-            list.Add(st[start..match.Index]);
+            list[index++] = st[start..match.Index];
             start = match.Index + match.Length;
         }
-        list.Add(st[start..]);
+        list[index] = st[start..];
         return list;
     }
 
     [DebuggerStepThrough]
-    public static IReadOnlyList<ReadOnlyMemory<char>> SplitSpace(this ReadOnlyMemory<char> st)
+    public static Memory<ReadOnlyMemory<char>> SplitSpace(this ReadOnlyMemory<char> st)
     {
         var matches = Regex.EnumerateMatches(st.Span, "\\s");
         var start = 0;
-        var list = new List<ReadOnlyMemory<char>>();
+        var list = new ReadOnlyMemory<char>[Regex.Count(st.Span, "\\s") + 1];
+        var index = 0;
         foreach (var match in matches)
         {
-            list.Add(st[start..match.Index]);
+            list[index++] = st[start..match.Index];
             start = match.Index + match.Length;
         }
-        list.Add(st[start..]);
+        list[index] = st[start..];
         return list;
     }
 
-    [DebuggerStepThrough]
+    [DebuggerStepThrough, Obsolete]
     public static string[] Split2Lines(this string st)
         => Regex.Split(st, "\r?\n\r?\n");
 
     [DebuggerStepThrough]
-    public static IReadOnlyList<ReadOnlyMemory<char>> Split2Lines(this ReadOnlyMemory<char> st)
+    public static Memory<ReadOnlyMemory<char>> Split2Lines(this ReadOnlyMemory<char> st)
     {
         var matches = Regex.EnumerateMatches(st.Span, "(\r?\n){2}");
         var start = 0;
-        var list = new List<ReadOnlyMemory<char>>();
+        var list = new ReadOnlyMemory<char>[Regex.Count(st.Span, "(\r?\n){2}") + 1];
+        var index = 0;
         foreach (var match in matches)
         {
-            list.Add(st[start..match.Index]);
+            list[index++] = st[start..match.Index];
             start = match.Index + match.Length;
         }
-        list.Add(st[start..]);
-        return list.AsReadOnly();
+        list[index] = st[start..];
+        return list;
     }
 
     [DebuggerStepThrough]

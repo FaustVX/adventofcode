@@ -11,7 +11,7 @@ public class Solution : Solver //, IDisplay
         {
             tail,
         };
-        foreach (var move in input.AsMemory().SplitLine())
+        foreach (var move in input.AsMemory().SplitLine().Span)
         {
             var dir = move.Span[0] switch
             {
@@ -45,7 +45,7 @@ public class Solution : Solver //, IDisplay
         {
             (0, 0),
         };
-        foreach (var move in input.AsMemory().SplitLine())
+        foreach (var move in input.AsMemory().SplitLine().Span)
         {
             var dir = move.Span[0] switch
             {
