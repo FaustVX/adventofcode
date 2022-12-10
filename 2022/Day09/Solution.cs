@@ -1,7 +1,7 @@
 namespace AdventOfCode.Y2022.Day09;
 
 [ProblemName("Rope Bridge")]
-public class Solution : Solver //, IDisplay
+public class Solution : Solver, IDisplay
 {
     public object PartOne(string input)
     => Execute(input, 2).Count;
@@ -33,31 +33,122 @@ public class Solution : Solver //, IDisplay
             }
         }
         return visited;
+    }
 
-        static void Move(ref (int x, int y) head, Span<(int x, int y)> tail, (int x, int y) dir)
-        {
-            head.x += dir.x;
-            head.y += dir.y;
-            if (tail.IsEmpty)
+    private static void Move(ref (int x, int y) head, Span<(int x, int y)> tail, (int x, int y) dir)
+    {
+        head.x += dir.x;
+        head.y += dir.y;
+        if (tail.IsEmpty)
+            return;
+        var offset = (x: head.x - tail[0].x, y: head.y - tail[0].y);
+        if (offset.x is >= -1 and <= 1)
+            if (offset.y is >= -1 and <= 1)
                 return;
-            var offset = (x: head.x - tail[0].x, y: head.y - tail[0].y);
-            if (offset.x is >= -1 and <= 1)
-                if (offset.y is >= -1 and <= 1)
-                    return;
 
-            dir.x = offset.x switch
+        dir.x = offset.x switch
+        {
+            > 0 => 1,
+            < 0 => -1,
+            _ => 0,
+        };
+        dir.y = offset.y switch
+        {
+            > 0 => 1,
+            < 0 => -1,
+            _ => 0,
+        };
+        Move(ref tail[0], tail[1..], dir);
+    }
+
+    public IEnumerable<(string name, Action<string> action)> GetDisplays()
+    {
+        yield return ("Animate", Animate);
+    }
+
+    private void Animate(string _)
+    {
+        var length = GetLength();
+        Span<(int x, int y)> rope = stackalloc (int, int)[length];
+        var visited = new HashSet<(int x, int y)>();
+
+        Console.CursorVisible = false;
+        Draw(rope, visited);
+
+        while (true)
+            switch (Console.ReadKey(intercept: true).Key)
             {
-                > 0 => 1,
-                < 0 => -1,
-                _ => 0,
-            };
-            dir.y = offset.y switch
+                case ConsoleKey.UpArrow:
+                    Move(ref rope[0], rope[1..], (0, -1));
+                    visited.Add(rope[^1]);
+                    Draw(rope, visited);
+                    break;
+                case ConsoleKey.DownArrow:
+                    Move(ref rope[0], rope[1..], (0, 1));
+                    visited.Add(rope[^1]);
+                    Draw(rope, visited);
+                    break;
+                case ConsoleKey.LeftArrow:
+                    Move(ref rope[0], rope[1..], (-1, 0));
+                    visited.Add(rope[^1]);
+                    Draw(rope, visited);
+                    break;
+                case ConsoleKey.RightArrow:
+                    Move(ref rope[0], rope[1..], (1, 0));
+                    visited.Add(rope[^1]);
+                    Draw(rope, visited);
+                    break;
+                case ConsoleKey.Escape:
+                    Console.CursorVisible = true;
+                    return;
+            }
+
+        static void Draw(ReadOnlySpan<(int x, int y)> rope, HashSet<(int x, int y)> visited)
+        {
+            var middle = (x: Console.WindowWidth / 2, y: Console.WindowHeight / 2);
+            Console.Clear();
+            foreach (var (x, y) in visited)
             {
-                > 0 => 1,
-                < 0 => -1,
-                _ => 0,
-            };
-            Move(ref tail[0], tail[1..], dir);
+                Console.SetCursorPosition(x + middle.x, y + middle.y);
+                Console.Write('#');
+            }
+            for (var i = rope.Length - 1; i >= 0; i--)
+            {
+                var ((x, y), c) = (rope[i], i == 0 ? 'H' : (char)(i + '0'));
+                Console.SetCursorPosition(x + middle.x, y + middle.y);
+                Console.Write(c);
+            }
+        }
+
+        static int GetLength()
+        {
+            var length = 10;
+            Console.Clear();
+            Console.WriteLine($"Rope Length: {length}");
+
+            while (true)
+                switch (Console.ReadKey(intercept: true).Key)
+                {
+                    case ConsoleKey.OemPlus:
+                    case ConsoleKey.UpArrow:
+                    case ConsoleKey.RightArrow:
+                        length++;
+                        Console.Clear();
+                        Console.WriteLine($"Rope Length: {length}");
+                        break;
+                    case ConsoleKey.OemMinus:
+                    case ConsoleKey.DownArrow:
+                    case ConsoleKey.LeftArrow:
+                        if (length <= 2)
+                            break;
+                        length--;
+                        Console.Clear();
+                        Console.WriteLine($"Rope Length: {length}");
+                        break;
+                    case ConsoleKey.Enter:
+                    case ConsoleKey.Spacebar:
+                        return length;
+                }
         }
     }
 }
