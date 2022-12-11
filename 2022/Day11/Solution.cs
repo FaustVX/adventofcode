@@ -9,8 +9,7 @@ public class Solution : Solver //, IDisplay
         var monkeys = ParseMonkeys(input);
         for (int i = 0; i < 20; i++)
             Round(monkeys, level => level / 3);
-        var mostActives = Find2MostActive(monkeys);
-        return mostActives.first.InspectedItems * mostActives.second.InspectedItems;
+        return CalculateBusinessLevel(monkeys);
     }
 
     private static ReadOnlySpan<Monkey> ParseMonkeys(string input)
@@ -30,15 +29,15 @@ public class Solution : Solver //, IDisplay
             monkey.Turn(monkeys, reduceWorryLevel);
     }
 
-    private (Monkey first, Monkey second) Find2MostActive(ReadOnlySpan<Monkey> monkeys)
+    private long CalculateBusinessLevel(ReadOnlySpan<Monkey> monkeys)
     {
-        (Monkey? first, Monkey? second) = (default, default);
+        var (first, second) = (0L, 0L);
         foreach (var monkey in monkeys)
-            if (monkey.InspectedItems > (first?.InspectedItems ?? 0))
-                (first, second) = (monkey, first);
-            else if (monkey.InspectedItems > (second?.InspectedItems ?? 0))
-                second = monkey;
-        return (first!, second!);
+            if (monkey.InspectedItems > first)
+                (first, second) = (monkey.InspectedItems, first);
+            else if (monkey.InspectedItems > second)
+                second = monkey.InspectedItems;
+        return first * second;
     }
 
     public object PartTwo(string input)
@@ -49,8 +48,7 @@ public class Solution : Solver //, IDisplay
         var modulo = GetModulo(monkeys);
         for (int i = 0; i < 10_000; i++)
             Round(monkeys, level => level % modulo);
-        var mostActives = Find2MostActive(monkeys);
-        return (ulong)mostActives.first.InspectedItems * (ulong)mostActives.second.InspectedItems;
+        return CalculateBusinessLevel(monkeys);
 
         static int GetModulo(ReadOnlySpan<Monkey> monkeys)
         {
