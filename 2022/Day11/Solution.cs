@@ -18,7 +18,7 @@ public class Solution : Solver //, IDisplay
         var monkeys = new Monkey[span.Length];
         for (var i = 0; i < span.Length; i++)
         {
-            monkeys[i] = new(span[i]);
+            monkeys[i] = Monkey.Parse(span[i]);
         }
         return monkeys;
     }
@@ -62,15 +62,18 @@ public class Solution : Solver //, IDisplay
 
 sealed class Monkey
 {
-    public Monkey(ReadOnlyMemory<char> input)
+    public static Monkey Parse(ReadOnlyMemory<char> input)
     {
         var lines = input.SplitLine().Span;
 
-        Items = ParseItem(lines[1].Span);
-        Operation = ParseOperation(lines[2].Span);
-        Test = int.Parse(lines[3].Span[^2..]); // Allow for 1 or 2 digits number
-        ThrowToMonkeyIfTrue = int.Parse(lines[4].Span[^2..]); // Allow for 1 or 2 digits number
-        ThrowToMonkeyIfFalse = int.Parse(lines[5].Span[^2..]); // Allow for 1 or 2 digits number
+        return new()
+        {
+            Items = ParseItem(lines[1].Span),
+            Operation = ParseOperation(lines[2].Span),
+            Test = int.Parse(lines[3].Span[^2..]), // Allow for 1 or 2 digits number
+            ThrowToMonkeyIfTrue = int.Parse(lines[4].Span[^2..]), // Allow for 1 or 2 digits number
+            ThrowToMonkeyIfFalse = int.Parse(lines[5].Span[^2..]), // Allow for 1 or 2 digits number
+        };
 
         static Queue<long> ParseItem(ReadOnlySpan<char> line)
         {
@@ -87,11 +90,14 @@ sealed class Monkey
         }
     }
 
-    public Queue<long> Items { get; }
-    public (bool isAddition, int? value) Operation { get; }
-    public int Test { get; }
-    public int ThrowToMonkeyIfTrue { get; }
-    public int ThrowToMonkeyIfFalse { get; }
+    private Monkey()
+    { }
+
+    public required Queue<long> Items { get; init; }
+    public required (bool isAddition, int? value) Operation { get; init; }
+    public required int Test { get; init; }
+    public required int ThrowToMonkeyIfTrue { get; init; }
+    public required int ThrowToMonkeyIfFalse { get; init; }
     public int InspectedItems { get; private set; }
 
     public void Turn(ReadOnlySpan<Monkey> monkeys, Func<long, long> reduceWorryLevel)
