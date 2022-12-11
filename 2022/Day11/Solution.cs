@@ -8,14 +8,13 @@ public class Solution : Solver //, IDisplay
     {
         var monkeys = ParseMonkeys(input);
         for (int i = 0; i < 20; i++)
-            Round(monkeys, divideWorryLevel: true);
+            Round(monkeys, level => level / 3);
         var mostActives = Find2MostActive(monkeys);
         return mostActives.first.InspectedItems * mostActives.second.InspectedItems;
     }
 
     private static ReadOnlySpan<Monkey> ParseMonkeys(string input)
     {
-        Monkey.Modulo = 1;
         var span = input.AsMemory().Split2Lines().Span;
         var monkeys = new Monkey[span.Length];
         for (var i = 0; i < span.Length; i++)
@@ -25,10 +24,10 @@ public class Solution : Solver //, IDisplay
         return monkeys;
     }
 
-    private static void Round(ReadOnlySpan<Monkey> monkeys, bool divideWorryLevel)
+    private static void Round(ReadOnlySpan<Monkey> monkeys, Func<long, long> reduceWorryLevel)
     {
         foreach (var monkey in monkeys)
-            monkey.Turn(monkeys, divideWorryLevel);
+            monkey.Turn(monkeys, reduceWorryLevel);
     }
 
     private (Monkey first, Monkey second) Find2MostActive(ReadOnlySpan<Monkey> monkeys)
@@ -47,10 +46,19 @@ public class Solution : Solver //, IDisplay
         // https://www.reddit.com/r/adventofcode/comments/zih7gf/comment/izrck61
 
         var monkeys = ParseMonkeys(input);
+        var modulo = GetModulo(monkeys);
         for (int i = 0; i < 10_000; i++)
-            Round(monkeys, divideWorryLevel: false);
+            Round(monkeys, level => level % modulo);
         var mostActives = Find2MostActive(monkeys);
         return (ulong)mostActives.first.InspectedItems * (ulong)mostActives.second.InspectedItems;
+
+        static int GetModulo(ReadOnlySpan<Monkey> monkeys)
+        {
+            var modulo = 1;
+            foreach (var monkey in monkeys)
+                modulo *= monkey.Test;
+            return modulo;
+        }
     }
 }
 
@@ -63,7 +71,6 @@ sealed class Monkey
         Items = ParseItem(lines[1].Span);
         Operation = ParseOperation(lines[2].Span);
         Test = int.Parse(lines[3].Span[^2..]); // Allow for 1 or 2 digits number
-        Modulo *= Test;
         ThrowToMonkeyIfTrue = int.Parse(lines[4].Span[^2..]); // Allow for 1 or 2 digits number
         ThrowToMonkeyIfFalse = int.Parse(lines[5].Span[^2..]); // Allow for 1 or 2 digits number
 
@@ -88,9 +95,8 @@ sealed class Monkey
     public int ThrowToMonkeyIfTrue { get; }
     public int ThrowToMonkeyIfFalse { get; }
     public int InspectedItems { get; private set; }
-    public static int Modulo { get; set; }
 
-    public void Turn(ReadOnlySpan<Monkey> monkeys, bool divideWorryLevel)
+    public void Turn(ReadOnlySpan<Monkey> monkeys, Func<long, long> reduceWorryLevel)
     {
         while (Items.TryDequeue(out var worryLevel))
         {
@@ -102,10 +108,7 @@ sealed class Monkey
                 (isAddition: true, null) => worryLevel + worryLevel,
                 (isAddition: false, null) => worryLevel * worryLevel,
             };
-            if (divideWorryLevel)
-                worryLevel /= 3;
-            else
-                worryLevel %= Modulo;
+            worryLevel = reduceWorryLevel(worryLevel);
             monkeys[worryLevel % Test == 0 ? ThrowToMonkeyIfTrue : ThrowToMonkeyIfFalse].Items.Enqueue(worryLevel);
         }
     }
