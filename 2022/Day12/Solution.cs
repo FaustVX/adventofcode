@@ -13,6 +13,7 @@ public class Solution : Solver, IDisplay
             _ => c - 'a',
         });
         FindInOut(graph, width, height, out var start, out var target);
+        graph[target.x, target.y] = 25;
         var dijkstra = new Dijkstra<int>(graph, width, height, start);
         var backTrace = dijkstra.Calculate(target, static pos => pos.to <= pos.from + 1);
         return backTrace.Count() - 1;
@@ -62,6 +63,7 @@ public class Solution : Solver, IDisplay
             _ => c - 'a',
         });
         FindInOut(graph, width, height, out var start, out var target);
+        graph[target.x, target.y] = 25;
         var dijkstra = new Dijkstra<int>(graph, width, height, start);
         var backTrace = dijkstra.Calculate(target, static pos => pos.to <= pos.from + 1);
         Display(graph, backTrace.GetEnumerator());
@@ -92,6 +94,7 @@ public class Solution : Solver, IDisplay
                         var i => (char)(i + 'a'),
                     });
             }
+            Console.ReadLine();
             (Console.ForegroundColor, Console.CursorVisible) = (fore, true);
         }
     }
@@ -105,6 +108,7 @@ public class Solution : Solver, IDisplay
             _ => c - 'a',
         });
         FindInOut(graph, width, height, out var start, out var target);
+        graph[target.x, target.y] = 25;
         var dijkstra = new Dijkstra<int>(graph, width, height, start);
         var backTrace = dijkstra.Calculate(target, static pos => pos.to <= pos.from + 1);
         Display(backTrace.GetEnumerator());
@@ -131,6 +135,7 @@ public class Solution : Solver, IDisplay
                 Console.Write(dir);
                 previous = current;
             }
+            Console.ReadLine();
             Console.CursorVisible = true;
         }
     }
@@ -161,10 +166,10 @@ public class Dijkstra<T>
     {
         ReadOnlySpan<(int x, int y)> offset = stackalloc (int x, int y)[]
         {
-            (-1, 0),
             (0, -1),
-            (1, 0),
+            (-1, 0),
             (0, 1),
+            (1, 0),
         };
 
         while (_nodes.Count > 0)
