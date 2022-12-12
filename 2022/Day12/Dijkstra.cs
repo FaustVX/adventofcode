@@ -5,24 +5,24 @@ public class Dijkstra<T>
 {
     private readonly Dictionary<(int x, int y), T> _nodes;
     private readonly Dictionary<(int x, int y), int> _dists;
-    private readonly Dictionary<(int x, int y), (int x, int y)?> _prevs;
+    public Dictionary<(int x, int y), (int x, int y)?> Previous { get; }
 
     public Dijkstra(T[,] graph, int width, int height, (int x, int y) start)
     {
         _nodes = new(capacity: width * height);
         _dists = new(capacity: width * height);
-        _prevs = new(capacity: width * height);
+        Previous = new(capacity: width * height);
         for (int x = 0; x < width; x++)
             for (int y = 0; y < height; y++)
             {
                 _nodes.Add((x, y), graph[x, y]);
                 _dists.Add((x, y), int.MaxValue);
-                _prevs.Add((x, y), null);
+                Previous.Add((x, y), null);
             }
         _dists[start] = 0;
     }
 
-    public IEnumerable<(int x, int y)> Calculate((int x, int y) target, Func<(T from, T to), bool> predicate)
+    public void Calculate(Func<(T from, T to), bool> predicate)
     {
         ReadOnlySpan<(int x, int y)> offset = stackalloc (int x, int y)[]
         {
@@ -45,20 +45,18 @@ public class Dijkstra<T>
                 if (alternate < _dists[pos])
                 {
                     _dists[pos] = alternate;
-                    _prevs[pos] = u.Key;
+                    Previous[pos] = u.Key;
                 }
             }
         }
-
-        return BackTrace(target);
     }
 
     private int GetMinDist(KeyValuePair<(int x, int y), T> kvp)
     => _dists[kvp.Key];
 
-    private IEnumerable<(int x, int y)> BackTrace((int x, int y)? target)
+    public IEnumerable<(int x, int y)> BackTrace((int x, int y)? target)
     {
-        for (; target != null; target = _prevs[target.Value])
+        for (; target != null; target = Previous[target.Value])
             yield return target.Value;
     }
 }
