@@ -164,27 +164,85 @@ class Runner
 
     public static void DisplaySolver(IDisplay display)
     {
-        var workingDir = (display as Solver)?.WorkingDir();
-        if (workingDir is null)
-            return;
-        foreach (var dir in new[] { Path.Combine(workingDir, "test"), workingDir })
-        {
-            if (!Directory.Exists(dir))
-                continue;
-            var searchOption = dir.EndsWith("test")
-                ? SearchOption.AllDirectories
-                : SearchOption.TopDirectoryOnly;
-            foreach (var file in Directory.EnumerateFiles(dir, "*.in", searchOption).OrderBy(file => file))
-            {
-                var input = GetNormalizedInput(file);
+        var files = GetInputs((Solver)display).ToArray();
+        var displays = display.GetDisplays().ToArray();
+        var fileSelected = 0;
+        var displaySelected = 0;
 
-                foreach (var (name, action) in display.GetDisplays())
-                {
-                    Console.WriteLine($"Press any key to start '{name}' ...");
-                    Console.ReadLine();
+        while (true)
+        {
+            Console.Clear();
+            for (int f = 0; f < files.Length; f++)
+            {
+                string file = files[f];
+                WriteSelected(file, fileSelected, f, false);
+            }
+            Console.WriteLine();
+            for (int d = 0; d < displays.Length; d++)
+            {
+                var (name, action) = displays[d];
+                WriteSelected(name, displaySelected, d, true);
+            }
+            switch (Console.ReadKey().Key)
+            {
+                case ConsoleKey.UpArrow:
+                    Decrement(ref displaySelected);
+                    break;
+                case ConsoleKey.DownArrow:
+                    Increment(ref displaySelected, displays.Length);
+                    break;
+                case ConsoleKey.LeftArrow:
+                    Decrement(ref fileSelected);
+                    break;
+                case ConsoleKey.RightArrow:
+                    Increment(ref fileSelected, files.Length);
+                    break;
+                case ConsoleKey.Escape:
+                    return;
+                case ConsoleKey.Enter:
+                case ConsoleKey.Spacebar:
                     Console.Clear();
-                    action(input);
-                }
+                    displays[displaySelected].action(GetNormalizedInput(files[fileSelected]));
+                    Console.ReadLine();
+                    break;
+            }
+        }
+
+        static void WriteSelected(string text, int selected, int i, bool newLine)
+        {
+            Console.Write((selected == i ? ">" : " ") + text + (selected == i ? "<" : " "));
+            if (newLine)
+                Console.WriteLine();
+            else
+                Console.Write(" \t");
+        }
+
+        static void Increment(ref int selected, int length)
+        {
+            if (selected < length - 1)
+                selected++;
+        }
+
+        static void Decrement(ref int selected)
+        {
+            if (selected > 0)
+                selected--;
+        }
+
+        static IEnumerable<string> GetInputs(Solver solver)
+        {
+            var workingDir = solver?.WorkingDir();
+            if (workingDir is null)
+                yield break;
+            foreach (var dir in new[] { Path.Combine(workingDir, "test"), workingDir })
+            {
+                if (!Directory.Exists(dir))
+                    continue;
+                var searchOption = dir.EndsWith("test")
+                    ? SearchOption.AllDirectories
+                    : SearchOption.TopDirectoryOnly;
+                foreach (var file in Directory.EnumerateFiles(dir, "*.in", searchOption).OrderBy(file => file))
+                    yield return file;
             }
         }
     }
