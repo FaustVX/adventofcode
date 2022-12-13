@@ -1,6 +1,16 @@
 #nullable enable
 namespace AdventOfCode.Y2022.Day13;
 
+static class Ext
+{
+    public static int Indent { get; set; }
+    public static void WriteLine(string text)
+    {
+        if (Globals.CurrentRunMode is Mode.Display)
+            Console.WriteLine(string.Concat(Enumerable.Repeat("  ", Indent)) + text);
+    }
+}
+
 public interface IPacket
 {
     protected delegate IPacket ParseDelegate(ReadOnlySpan<char> input, out int length);
@@ -54,23 +64,39 @@ public sealed class List : IPacket
 
     public bool? IsOrdered(IPacket right)
     {
-        if (right is List l)
+        Ext.WriteLine($"- Compare {this} vs {right}");
+        Ext.Indent++;
+        try
         {
-            for (int i = 0; i < Packets.Count; i++)
+            if (right is List l)
             {
-                if (l.Packets.Count <= i)
-                    return false;
-                var isOrdered = Packets[i].IsOrdered(l.Packets[i]);
-                if (isOrdered != null)
-                    return isOrdered;
+                for (int i = 0; i < Packets.Count; i++)
+                {
+                    if (l.Packets.Count <= i)
+                    {
+                        Ext.WriteLine("- Right side ran out of items, so inputs are not in the right order");
+                        return false;
+                    }
+                    var isOrdered = Packets[i].IsOrdered(l.Packets[i]);
+                    if (isOrdered != null)
+                        return isOrdered;
+                }
+                if (Packets.Count == l.Packets.Count)
+                    return null;
+                Ext.WriteLine("- Left side ran out of items, so inputs are in the right order");
+                return true;
             }
-            if (Packets.Count == l.Packets.Count)
-                return null;
-            return true;
+            else if (right is Int i)
+            {
+                Ext.WriteLine($"- Mixed types; convert right to [{right}] and retry comparison");
+                return IsOrdered(new List(new List<IPacket>() { i }));
+            }
+            throw new UnreachableException();
         }
-        else if (right is Int i)
-            return IsOrdered(new List(new List<IPacket>() { i }));
-        throw new UnreachableException();
+        finally
+        {
+            Ext.Indent--;
+        }
     }
 
     public override string ToString()
@@ -97,17 +123,35 @@ public sealed class Int : IPacket
 
     public bool? IsOrdered(IPacket right)
     {
-        if (right is Int i)
+        Ext.WriteLine($"- Compare {this} vs {right}");
+        Ext.Indent++;
+        try
         {
-            if (Value < i.Value)
-                return true;
-            if (Value > i.Value)
-                return false;
-            return null;
+            if (right is Int i)
+            {
+                if (Value < i.Value)
+                {
+                    Ext.WriteLine("- Left side is smaller, so inputs are in the right order");
+                    return true;
+                }
+                if (Value > i.Value)
+                {
+                    Ext.WriteLine("- Right side is smaller, so inputs are not in the right order");
+                    return false;
+                }
+                return null;
+            }
+            if (right is List l)
+            {
+                Ext.WriteLine($"- Mixed types; convert left to [{this}] and retry comparison");
+                return new List(new List<IPacket>() { this }).IsOrdered(l);
+            }
+            throw new UnreachableException();
         }
-        if (right is List l)
-            return new List(new List<IPacket>() { this }).IsOrdered(l);
-        throw new UnreachableException();
+        finally
+        {
+            Ext.Indent--;
+        }
     }
 
     public override string ToString()
