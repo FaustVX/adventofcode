@@ -119,3 +119,45 @@ What are the indices of the pairs that are already <em>in the right order</em>? 
 Determine which pairs of packets are already in the right order. <em>What is the sum of the indices of those pairs?</em>
 
 
+## --- Part Two ---
+Now, you just need to put <em>all</em> of the packets in the right order. Disregard the blank lines in your list of received packets.
+
+The distress signal protocol also requires that you include two additional <em>divider packets</em>:
+
+<pre>
+<code>[[2]]
+[[6]]
+</code>
+</pre>
+
+Using the same rules as before, organize all packets - the ones in your list of received packets as well as the two divider packets - into the correct order.
+
+For the example above, the result of putting the packets in the correct order is:
+
+<pre>
+<code>[]
+[[]]
+[[[]]]
+[1,1,3,1,1]
+[1,1,5,1,1]
+[[1],[2,3,4]]
+[1,[2,[3,[4,[5,6,0]]]],8,9]
+[1,[2,[3,[4,[5,6,7]]]],8,9]
+[[1],4]
+<em>[[2]]</em>
+[3]
+[[4,4],4,4]
+[[4,4],4,4,4]
+<em>[[6]]</em>
+[7,7,7]
+[7,7,7,7]
+[[8,7,6]]
+[9]
+</code>
+</pre>
+
+Afterward, locate the divider packets. To find the <em>decoder key</em> for this distress signal, you need to determine the indices of the two divider packets and multiply them together. (The first packet is at index 1, the second packet is at index 2, and so on.) In this example, the divider packets are <em>10th</em> and <em>14th</em>, and so the decoder key is <code><em>140</em></code>.
+
+Organize all of the packets into the correct order. <em>What is the decoder key for the distress signal?</em>
+
+
