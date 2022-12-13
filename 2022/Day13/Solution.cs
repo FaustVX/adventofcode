@@ -2,152 +2,70 @@
 namespace AdventOfCode.Y2022.Day13;
 
 [ProblemName("Distress Signal")]
-public class Solution : Solver //, IDisplay
+public class Solution : Solver, IDisplay
 {
     public object PartOne(string input)
     {
-        var pairs = ParsePairs(input.AsMemory().Split2Lines());
+        var pairs = Parse(input.AsMemory().SplitLine());
         return pairs
-            .Select(static (pair, i) => pair.left.IsOrdered(pair.right) is true ? i + 1 : 0)
+            .Chunk(2)
+            .Select(static (pair, i) => pair[0].IsOrdered(pair[1]) is true ? i + 1 : 0)
             .Sum();
     }
 
-    private List<(List left, List right)> ParsePairs(Memory<ReadOnlyMemory<char>> pairs)
+    private IReadOnlyList<List> Parse(ReadOnlyMemory<ReadOnlyMemory<char>> lines)
     {
-        var packets = new List<(List left, List right)>(capacity: pairs.Length);
-        foreach (var pair in pairs.Span)
-        {
-            var p = pair.SplitLine().Span;
-            var left = List.Parse(p[0].Span, out _);
-            var right = List.Parse(p[1].Span, out _);
-            packets.Add((left, right));
-        }
-        return packets;
+        var list = new List<List>();
+        foreach (var pair in lines.Span)
+            if (!pair.IsEmpty)
+                list.Add (List.Parse(pair.Span, out _));
+        return list;
     }
 
     public object PartTwo(string input)
     {
-        input += "\n\n[[2]]\n[[6]]";
-        var pairs = ParsePairs(input.AsMemory().Split2Lines());
+        var divider1 = List.Parse("[[2]]", out _);
+        var divider2 = List.Parse("[[6]]", out _);
+        var pairs = Parse(input.AsMemory().SplitLine())
+            .Append(divider1)
+            .Append(divider2);
         var ordered = pairs
-            .SelectMany(static pair => new[]{pair.left, pair.right})
             .Order(new List.Comparer())
             .ToList();
-        return (ordered.IndexOf(pairs[^1].left) + 1) * (ordered.IndexOf(pairs[^1].right) + 1);
+        return (ordered.IndexOf(divider1) + 1) * (ordered.IndexOf(divider2) + 1);
     }
-}
 
-public interface IPacket
-{
-    public abstract bool? IsOrdered(IPacket right);
-    public abstract string ToString();
-}
-
-public sealed class List : IPacket
-{
-    public sealed class Comparer : IComparer<List>
+    public IEnumerable<(string name, Action<string> action)> GetDisplays()
     {
-        public int Compare(List? x, List? y)
-        => x!.IsOrdered(y!) switch
+        yield return ("Part 1", Part1);
+        yield return ("Part 2", Part2);
+    }
+
+    private void Part1(string input)
+    {
+        var pairs = Parse(input.AsMemory().SplitLine());
+        var i = 1;
+        foreach (var pair in pairs.Chunk(2))
         {
-            null => 0,
-            true => -1,
-            false => +1,
-        };
-    }
-    public List(IReadOnlyList<IPacket> packets)
-    {
-        Packets = packets;
-    }
-
-    public IReadOnlyList<IPacket> Packets { get; }
-
-    public static List Parse(ReadOnlySpan<char> input, out int length)
-    {
-        var packets = new List<IPacket>();
-        length = 1;
-        while (true)
-            switch (input[length])
-            {
-                case ',':
-                    length++;
-                    break;
-                case ']':
-                    length++;
-                    return new(packets);
-                case '[':
-                    {
-                        packets.Add(Parse(input[length..], out var used));
-                        length += used;
-                        break;
-                    }
-                default:
-                    {
-                        packets.Add(Int.Parse(input[length..], out var used));
-                        length += used;
-                        break;
-                    }
-            }
-    }
-
-    public bool? IsOrdered(IPacket right)
-    {
-        if (right is List l)
-        {
-            for (int i = 0; i < Packets.Count; i++)
-            {
-                if (l.Packets.Count <= i)
-                    return false;
-                var isOrdered = Packets[i].IsOrdered(l.Packets[i]);
-                if (isOrdered != null)
-                    return isOrdered;
-            }
-            if (Packets.Count == l.Packets.Count)
-                return null;
-            return true;
+            Console.WriteLine($"\n== Pair {i++} ==");
+            pair[0].IsOrdered(pair[1]);
         }
-        else if (right is Int i)
-            return IsOrdered(new List(new List<IPacket>() { i }));
-        throw new UnreachableException();
     }
 
-    public override string ToString()
-        => $"[{string.Join(',', Packets)}]";
-}
-
-public sealed class Int : IPacket
-{
-    public Int(int value)
+    private void Part2(string input)
     {
-        Value = value;
-    }
-
-    public int Value { get; }
-
-    public static Int Parse(ReadOnlySpan<char> input, out int length)
-    {
-        var last = 0;
-        for (length = 1; int.TryParse(input[..length], out var o); length++)
-            last = o;
-        length--;
-        return new(last);
-    }
-
-    public bool? IsOrdered(IPacket right)
-    {
-        if (right is Int i)
+        (var currentMode, Globals.CurrentRunMode) = (Globals.CurrentRunMode, (Mode)(-1));
+        var divider1 = List.Parse("[[2]]", out _);
+        var divider2 = List.Parse("[[6]]", out _);
+        var pairs = Parse(input.AsMemory().SplitLine())
+            .Append(divider1)
+            .Append(divider2);
+        var ordered = pairs
+            .Order(new List.Comparer());
+        foreach (var packet in ordered)
         {
-            if (Value < i.Value)
-                return true;
-            if (Value > i.Value)
-                return false;
-            return null;
+            Console.WriteLine(packet);
         }
-        if (right is List l)
-            return new List(new List<IPacket>() { this }).IsOrdered(l);
-        throw new UnreachableException();
+        Globals.CurrentRunMode = currentMode;
     }
-
-    public override string ToString()
-        => Value.ToString();
 }
