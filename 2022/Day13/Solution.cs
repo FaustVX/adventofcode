@@ -27,17 +27,34 @@ public class Solution : Solver //, IDisplay
 
     public object PartTwo(string input)
     {
-        return 0;
+        input += "\n\n[[2]]\n[[6]]";
+        var pairs = ParsePairs(input.AsMemory().Split2Lines());
+        var ordered = pairs
+            .SelectMany(static pair => new[]{pair.left, pair.right})
+            .Order(new List.Comparer())
+            .ToList();
+        return (ordered.IndexOf(pairs[^1].left) + 1) * (ordered.IndexOf(pairs[^1].right) + 1);
     }
 }
 
 public interface IPacket
 {
     public abstract bool? IsOrdered(IPacket right);
+    public abstract string ToString();
 }
 
 public sealed class List : IPacket
 {
+    public sealed class Comparer : IComparer<List>
+    {
+        public int Compare(List? x, List? y)
+        => x!.IsOrdered(y!) switch
+        {
+            null => 0,
+            true => -1,
+            false => +1,
+        };
+    }
     public List(IReadOnlyList<IPacket> packets)
     {
         Packets = packets;
@@ -93,6 +110,9 @@ public sealed class List : IPacket
             return IsOrdered(new List(new List<IPacket>() { i }));
         throw new UnreachableException();
     }
+
+    public override string ToString()
+        => $"[{string.Join(',', Packets)}]";
 }
 
 public sealed class Int : IPacket
@@ -127,4 +147,7 @@ public sealed class Int : IPacket
             return new List(new List<IPacket>() { this }).IsOrdered(l);
         throw new UnreachableException();
     }
+
+    public override string ToString()
+        => Value.ToString();
 }
