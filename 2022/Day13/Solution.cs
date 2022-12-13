@@ -6,33 +6,32 @@ public class Solution : Solver //, IDisplay
 {
     public object PartOne(string input)
     {
-        var pairs = ParsePairs(input.AsMemory().Split2Lines());
+        var pairs = Parse(input.AsMemory().SplitLine());
         return pairs
-            .Select(static (pair, i) => pair.left.IsOrdered(pair.right) is true ? i + 1 : 0)
+            .Chunk(2)
+            .Select(static (pair, i) => pair[0].IsOrdered(pair[1]) is true ? i + 1 : 0)
             .Sum();
     }
 
-    private List<(List left, List right)> ParsePairs(Memory<ReadOnlyMemory<char>> pairs)
+    private IReadOnlyList<List> Parse(ReadOnlyMemory<ReadOnlyMemory<char>> lines)
     {
-        var packets = new List<(List left, List right)>(capacity: pairs.Length);
-        foreach (var pair in pairs.Span)
-        {
-            var p = pair.SplitLine().Span;
-            var left = List.Parse(p[0].Span, out _);
-            var right = List.Parse(p[1].Span, out _);
-            packets.Add((left, right));
-        }
-        return packets;
+        var list = new List<List>();
+        foreach (var pair in lines.Span)
+            if (!pair.IsEmpty)
+                list.Add (List.Parse(pair.Span, out _));
+        return list;
     }
 
     public object PartTwo(string input)
     {
-        input += "\n\n[[2]]\n[[6]]";
-        var pairs = ParsePairs(input.AsMemory().Split2Lines());
+        var divider1 = List.Parse("[[2]]", out _);
+        var divider2 = List.Parse("[[6]]", out _);
+        var pairs = Parse(input.AsMemory().SplitLine())
+            .Append(divider1)
+            .Append(divider2);
         var ordered = pairs
-            .SelectMany(static pair => new[]{pair.left, pair.right})
             .Order(new List.Comparer())
             .ToList();
-        return (ordered.IndexOf(pairs[^1].left) + 1) * (ordered.IndexOf(pairs[^1].right) + 1);
+        return (ordered.IndexOf(divider1) + 1) * (ordered.IndexOf(divider2) + 1);
     }
 }
