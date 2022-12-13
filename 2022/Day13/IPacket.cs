@@ -3,6 +3,7 @@ namespace AdventOfCode.Y2022.Day13;
 
 public interface IPacket
 {
+    protected delegate IPacket ParseDelegate(ReadOnlySpan<char> input, out int length);
     public abstract bool? IsOrdered(IPacket right);
     public abstract string ToString();
 }
@@ -39,16 +40,13 @@ public sealed class List : IPacket
                 case ']':
                     length++;
                     return new(packets);
-                case '[':
+                case var token:
                     {
-                        packets.Add(Parse(input[length..], out var used));
+                        IPacket.ParseDelegate parser = token is '[' ? Parse : Int.Parse;
+                        packets.Add(parser(input[length..], out var used));
                         length += used;
-                        break;
-                    }
-                default:
-                    {
-                        packets.Add(Int.Parse(input[length..], out var used));
-                        length += used;
+                        if (input[length] is ',')
+                            length++;
                         break;
                     }
             }
