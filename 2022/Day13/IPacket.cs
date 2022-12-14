@@ -3,11 +3,32 @@ namespace AdventOfCode.Y2022.Day13;
 
 static class Ext
 {
-    public static int Indent { get; set; }
-    public static void WriteLine(string text)
+    [System.Runtime.CompilerServices.InterpolatedStringHandler]
+    public readonly ref struct StringInterpolated
     {
-        if (Globals.CurrentRunMode is Mode.Display)
-            Console.WriteLine(string.Concat(Enumerable.Repeat("  ", Indent)) + text);
+        public readonly StringBuilder _sb = new();
+        public readonly bool IsEnabled;
+
+        public StringInterpolated(int literalLength, int formattedCount, out bool isEnabled)
+        {
+            IsEnabled = isEnabled = Globals.CurrentRunMode is Mode.Display;
+        }
+
+        public void AppendFormatted(object o)
+        => _sb.Append(o);
+
+        public void AppendLiteral(string s)
+        => _sb.Append(s);
+
+        public override string ToString()
+        => _sb.ToString();
+    }
+
+    public static int Indent { get; set; }
+    public static void WriteLine(StringInterpolated text)
+    {
+        if (text.IsEnabled)
+            Console.WriteLine(string.Concat(Enumerable.Repeat("  ", Indent)) + text.ToString());
     }
 }
 
@@ -74,7 +95,7 @@ public sealed class List : IPacket
                 {
                     if (l.Packets.Count <= i)
                     {
-                        Ext.WriteLine("- Right side ran out of items, so inputs are not in the right order");
+                        Ext.WriteLine($"- Right side ran out of items, so inputs are not in the right order");
                         return false;
                     }
                     var isOrdered = Packets[i].IsOrdered(l.Packets[i]);
@@ -83,7 +104,7 @@ public sealed class List : IPacket
                 }
                 if (Packets.Count == l.Packets.Count)
                     return null;
-                Ext.WriteLine("- Left side ran out of items, so inputs are in the right order");
+                Ext.WriteLine($"- Left side ran out of items, so inputs are in the right order");
                 return true;
             }
             else if (right is Int i)
@@ -131,12 +152,12 @@ public sealed class Int : IPacket
             {
                 if (Value < i.Value)
                 {
-                    Ext.WriteLine("- Left side is smaller, so inputs are in the right order");
+                    Ext.WriteLine($"- Left side is smaller, so inputs are in the right order");
                     return true;
                 }
                 if (Value > i.Value)
                 {
-                    Ext.WriteLine("- Right side is smaller, so inputs are not in the right order");
+                    Ext.WriteLine($"- Right side is smaller, so inputs are not in the right order");
                     return false;
                 }
                 return null;
