@@ -5,14 +5,14 @@ namespace AdventOfCode.Y2022.Day14;
 public class Solution : Solver //, IDisplay
 {
     public object PartOne(string input)
-    => Execute(input, isPart2: false);
+    => Execute(input, addFloor: false);
 
     public object PartTwo(string input)
-    => Execute(input, isPart2: true);
+    => Execute(input, addFloor: true);
 
-    private static object Execute(string input, bool isPart2)
+    private static object Execute(string input, bool addFloor)
     {
-        var cave = Cave.Parse(input.AsMemory().SplitLine(), isPart2);
+        var cave = Cave.Parse(input.AsMemory().SplitLine(), addFloor);
         var step = 0;
         while (cave.DropSand())
             step++;

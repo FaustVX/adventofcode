@@ -3,13 +3,16 @@ namespace AdventOfCode.Y2022.Day14;
 
 public sealed class Cave
 {
+    private Cave()
+    { }
+
     private bool[,] _cave { get; init; } = default!;
-    public (int x, int y) Offset { get; private init; } = default!;
+    public int OffsetX { get; private init; } = default!;
     public (int x, int y) Size { get; private init; } = default!;
     public bool this[int x, int y]
     {
-        get => _cave[x - Offset.x, y - Offset.y];
-        set => _cave[x - Offset.x, y - Offset.y] = value;
+        get => _cave[x - OffsetX, y];
+        set => _cave[x - OffsetX, y] = value;
     }
     public bool this[(int x, int y) pos]
     {
@@ -34,7 +37,7 @@ public sealed class Cave
             foreach (var dir in dirs)
             {
                 var newPos = (x: sand.x + dir.x, y: sand.y + dir.y);
-                if (newPos.x - Offset.x < 0 || newPos.x - Offset.x >= Size.x || newPos.y - Offset.y >= Size.y)
+                if (newPos.x - OffsetX < 0 || newPos.x - OffsetX >= Size.x || newPos.y >= Size.y)
                     return false;
                 if (!this[newPos])
                 {
@@ -51,39 +54,8 @@ public sealed class Cave
         }
     }
 
-    public static Cave Parse(ReadOnlyMemory<ReadOnlyMemory<char>> input, bool isPart2)
+    private void PlaceWalls(ReadOnlyMemory<(int x, int y)>[] pathes, bool addFLoor)
     {
-        var pathes = new ReadOnlyMemory<(int x, int y)>[input.Length];
-        for (int i = 0; i < input.Length; i++)
-            pathes[i] = ParsePath(input.Span[i].Split(" -> "));
-
-        var (minX, maxX, minY, maxY) = (500, 500, 0, 0);
-        foreach (var path in pathes)
-            foreach (var (x, y) in path.Span)
-            {
-                if (x < minX)
-                    minX = x;
-                else if (x > maxX)
-                    maxX = x;
-                if (y < minY)
-                    minY = y;
-                else if (y > maxY)
-                    maxY = y;
-            }
-        if (isPart2)
-        {
-            maxY += 2;
-            minX = Math.Min(minX, 500 - maxY);
-            maxX = Math.Max(maxX, 501 + maxY);
-        }
-        var (width, height) = (maxX - minX + 1, maxY - minY + 1);
-        var c = new Cave()
-        {
-            _cave = new bool[width, height],
-            Offset = (minX, minY),
-            Size = (width, height),
-        };
-
         foreach (var path in pathes)
         {
             var previous = path.Span[0];
@@ -91,17 +63,41 @@ public sealed class Cave
             {
                 if (previous.x == current.x)
                     for (var (y, max) = (Math.Min(previous.y, current.y), Math.Max(previous.y, current.y)); y <= max; y++)
-                        c[current.x, y] = true;
+                        this[current.x, y] = true;
                 else if (previous.y == current.y)
                     for (var (x, max) = (Math.Min(previous.x, current.x), Math.Max(previous.x, current.x)); x <= max; x++)
-                        c[x, current.y] = true;
+                        this[x, current.y] = true;
                 previous = current;
             }
         }
-        if (isPart2)
+        var (minX, maxX, maxY) = (OffsetX, Size.x - 1 + OffsetX, Size.y - 1);
+        if (addFLoor)
             for (int x = minX; x <= maxX; x++)
-                c[x, maxY] = true;
+                this[x, maxY] = true;
+    }
+
+    public static Cave Parse(ReadOnlyMemory<ReadOnlyMemory<char>> input, bool addFloor)
+    {
+        var pathes = ParsePathes(input);
+        var (minX, maxX, maxY) = GetMinMax(pathes, addFloor, (500, 0));
+        var (width, height) = (maxX - minX + 1, maxY + 1);
+        var c = new Cave()
+        {
+            _cave = new bool[width, height],
+            OffsetX = minX,
+            Size = (width, height),
+        };
+
+        c.PlaceWalls(pathes, addFloor);
         return c;
+    }
+
+    private static ReadOnlyMemory<(int x, int y)>[] ParsePathes(ReadOnlyMemory<ReadOnlyMemory<char>> input)
+    {
+        var pathes = new ReadOnlyMemory<(int x, int y)>[input.Length];
+        for (int i = 0; i < input.Length; i++)
+            pathes[i] = ParsePath(input.Span[i].Split(" -> "));
+        return pathes;
     }
 
     private static ReadOnlyMemory<(int x, int y)> ParsePath(ReadOnlyMemory<ReadOnlyMemory<char>> line)
@@ -118,4 +114,26 @@ public sealed class Cave
         [var x, var y] when int.TryParse(x.Span, out var a) && int.TryParse(y.Span, out var b) => (a, b),
         _ => throw new UnreachableException(),
     };
+
+    private static (int minX, int maxX, int maxY) GetMinMax(ReadOnlyMemory<(int x, int y)>[] pathes, bool addFloor, (int x, int y) sandDropPos)
+    {
+        var (minX, maxX, maxY) = (sandDropPos.x, sandDropPos.x, sandDropPos.y);
+        foreach (var path in pathes)
+            foreach (var (x, y) in path.Span)
+            {
+                if (x < minX)
+                    minX = x;
+                else if (x > maxX)
+                    maxX = x;
+                if (y > maxY)
+                    maxY = y;
+            }
+        if (addFloor)
+        {
+            maxY += 2;
+            minX = Math.Min(minX, sandDropPos.x - 1 - maxY);
+            maxX = Math.Max(maxX, sandDropPos.x + 1 + maxY);
+        }
+        return (minX, maxX, maxY);
+    }
 }
