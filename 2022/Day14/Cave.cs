@@ -3,19 +3,20 @@ namespace AdventOfCode.Y2022.Day14;
 
 public sealed class Cave
 {
-    private bool[,] C { get; init; } = default!;
+    private bool[,] _cave { get; init; } = default!;
     public (int x, int y) Offset { get; private init; } = default!;
     public (int x, int y) Size { get; private init; } = default!;
     public bool this[int x, int y]
     {
-        get => C[x - Offset.x, y - Offset.y];
-        set => C[x - Offset.x, y - Offset.y] = value;
+        get => _cave[x - Offset.x, y - Offset.y];
+        set => _cave[x - Offset.x, y - Offset.y] = value;
     }
     public bool this[(int x, int y) pos]
     {
         get => this[pos.x, pos.y];
         set => this[pos.x, pos.y] = value;
     }
+
     public bool DropSand()
     {
         ReadOnlySpan<(int x, int y)> dirs = stackalloc (int x, int y)[]
@@ -49,6 +50,7 @@ public sealed class Cave
             }
         }
     }
+
     public static Cave Parse(ReadOnlyMemory<ReadOnlyMemory<char>> input, bool isPart2)
     {
         var pathes = new ReadOnlyMemory<(int x, int y)>[input.Length];
@@ -77,7 +79,7 @@ public sealed class Cave
         var (width, height) = (maxX - minX + 1, maxY - minY + 1);
         var c = new Cave()
         {
-            C = new bool[width, height],
+            _cave = new bool[width, height],
             Offset = (minX, minY),
             Size = (width, height),
         };
