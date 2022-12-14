@@ -26,13 +26,20 @@ public class Solution : Solver, IDisplay
     {
         var divider1 = List.Parse("[[2]]", out _);
         var divider2 = List.Parse("[[6]]", out _);
-        var pairs = Parse(input.AsMemory().SplitLine())
-            .Append(divider1)
-            .Append(divider2);
-        var ordered = pairs
-            .Order(new List.Comparer())
-            .ToList();
-        return (ordered.IndexOf(divider1) + 1) * (ordered.IndexOf(divider2) + 1);
+        var pairs = Parse(input.AsMemory().SplitLine());
+        var index1 = 1;
+        var index2 = 2;
+        foreach (var pair in pairs)
+        {
+            if (pair.IsOrdered(divider1) is true)
+            {
+                index1++;
+                index2++;
+            }
+            else if (pair.IsOrdered(divider2) is true)
+                index2++;
+        }
+        return index1 * index2;
     }
 
     public IEnumerable<(string name, Action<string> action)> GetDisplays()
