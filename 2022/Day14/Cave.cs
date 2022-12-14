@@ -20,37 +20,41 @@ public sealed class Cave
         set => this[pos.x, pos.y] = value;
     }
 
-    public bool DropSand()
+    public IEnumerable<(int x, int y)> DropSand()
     {
-        ReadOnlySpan<(int x, int y)> dirs = stackalloc (int x, int y)[]
+        var dirs = new (int x, int y)[]
         {
             (0, 1),
             (-1, 1),
             (1, 1),
         };
-        var sand = (x: 500, y: 0);
         while (true)
         {
-            if (this[sand])
-                return false;
-            var hasFallen = false;
-            foreach (var dir in dirs)
-            {
-                var newPos = (x: sand.x + dir.x, y: sand.y + dir.y);
-                if (newPos.x - OffsetX < 0 || newPos.x - OffsetX >= Size.x || newPos.y >= Size.y)
-                    return false;
-                if (!this[newPos])
-                {
-                    sand = newPos;
-                    hasFallen = true;
+	        var sand = (x: 500, y: 0);
+	        while (true)
+	        {
+	            if (this[sand])
+	                yield break;
+	            var hasFallen = false;
+	            foreach (var dir in dirs)
+	            {
+	                var newPos = (x: sand.x + dir.x, y: sand.y + dir.y);
+	                if (newPos.x - OffsetX < 0 || newPos.x - OffsetX >= Size.x || newPos.y >= Size.y)
+	                    yield break;
+	                if (!this[newPos])
+	                {
+	                    sand = newPos;
+	                    hasFallen = true;
+	                    break;
+	                }
+	            }
+	            if (!hasFallen)
+	            {
+	                this[sand] = true;
+	                yield return sand;
                     break;
-                }
-            }
-            if (!hasFallen)
-            {
-                this[sand] = true;
-                return true;
-            }
+	            }
+	        }
         }
     }
 
