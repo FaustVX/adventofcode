@@ -6,7 +6,7 @@ public class Solution : Solver //, IDisplay
 {
     public object PartOne(string input)
     {
-        var cave = Cave.Parse(input.AsMemory().SplitLine());
+        var cave = Cave.Parse(input.AsMemory().SplitLine(), isPart2: false);
         var step = 0;
         while (cave.DropSand())
             step++;
@@ -15,7 +15,11 @@ public class Solution : Solver //, IDisplay
 
     public object PartTwo(string input)
     {
-        return 0;
+        var cave = Cave.Parse(input.AsMemory().SplitLine(), isPart2: true);
+        var step = 0;
+        while (cave.DropSand())
+            step++;
+        return step;
     }
 }
 
@@ -45,6 +49,8 @@ public sealed class Cave
         var sand = (x: 500, y: 0);
         while (true)
         {
+            if (this[sand])
+                return false;
             var hasFallen = false;
             foreach (var dir in dirs)
             {
@@ -65,7 +71,7 @@ public sealed class Cave
             }
         }
     }
-    public static Cave Parse(ReadOnlyMemory<ReadOnlyMemory<char>> input)
+    public static Cave Parse(ReadOnlyMemory<ReadOnlyMemory<char>> input, bool isPart2)
     {
         var pathes = new ReadOnlyMemory<(int x, int y)>[input.Length];
         for (int i = 0; i < input.Length; i++)
@@ -84,6 +90,12 @@ public sealed class Cave
                 else if (y > maxY)
                     maxY = y;
             }
+        if (isPart2)
+        {
+            maxY += 2;
+            minX = Math.Min(minX, 500 - maxY);
+            maxX = Math.Max(maxX, 501 + maxY);
+        }
         var (width, height) = (maxX - minX + 1, maxY - minY + 1);
         var c = new Cave()
         {
@@ -106,6 +118,9 @@ public sealed class Cave
                 previous = current;
             }
         }
+        if (isPart2)
+            for (int x = minX; x <= maxX; x++)
+                c[x, maxY] = true;
         return c;
     }
 
