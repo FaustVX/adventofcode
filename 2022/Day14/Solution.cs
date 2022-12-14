@@ -2,140 +2,44 @@
 namespace AdventOfCode.Y2022.Day14;
 
 [ProblemName("Regolith Reservoir")]
-public class Solution : Solver //, IDisplay
+public class Solution : Solver, IDisplay
 {
     public object PartOne(string input)
-    {
-        var cave = Cave.Parse(input.AsMemory().SplitLine(), isPart2: false);
-        var step = 0;
-        while (cave.DropSand())
-            step++;
-        return step;
-    }
+    => Execute(input, addFloor: false);
 
     public object PartTwo(string input)
-    {
-        var cave = Cave.Parse(input.AsMemory().SplitLine(), isPart2: true);
-        var step = 0;
-        while (cave.DropSand())
-            step++;
-        return step;
-    }
-}
+    => Execute(input, addFloor: true);
 
-public sealed class Cave
-{
-    private bool[,] C { get; init; } = default!;
-    public (int x, int y) Offset { get; private init; } = default!;
-    public (int x, int y) Size { get; private init; } = default!;
-    public bool this[int x, int y]
+    private static object Execute(string input, bool addFloor)
     {
-        get => C[x - Offset.x, y - Offset.y];
-        set => C[x - Offset.x, y - Offset.y] = value;
+        var cave = Cave.Parse(input.AsMemory().SplitLine(), addFloor);
+        return cave.DropSand().Count();
     }
-    public bool this[(int x, int y) pos]
+
+    public IEnumerable<(string name, Action<string> action)> GetDisplays()
     {
-        get => this[pos.x, pos.y];
-        set => this[pos.x, pos.y] = value;
+        yield return ("part 1", static input => Display(input, addFloor: false));
+        yield return ("part 2", static input => Display(input, addFloor: true));
     }
-    public bool DropSand()
+
+    private static void Display(string input, bool addFloor)
     {
-        ReadOnlySpan<(int x, int y)> dirs = stackalloc (int x, int y)[]
+        Console.CursorVisible = false;
+        var cave = Cave.Parse(input.AsMemory().SplitLine(), addFloor);
+        for (int y = 0; y < cave.Size.y; y++)
         {
-            (0, 1),
-            (-1, 1),
-            (1, 1),
-        };
-        var sand = (x: 500, y: 0);
-        while (true)
-        {
-            if (this[sand])
-                return false;
-            var hasFallen = false;
-            foreach (var dir in dirs)
+            for (int x = 0; x < cave.Size.x; x++)
             {
-                var newPos = (x: sand.x + dir.x, y: sand.y + dir.y);
-                if (newPos.x - Offset.x < 0 || newPos.x - Offset.x >= Size.x || newPos.y - Offset.y >= Size.y)
-                    return false;
-                if (!this[newPos])
-                {
-                    sand = newPos;
-                    hasFallen = true;
-                    break;
-                }
+                Console.Write(cave[x + cave.OffsetX, y] ? '#' : ' ');
             }
-            if (!hasFallen)
-            {
-                this[sand] = true;
-                return true;
-            }
+            Console.WriteLine();
         }
-    }
-    public static Cave Parse(ReadOnlyMemory<ReadOnlyMemory<char>> input, bool isPart2)
-    {
-        var pathes = new ReadOnlyMemory<(int x, int y)>[input.Length];
-        for (int i = 0; i < input.Length; i++)
-            pathes[i] = ParsePath(input.Span[i].Split(" -> "));
-
-        var (minX, maxX, minY, maxY) = (500, 500, 0, 0);
-        foreach (var path in pathes)
-            foreach (var (x, y) in path.Span)
-            {
-                if (x < minX)
-                    minX = x;
-                else if (x > maxX)
-                    maxX = x;
-                if (y < minY)
-                    minY = y;
-                else if (y > maxY)
-                    maxY = y;
-            }
-        if (isPart2)
+        foreach (var sand in cave.DropSand())
         {
-            maxY += 2;
-            minX = Math.Min(minX, 500 - maxY);
-            maxX = Math.Max(maxX, 501 + maxY);
+            Console.ReadKey(intercept: true);
+            Console.SetCursorPosition(sand.x - cave.OffsetX, sand.y);
+            Console.Write('o');
         }
-        var (width, height) = (maxX - minX + 1, maxY - minY + 1);
-        var c = new Cave()
-        {
-            C = new bool[width, height],
-            Offset = (minX, minY),
-            Size = (width, height),
-        };
-
-        foreach (var path in pathes)
-        {
-            var previous = path.Span[0];
-            foreach (var current in path.Span[1..])
-            {
-                if (previous.x == current.x)
-                    for (var (y, max) = (Math.Min(previous.y, current.y), Math.Max(previous.y, current.y)); y <= max; y++)
-                        c[current.x, y] = true;
-                else if (previous.y == current.y)
-                    for (var (x, max) = (Math.Min(previous.x, current.x), Math.Max(previous.x, current.x)); x <= max; x++)
-                        c[x, current.y] = true;
-                previous = current;
-            }
-        }
-        if (isPart2)
-            for (int x = minX; x <= maxX; x++)
-                c[x, maxY] = true;
-        return c;
+        Console.CursorVisible = true;
     }
-
-    private static ReadOnlyMemory<(int x, int y)> ParsePath(ReadOnlyMemory<ReadOnlyMemory<char>> line)
-    {
-        var path = new (int x, int y)[line.Length];
-        for (var i = 0; i < line.Length; i++)
-            path[i] = ParsePoint(line.Span[i]);
-        return path;
-    }
-
-    private static (int x, int y) ParsePoint(ReadOnlyMemory<char> input)
-    => input.Split(",").Span switch
-    {
-        [var x, var y] when int.TryParse(x.Span, out var a) && int.TryParse(y.Span, out var b) => (a, b),
-        _ => throw new UnreachableException(),
-    };
 }
