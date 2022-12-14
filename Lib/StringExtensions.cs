@@ -1,4 +1,5 @@
 using System.ComponentModel;
+using System.Diagnostics.CodeAnalysis;
 using System.Runtime.CompilerServices;
 
 namespace AdventOfCode;
@@ -77,6 +78,22 @@ public static class StringExtensions
         var matches = Regex.EnumerateMatches(st.Span, "(\r?\n){2}");
         var start = 0;
         var list = new ReadOnlyMemory<char>[Regex.Count(st.Span, "(\r?\n){2}") + 1];
+        var index = 0;
+        foreach (var match in matches)
+        {
+            list[index++] = st[start..match.Index];
+            start = match.Index + match.Length;
+        }
+        list[index] = st[start..];
+        return list;
+    }
+
+    [DebuggerStepThrough]
+    public static Memory<ReadOnlyMemory<char>> Split(this ReadOnlyMemory<char> st, [StringSyntax(StringSyntaxAttribute.Regex)]string regexSplit)
+    {
+        var matches = Regex.EnumerateMatches(st.Span, regexSplit);
+        var start = 0;
+        var list = new ReadOnlyMemory<char>[Regex.Count(st.Span, regexSplit) + 1];
         var index = 0;
         foreach (var match in matches)
         {
