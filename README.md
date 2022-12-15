@@ -1,4 +1,4 @@
-# Advent of Code (2020-2022)
+# Advent of Code (2022-2022)
 C# solutions to the Advent of Code problems.
 Check out https://adventofcode.com.
 
