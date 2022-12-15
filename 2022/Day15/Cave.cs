@@ -39,11 +39,17 @@ public sealed class Cave
     public IEnumerable<IEnumerable<(int x, int y)>> GetLimitsOfRange()
     {
         foreach (var (sensor, d) in Sensors)
-            yield return GetLimits(sensor, d);
+            yield return GetLimits(sensor, d + 1);
 
         static IEnumerable<(int x, int y)> GetLimits((int x, int y) sensor, int distance)
         {
-            
+            for (int d = 0; d <= distance; d++)
+            {
+                yield return (d + sensor.x, distance - d + sensor.y);
+                yield return (-d + sensor.x, -(distance - d) + sensor.y);
+                yield return (distance - d + sensor.x, -d + sensor.y);
+                yield return (-(distance - d) + sensor.x, d + sensor.y);
+            }
         }
     }
 

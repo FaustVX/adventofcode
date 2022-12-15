@@ -50,10 +50,20 @@ public class Solution : Solver //, IDisplay
                 maxY = y;
         }
 
-        for (int y = minY; y < maxY; y++)
-            for (int x = minX; x < maxX; x++)
-                if (!cave.IsInRange(x, y))
-                    return x * 4_000_000 + y;
+        if (minX < 0)
+            minX = 0;
+        if (maxX > 4_000_000)
+            maxX = 4_000_000;
+        if (minY < 0)
+            minY = 0;
+        if (maxY > 4_000_000)
+            maxY = 4_000_000;
+
+        foreach (var sensor in cave.GetLimitsOfRange())
+            foreach (var (x, y) in sensor)
+                if (x >= minX && x <= maxX && y >= minY && y <= maxY)
+                    if (!cave.IsInRange(x, y))
+                        return x * 4_000_000L + y;
 
         throw new UnreachableException();
     }
