@@ -28,17 +28,34 @@ public sealed class Cave
                 return Location.Sensor;
             foreach (var (sensor, distance) in Sensors)
             {
-                var manhattanDistance = Math.Abs(sensor.x - x)-1 + Math.Abs(sensor.y - y)-1;
-                if (manhattanDistance < distance-1)
+                var manhattanDistance = Math.Abs(sensor.x - x) - 1 + Math.Abs(sensor.y - y) - 1;
+                if (manhattanDistance < distance - 1)
                     return Location.NotBeacon;
             }
             return Location.Empty;
         }
     }
 
-    public Location this[(int x, int y) pos]
+    public IEnumerable<IEnumerable<(int x, int y)>> GetLimitsOfRange()
     {
-        get => this[pos.x, pos.y];
+        foreach (var (sensor, d) in Sensors)
+            yield return GetLimits(sensor, d);
+
+        static IEnumerable<(int x, int y)> GetLimits((int x, int y) sensor, int distance)
+        {
+            
+        }
+    }
+
+    public bool IsInRange(int x, int y)
+    {
+        foreach (var (sensor, distance) in Sensors)
+        {
+            var manhattanDistance = Math.Abs(sensor.x - x) - 1 + Math.Abs(sensor.y - y) - 1;
+            if (manhattanDistance < distance - 1)
+                return true;
+        }
+        return false;
     }
 
     private void PlaceLocations(ReadOnlyMemory<((int x, int y) sensor, (int x, int y) beacon)> pathes)
@@ -83,10 +100,10 @@ public sealed class Cave
         foreach (var (sensor, beacon) in pathes.Span)
         {
             var manhattanDistance = Math.Abs(sensor.x - beacon.x) + Math.Abs(sensor.y - beacon.y);
-            SetMinMax(sensor.x + manhattanDistance + 1, ref minX, ref maxX);
-            SetMinMax(sensor.x - manhattanDistance - 1, ref minX, ref maxX);
-            SetMinMax(sensor.y + manhattanDistance + 1, ref minY, ref maxY);
-            SetMinMax(sensor.y - manhattanDistance - 1, ref minY, ref maxY);
+            SetMinMax(sensor.x + manhattanDistance, ref minX, ref maxX);
+            SetMinMax(sensor.x - manhattanDistance, ref minX, ref maxX);
+            SetMinMax(sensor.y + manhattanDistance, ref minY, ref maxY);
+            SetMinMax(sensor.y - manhattanDistance, ref minY, ref maxY);
         }
         return (minX, maxX, minY, maxY);
 

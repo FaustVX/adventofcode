@@ -35,6 +35,26 @@ public class Solution : Solver //, IDisplay
 
     public object PartTwo(string input)
     {
-        return 0;
+        var cave = Cave.Parse(input.AsMemory());
+
+        var (minX, maxX, minY, maxY) = (int.MaxValue, 0, int.MaxValue, 0);
+        foreach (var (x, y) in cave.Sensors.Keys)
+        {
+            if (x < minX)
+                minX = x;
+            else if (x > maxX)
+                maxX = x;
+            if (y < minY)
+                minY = y;
+            else if (y > maxY)
+                maxY = y;
+        }
+
+        for (int y = minY; y < maxY; y++)
+            for (int x = minX; x < maxX; x++)
+                if (!cave.IsInRange(x, y))
+                    return x * 4_000_000 + y;
+
+        throw new UnreachableException();
     }
 }
