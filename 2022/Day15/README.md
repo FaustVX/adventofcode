@@ -112,3 +112,13 @@ In this example, in the row where <code>y=10</code>, there are <code><em>26</em>
 Consult the report from the sensors you just deployed. <em>In the row where <code>y=2000000</code>, how many positions cannot contain a beacon?</em>
 
 
+## --- Part Two ---
+Your handheld device indicates that the distress signal is coming from a beacon nearby. The distress beacon is not detected by any sensor, but the distress beacon must have <code>x</code> and <code>y</code> coordinates each no lower than <code>0</code> and no larger than <code>4000000</code>.
+
+To isolate the distress beacon's signal, you need to determine its <em>tuning frequency</em>, which can be found by multiplying its <code>x</code> coordinate by <code>4000000</code> and then adding its <code>y</code> coordinate.
+
+In the example above, the search space is smaller: instead, the <code>x</code> and <code>y</code> coordinates can each be at most <code>20</code>. With this reduced search area, there is only a single position that could have a beacon: <code>x=14, y=11</code>. The tuning frequency for this distress beacon is <code><em>56000011</em></code>.
+
+Find the only possible position for the distress beacon. <em>What is its tuning frequency?</em>
+
+
