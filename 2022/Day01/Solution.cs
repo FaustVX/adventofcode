@@ -17,6 +17,10 @@ public class Solution : Solver
     }
 
     public object PartTwo(string input) {
-        return 0;
+        var elfs = input.Split("\n\n");
+
+        var elfsCalories = elfs.Select(elf => elf.Split("\n").Select(x => int.Parse(x)).Sum()).ToList();
+        elfsCalories.Sort();
+        return elfsCalories.TakeLast(3).Sum();
     }
 }
