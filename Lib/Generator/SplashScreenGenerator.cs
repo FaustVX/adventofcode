@@ -33,8 +33,11 @@ class SplashScreenImpl : SplashScreen
 
         var bw = new BufferWriter();
         foreach (var line in lines)
+        {
             foreach (var token in line)
                 bw.Write(token.ConsoleColor, token.Text, token.Bold);
+            bw.Write(-1, "\n", false);
+        }
         return bw.GetContent();
     }
 
