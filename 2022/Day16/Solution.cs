@@ -10,7 +10,7 @@ public class Solution : Solver //, IDisplay
         return Calcutate(tunnels, tunnels.Where(static kvp => kvp.Value.pressure != 0).Select(static kvp => kvp.Key).ToImmutableList(), 30, "AA");
     }
 
-    private static int Calcutate(ImmutableDictionary<string, (int pressure, List<string> leading)> tunnels, ImmutableList<string> valvesToOpen, int minuteRemaining, string entrance)
+    private static int Calcutate(IReadOnlyDictionary<string, (int pressure, List<string> leading)> tunnels, ImmutableList<string> valvesToOpen, int minuteRemaining, string entrance)
     {
         if (minuteRemaining < 1 || valvesToOpen.IsEmpty)
             return 0;
@@ -40,7 +40,7 @@ public class Solution : Solver //, IDisplay
         return maxPressure;
     }
 
-    private static ImmutableDictionary<string, (int pressure, List<string> leading)> ParseTunnels(ReadOnlyMemory<ReadOnlyMemory<char>> lines)
+    private static IReadOnlyDictionary<string, (int pressure, List<string> leading)> ParseTunnels(ReadOnlyMemory<ReadOnlyMemory<char>> lines)
     {
         var tunnels = new Dictionary<string, (int pressure, List<string> leading)>(capacity: lines.Length);
         foreach (var tunnel in lines.Span)
@@ -49,7 +49,7 @@ public class Solution : Solver //, IDisplay
             var leading = infos[11..];
             tunnels.Add(infos.Span[1].ToString(), (int.Parse(infos.Span[5].Span), Enumerable.Repeat(leading, leading.Length).Select((l, i) => l.Span[i][..2].ToString()).ToList()));
         }
-        return tunnels.ToImmutableDictionary();
+        return tunnels;
     }
 
     public object PartTwo(string input)
