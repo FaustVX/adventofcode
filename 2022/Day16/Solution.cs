@@ -12,28 +12,20 @@ public class Solution : Solver //, IDisplay
 
     private static int Calcutate(IReadOnlyDictionary<string, (int pressure, List<string> leading)> tunnels, ImmutableList<string> valvesToOpen, int minuteRemaining, string entrance)
     {
-        if (minuteRemaining < 1 || valvesToOpen.IsEmpty)
+        if (minuteRemaining < 1)
             return 0;
+        if (valvesToOpen.IsEmpty)
+            return tunnels[entrance].pressure * minuteRemaining;
         var dijkstra = new Dijkstra(tunnels, entrance);
         dijkstra.Calculate();
-        if (valvesToOpen is [var l])
-        {
-            var backtrace = dijkstra.BackTrace(l).ToArray();
-            var minute = minuteRemaining - backtrace.Count();
-            if (minute >= 1)
-                return tunnels[l].pressure * minute;
-            return 0;
-        }
         var maxPressure = 0;
         foreach (var label in valvesToOpen)
         {
-            var backtrace = dijkstra.BackTrace(label).ToArray();
-            var minute = minuteRemaining - backtrace.Count();
             var pressure = Calcutate(tunnels
                     , valvesToOpen.Remove(label)
-                    , minute
-                    , entrance: label)
-                + tunnels[label].pressure * minute;
+                    , minuteRemaining - dijkstra.BackTrace(label).Count()
+                    , entrance: label);
+            pressure += tunnels[entrance].pressure * minuteRemaining;
             if (pressure > maxPressure)
                 maxPressure = pressure;
         }
