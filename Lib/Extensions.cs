@@ -99,4 +99,31 @@ public static class Extensions
             .SelectMany(x => Enumerable.Range(0, h).Select(y => ((x, y), array[x, y])))
             .ToDictionary(static t => t.Item1, static t => t.Item2);
     }
+
+    [DebuggerStepThrough]
+    public static IEnumerable<(TFirst first, TSecond second)> ZipRepeated<TFirst, TSecond>(this IEnumerable<TFirst> source, TSecond other)
+    {
+        var enumerator = source.GetEnumerator();
+        while (enumerator.MoveNext())
+            yield return (enumerator.Current, other);
+    }
+
+    [DebuggerStepThrough]
+    public static IEnumerable<TResult> ZipRepeated<TFirst, TSecond, TResult>(this IEnumerable<TFirst> source, TSecond other, Func<TFirst, TSecond, TResult> converter)
+    {
+        var enumerator = source.GetEnumerator();
+        while (enumerator.MoveNext())
+            yield return converter(enumerator.Current, other);
+    }
+
+    [DebuggerStepThrough]
+    public static IEnumerable<T> Loop<T>(this IEnumerable<T> source)
+    {
+        while (true)
+        {
+            var enumerator = source.GetEnumerator();
+            while (enumerator.MoveNext())
+                yield return enumerator.Current;
+        }
+    }
 }
