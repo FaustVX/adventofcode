@@ -149,4 +149,87 @@ public static class Extensions
     where T2 : ISpanParsable<T2>
     where T3 : ISpanParsable<T3>
     => (T1.Parse(memory.Span[0].Span, default), T2.Parse(memory.Span[1].Span, default), T3.Parse(memory.Span[2].Span, default));
+
+    [DebuggerStepThrough]
+    public static void SetMinMax<T>(this T value, ref T min, ref T max)
+    where T : System.Numerics.IComparisonOperators<T, T, bool>
+    {
+        if (value < min)
+            min = value;
+        else if (value > max)
+            max = value;
+    }
+
+    [DebuggerStepThrough]
+    public static void SetMinMaxBy<T, TValue>(this T value, ref T min, ref T max, Func<T, TValue> getValue)
+    where TValue : System.Numerics.IComparisonOperators<TValue, TValue, bool>
+    {
+        var v = getValue(value);
+        if (v < getValue(min))
+            min = value;
+        else if (v > getValue(max))
+            max = value;
+    }
+
+    [DebuggerStepThrough]
+    public static void SetMin<T>(this T value, ref T max)
+    where T : System.Numerics.IComparisonOperators<T, T, bool>
+    {
+        if (value < max)
+            max = value;
+    }
+
+    [DebuggerStepThrough]
+    public static void SetMax<T>(this T value, ref T max)
+    where T : System.Numerics.IComparisonOperators<T, T, bool>
+    {
+        if (value > max)
+            max = value;
+    }
+
+    [DebuggerStepThrough]
+    public static void SetMinBy<T, TValue>(this T value, ref T max, Func<T, TValue> getValue)
+    where TValue : System.Numerics.IComparisonOperators<TValue, TValue, bool>
+    {
+        if (getValue(value) < getValue(max))
+            max = value;
+    }
+
+    [DebuggerStepThrough]
+    public static void SetMaxBy<T, TValue>(this T value, ref T max, Func<T, TValue> getValue)
+    where TValue : System.Numerics.IComparisonOperators<TValue, TValue, bool>
+    {
+        if (getValue(value) > getValue(max))
+            max = value;
+    }
+
+    [DebuggerStepThrough]
+    public static (T1 minX, T1 maxX, T2 minY, T2 maxY) GetMinMax<T1, T2>(this IEnumerable<(T1 x, T2 y)> values)
+    where T1 : System.Numerics.IMinMaxValue<T1>, System.Numerics.IComparisonOperators<T1, T1, bool>, System.Numerics.IIncrementOperators<T1>, System.Numerics.IDecrementOperators<T1>
+    where T2 : System.Numerics.IMinMaxValue<T2>, System.Numerics.IComparisonOperators<T2, T2, bool>, System.Numerics.IIncrementOperators<T2>, System.Numerics.IDecrementOperators<T2>
+    {
+        (var minX, var maxX, var minY, var maxY) = (T1.MaxValue, T1.MinValue, T2.MaxValue, T2.MinValue);
+        foreach (var (x, y) in values)
+        {
+            x.SetMinMax(ref minX, ref maxX);
+            y.SetMinMax(ref minY, ref maxY);
+        }
+        return (--minX, ++maxX, --minY, ++maxY);
+    }
+
+    [DebuggerStepThrough]
+    public static (T1 minX, T1 maxX, T2 minY, T2 maxY, T3 minZ, T3 maxZ) GetMinMax<T1, T2, T3>(this IEnumerable<(T1 x, T2 y, T3 z)> values)
+    where T1 : System.Numerics.IMinMaxValue<T1>, System.Numerics.IComparisonOperators<T1, T1, bool>, System.Numerics.IIncrementOperators<T1>, System.Numerics.IDecrementOperators<T1>
+    where T2 : System.Numerics.IMinMaxValue<T2>, System.Numerics.IComparisonOperators<T2, T2, bool>, System.Numerics.IIncrementOperators<T2>, System.Numerics.IDecrementOperators<T2>
+    where T3 : System.Numerics.IMinMaxValue<T3>, System.Numerics.IComparisonOperators<T3, T3, bool>, System.Numerics.IIncrementOperators<T3>, System.Numerics.IDecrementOperators<T3>
+    {
+        (var minX, var maxX, var minY, var maxY, var minZ, var maxZ) = (T1.MaxValue, T1.MinValue, T2.MaxValue, T2.MinValue, T3.MaxValue, T3.MinValue);
+        foreach (var (x, y, z) in values)
+        {
+            x.SetMinMax(ref minX, ref maxX);
+            y.SetMinMax(ref minY, ref maxY);
+            z.SetMinMax(ref minZ, ref maxZ);
+        }
+        return (--minX, ++maxX, --minY, ++maxY, --minZ, ++maxZ);
+    }
 }
