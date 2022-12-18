@@ -154,7 +154,7 @@ static class Updater
                         var initial = (Git.Commit)tag.Target;
                         var duration = signature.When - initial.Committer.When;
                         Git.Commands.Stage(repo, "*");
-                        var commit = repo.Commit($"Solved P1 in {duration:h\\:mm\\:ss}", signature, signature, new());
+                        var commit = repo.Commit($"Solved P1 in {duration:h\\:mm\\:ss}", signature, signature, new(){ AllowEmptyCommit = true });
                         repo.Tags.Add($"Y{problem.Year}D{problem.Day}P2", commit);
                     }
                     else
@@ -163,11 +163,11 @@ static class Updater
                         var initial = (Git.Commit)tag.Target;
                         var duration = signature.When - initial.Committer.When;
                         Git.Commands.Stage(repo, "*");
-                        repo.Commit($"Solved P2 in {duration:h\\:mm\\:ss}", signature, signature, new());
+                        repo.Commit($"Solved P2 in {duration:h\\:mm\\:ss}", signature, signature, new(){ AllowEmptyCommit = true });
                         repo.Tags.Remove(tag);
                         Runner.RunBenchmark(solver.GetType());
                         Git.Commands.Stage(repo, "*");
-                        repo.Commit("Added Benchmarks", signature, signature, new());
+                        repo.Commit("Added Benchmarks", signature, signature, new(){ AllowEmptyCommit = true });
                         var branch = repo.Head;
                         var main = repo.Branches["main"] ?? repo.Branches["master"];
                         Git.Commands.Checkout(repo, main);
