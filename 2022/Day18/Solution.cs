@@ -71,7 +71,7 @@ public class Solution : Solver //, IDisplay
                 foreach (var dir in dirs)
                 {
                     var pos = voxel.Add(dir);
-                    if (airs.Contains(pos))
+                    if (airs.Contains(pos) && !toCheck.Contains(pos))
                         toCheck.Add(pos);
                 }
             }
