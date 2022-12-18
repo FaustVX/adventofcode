@@ -65,9 +65,7 @@ public class Solution : Solver, IDisplay
             {
                 if (graph[x, y] != 1)
                     continue;
-                var count = dijkstra.BackTrace((x, y)).Count();
-                if (count < distance)
-                    distance = count;
+                dijkstra.BackTrace((x, y)).Count().SetMin(ref distance);
             }
         }
         return distance;

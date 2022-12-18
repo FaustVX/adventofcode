@@ -125,18 +125,14 @@ public sealed class Cave
         foreach (var path in pathes)
             foreach (var (x, y) in path.Span)
             {
-                if (x < minX)
-                    minX = x;
-                else if (x > maxX)
-                    maxX = x;
-                if (y > maxY)
-                    maxY = y;
+                x.SetMinMax(ref minX, ref maxX);
+                y.SetMax(ref maxY);
             }
         if (addFloor)
         {
             maxY += 2;
-            minX = Math.Min(minX, sandDropPos.x - 1 - maxY);
-            maxX = Math.Max(maxX, sandDropPos.x + 1 + maxY);
+            (sandDropPos.x - 1 - maxY).SetMin(ref minX);
+            (sandDropPos.x + 1 + maxY).SetMax(ref maxX);
         }
         return (minX, maxX, maxY);
     }

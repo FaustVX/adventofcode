@@ -10,24 +10,7 @@ public class Solution : Solver //, IDisplay
         return Enumerable.Repeat(cave, cave.Size.x).Where(cave.Size.y <= 100 ? GetForTest : GetForInput).Count();
 
         static bool GetForTest(Cave c, int x)
-        {
-            switch (c[x + c.Offset.x, 10])
-            {
-                case Location.NotBeacon:
-                    Console.Write('#');
-                    return true;
-                case Location.Empty:
-                    Console.Write('.');
-                    break;
-                case Location.Sensor:
-                    Console.Write('S');
-                    break;
-                case Location.Beacon:
-                    Console.Write('B');
-                    break;
-            }
-            return false;
-        }
+        => c[x + c.Offset.x, 10] is Location.NotBeacon;
 
         static bool GetForInput(Cave c, int x)
         => c[x + c.Offset.x, 2_000_000] is Location.NotBeacon;
@@ -37,27 +20,12 @@ public class Solution : Solver //, IDisplay
     {
         var cave = Cave.Parse(input.AsMemory());
 
-        var (minX, maxX, minY, maxY) = (int.MaxValue, 0, int.MaxValue, 0);
-        foreach (var (x, y) in cave.Sensors.Keys)
-        {
-            if (x < minX)
-                minX = x;
-            else if (x > maxX)
-                maxX = x;
-            if (y < minY)
-                minY = y;
-            else if (y > maxY)
-                maxY = y;
-        }
+        var (minX, maxX, minY, maxY) = cave.Sensors.Keys.GetMinMax();
 
-        if (minX < 0)
-            minX = 0;
-        if (maxX > 4_000_000)
-            maxX = 4_000_000;
-        if (minY < 0)
-            minY = 0;
-        if (maxY > 4_000_000)
-            maxY = 4_000_000;
+        0.SetMax(ref minX);
+        4_000_000.SetMin(ref maxX);
+        0.SetMax(ref minY);
+        4_000_000.SetMin(ref maxY);
 
         foreach (var sensor in cave.GetLimitsOfRange())
             foreach (var (x, y) in sensor)

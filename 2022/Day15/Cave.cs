@@ -106,19 +106,11 @@ public sealed class Cave
         foreach (var (sensor, beacon) in pathes.Span)
         {
             var manhattanDistance = Math.Abs(sensor.x - beacon.x) + Math.Abs(sensor.y - beacon.y);
-            SetMinMax(sensor.x + manhattanDistance, ref minX, ref maxX);
-            SetMinMax(sensor.x - manhattanDistance, ref minX, ref maxX);
-            SetMinMax(sensor.y + manhattanDistance, ref minY, ref maxY);
-            SetMinMax(sensor.y - manhattanDistance, ref minY, ref maxY);
+            (sensor.x + manhattanDistance).SetMinMax(ref minX, ref maxX);
+            (sensor.x - manhattanDistance).SetMinMax(ref minX, ref maxX);
+            (sensor.y + manhattanDistance).SetMinMax(ref minY, ref maxY);
+            (sensor.y - manhattanDistance).SetMinMax(ref minY, ref maxY);
         }
         return (minX, maxX, minY, maxY);
-
-        static void SetMinMax(int value, ref int min, ref int max)
-        {
-            if (value < min)
-                min = value;
-            else if (value > max)
-                max = value;
-        }
     }
 }

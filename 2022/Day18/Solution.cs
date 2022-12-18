@@ -36,6 +36,12 @@ public class Solution : Solver //, IDisplay
     {
         var magmas = ParseVoxels(input.AsMemory().SplitLine());
         var (minX, maxX, minY, maxY, minZ, maxZ) = magmas.GetMinMax();
+        minX--;
+        maxX++;
+        minY--;
+        maxY++;
+        minZ--;
+        maxZ++;
         var dirs = new (int, int, int)[]
         {
             (-1, 0, 0),
