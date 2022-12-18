@@ -51,17 +51,15 @@ public class Solution : Solver //, IDisplay
             (0, 0, -1),
             (0, 0, +1),
         };
-        var toCheck = new List<(int x, int y, int z)>() // will contains only air voxels
-        {
-            (minX, minY, minZ),
-            (minX, maxY, minZ),
-            (maxX, minY, minZ),
-            (maxX, maxY, minZ),
-            (minX, minY, maxZ),
-            (minX, maxY, maxZ),
-            (maxX, minY, maxZ),
-            (maxX, maxY, maxZ),
-        };
+        var toCheck = new Queue<(int x, int y, int z)>(); // will contains only air voxels
+        toCheck.Enqueue((minX, minY, minZ));
+        toCheck.Enqueue((minX, maxY, minZ));
+        toCheck.Enqueue((maxX, minY, minZ));
+        toCheck.Enqueue((maxX, maxY, minZ));
+        toCheck.Enqueue((minX, minY, maxZ));
+        toCheck.Enqueue((minX, maxY, maxZ));
+        toCheck.Enqueue((maxX, minY, maxZ));
+        toCheck.Enqueue((maxX, maxY, maxZ));
         var airs = new HashSet<(int x, int y, int z)>(capacity: (maxX - minX + 1) * (maxY - minY + 1) * (maxZ - minZ + 1) - magmas.Count);
         for (var x = minX; x <= maxX; x++)
             for (var y = minY; y <= maxY; y++)
@@ -69,18 +67,16 @@ public class Solution : Solver //, IDisplay
                     if (!magmas.Contains((x, y, z)))
                         airs.Add((x, y, z));
         while (toCheck.Count > 0)
-            for (var i = toCheck.Count - 1; i >= 0 ; i--)
+        {
+            var voxel = toCheck.Dequeue();
+            airs.Remove(voxel);
+            foreach (var dir in dirs)
             {
-                var voxel = toCheck[i];
-                toCheck.Remove(voxel);
-                airs.Remove(voxel);
-                foreach (var dir in dirs)
-                {
-                    var pos = voxel.Add(dir);
-                    if (airs.Contains(pos) && !toCheck.Contains(pos))
-                        toCheck.Add(pos);
-                }
+                var pos = voxel.Add(dir);
+                if (airs.Contains(pos) && !toCheck.Contains(pos))
+                    toCheck.Enqueue(pos);
             }
+        }
 
         var emptyFaces = 0;
         foreach (var voxel in magmas)
