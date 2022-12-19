@@ -232,4 +232,11 @@ public static class Extensions
         }
         return (minX, maxX, minY, maxY, minZ, maxZ);
     }
+
+    [DebuggerStepThrough]
+    public static IEnumerable<T> AsEnumerable<T>(this ReadOnlyMemory<T> memory)
+    {
+        for (int i = 0; i < memory.Length; i++)
+            yield return memory.Span[i];
+    }
 }

@@ -33,7 +33,7 @@ public static class StringExtensions
         => Regex.Split(st, "\r?\n");
 
     [DebuggerStepThrough]
-    public static Memory<ReadOnlyMemory<char>> SplitLine(this ReadOnlyMemory<char> st)
+    public static ReadOnlyMemory<ReadOnlyMemory<char>> SplitLine(this ReadOnlyMemory<char> st)
     {
         var matches = Regex.EnumerateMatches(st.Span, "\r?\n");
         var start = 0;
@@ -53,7 +53,7 @@ public static class StringExtensions
         => Regex.Split(st, "\\s");
 
     [DebuggerStepThrough]
-    public static Memory<ReadOnlyMemory<char>> SplitSpace(this ReadOnlyMemory<char> st)
+    public static ReadOnlyMemory<ReadOnlyMemory<char>> SplitSpace(this ReadOnlyMemory<char> st)
     {
         var matches = Regex.EnumerateMatches(st.Span, "\\s");
         var start = 0;
@@ -73,7 +73,7 @@ public static class StringExtensions
         => Regex.Split(st, "\r?\n\r?\n");
 
     [DebuggerStepThrough]
-    public static Memory<ReadOnlyMemory<char>> Split2Lines(this ReadOnlyMemory<char> st)
+    public static ReadOnlyMemory<ReadOnlyMemory<char>> Split2Lines(this ReadOnlyMemory<char> st)
     {
         var matches = Regex.EnumerateMatches(st.Span, "(\r?\n){2}");
         var start = 0;
@@ -89,7 +89,7 @@ public static class StringExtensions
     }
 
     [DebuggerStepThrough]
-    public static Memory<ReadOnlyMemory<char>> Split(this ReadOnlyMemory<char> st, [StringSyntax(StringSyntaxAttribute.Regex)]string regexSplit)
+    public static ReadOnlyMemory<ReadOnlyMemory<char>> Split(this ReadOnlyMemory<char> st, [StringSyntax(StringSyntaxAttribute.Regex)]string regexSplit)
     {
         var matches = Regex.EnumerateMatches(st.Span, regexSplit);
         var start = 0;
