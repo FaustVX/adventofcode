@@ -15,54 +15,58 @@ public class Solution : Solver //, IDisplay
 
     public object PartOne(string input)
     {
-        var linked = ParseInput(input.AsMemory().SplitLine());
+        var linked = ParseInput<int>(input.AsMemory().SplitLine());
+        Mix(linked);
+        RotateList(linked, static n => n.Value == 0);
+        var list = linked.ToArray();
+        return list[1000 % list.Length].Value + list[2000 % list.Length].Value + list[3000 % list.Length].Value;
+    }
+
+    private static void Mix<T>(LinkedList<Node<T>> linked)
+    where T : System.Numerics.INumber<T>
+    {
         for (var node = linked.First; node != null; node = node.Value.Next)
-        {
-            if (node.Value.Value > 0)
+            if (node.Value.Value > T.Zero)
             {
                 var after = node.Next ?? linked.First!;
                 linked.Remove(node);
-                for (int i = 1; i < node.Value.Value; i++)
+                for (var i = T.One; i < node.Value.Value; i++)
                     after = after?.Next ?? linked.First!;
                 if (after.Next is null)
                     linked.AddFirst(node);
                 else
                     linked.AddAfter(after!, node);
             }
-            else if (node.Value.Value < 0)
+            else if (node.Value.Value < T.Zero)
             {
                 var before = node.Previous ?? linked.Last!;
                 linked.Remove(node);
-                for (var i = 1; i < -node.Value.Value; i++)
+                for (var i = T.One; i < -node.Value.Value; i++)
                     before = before?.Previous ?? linked.Last!;
                 if (before!.Previous is null)
                     linked.AddLast(node);
                 else
                     linked.AddBefore(before!, node);
             }
-        }
+    }
 
-        var list = RotateList(linked, static n => n.Value == 0).ToArray();
-        return list[1000 % list.Length].Value + list[2000 % list.Length].Value + list[3000 % list.Length].Value;
-
-        static LinkedList<T> RotateList<T>(LinkedList<T> list, Func<T, bool> predicate)
+    private static void RotateList<T>(LinkedList<T> list, Func<T, bool> predicate)
+    {
+        while (!predicate(list.First!.Value))
         {
-            while (!predicate(list.First!.Value))
-            {
-                var first = list.First!;
-                list.RemoveFirst();
-                list.AddLast(first);
-            }
-            return list;
+            var first = list.First!;
+            list.RemoveFirst();
+            list.AddLast(first);
         }
     }
 
-    private static LinkedList<Node<int>> ParseInput(ReadOnlyMemory<ReadOnlyMemory<char>> input)
+    private static LinkedList<Node<T>> ParseInput<T>(ReadOnlyMemory<ReadOnlyMemory<char>> input)
+    where T : ISpanParsable<T>
     {
-        var list = new LinkedList<Node<int>>();
-        LinkedListNode<Node<int>>? next = default;
-        for (int i = input.Length - 1; i >= 0 ; i--)
-            next = list.AddFirst(new Node<int>() { Value = int.Parse(input.Span[i].Span), Next = next });
+        var list = new LinkedList<Node<T>>();
+        LinkedListNode<Node<T>>? next = default;
+        for (var i = input.Length - 1; i >= 0 ; i--)
+            next = list.AddFirst(new Node<T>() { Value = T.Parse(input.Span[i].Span, default), Next = next });
         return list;
     }
 
