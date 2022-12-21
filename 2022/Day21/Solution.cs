@@ -9,6 +9,15 @@ public class Solution : Solver //, IDisplay
 
     public object PartTwo(string input)
     {
-        return 0;
+        IMonkey.i++;
+        var monkeys = IMonkey.ParseMonkeys(input.AsMemory().SplitLine());
+        var humn = monkeys["humn"] = new Human();
+        var root = new RootMonkey((OperationMonkey)monkeys["root"]);
+        monkeys["root"] = root;
+        root.GetHumanValue();
+        if (root.LeftMonkey.Value == root.RightMonkey.Value)
+            return humn.Value;
+        else
+            throw new UnreachableException($"{root.LeftMonkey.Value} != {root.RightMonkey.Value}");
     }
 }

@@ -3,7 +3,10 @@ namespace AdventOfCode.Y2022.Day21;
 
 interface IMonkey
 {
+    public static int i = 0;
     public abstract long Value { get; }
+    public abstract bool ContainsHuman { get; }
+    public long GetHumanValue(long equalsTo);
     public static Dictionary<string, IMonkey> ParseMonkeys(ReadOnlyMemory<ReadOnlyMemory<char>> input)
     {
         var cache = new Dictionary<string, IMonkey>(capacity: input.Length);
@@ -33,22 +36,95 @@ interface IMonkey
 sealed class NumberMonkey : IMonkey
 {
     public required long Value { get; init; }
+    public bool ContainsHuman => false;
+
+    long IMonkey.GetHumanValue(long equalsTo)
+    {
+        throw new NotImplementedException();
+    }
 }
 
-class OperationMonkey : IMonkey
+abstract class RelationalMonkey : IMonkey
 {
     public required string Left { get; init; }
-    public required char Operation { get; init; }
     public required string Right { get; init; }
+    public IMonkey LeftMonkey => Cache[Left];
+    public IMonkey RightMonkey => Cache[Right];
     public required IReadOnlyDictionary<string, IMonkey> Cache { get; init; }
+    public bool ContainsHuman => Cache[Left].ContainsHuman || Cache[Right].ContainsHuman;
+    public abstract long Value { get; }
+
+    public abstract long GetHumanValue(long equalsTo);
+}
+
+class OperationMonkey : RelationalMonkey
+{
+    public required char Operation { get; init; }
     private long? _value;
-    public long Value
+    public override long Value
     => _value ??= Operation switch
     {
-        '+' => Cache[Left].Value + Cache[Right].Value,
-        '-' => Cache[Left].Value - Cache[Right].Value,
-        '*' => Cache[Left].Value * Cache[Right].Value,
-        '/' => Cache[Left].Value / Cache[Right].Value,
+        '+' => LeftMonkey.Value + RightMonkey.Value,
+        '-' => LeftMonkey.Value - RightMonkey.Value,
+        '*' => LeftMonkey.Value * RightMonkey.Value,
+        '/' => LeftMonkey.Value / RightMonkey.Value,
         _ => throw new UnreachableException(),
     };
+    public override long GetHumanValue(long equalsTo)
+    {
+        if (RightMonkey.ContainsHuman)
+            return Operation switch
+            {
+                '+' => RightMonkey.GetHumanValue(equalsTo - LeftMonkey.Value),
+                '-' => RightMonkey.GetHumanValue(LeftMonkey.Value - equalsTo),
+                '*' => RightMonkey.GetHumanValue(equalsTo / LeftMonkey.Value),
+                '/' => RightMonkey.GetHumanValue(LeftMonkey.Value / equalsTo),
+                _ => throw new UnreachableException(),
+            };
+        else if (LeftMonkey.ContainsHuman)
+            return Operation switch
+            {
+                '+' => LeftMonkey.GetHumanValue(equalsTo - RightMonkey.Value),
+                '-' => LeftMonkey.GetHumanValue(equalsTo + RightMonkey.Value),
+                '*' => LeftMonkey.GetHumanValue(equalsTo / RightMonkey.Value),
+                '/' => LeftMonkey.GetHumanValue(equalsTo * RightMonkey.Value),
+                _ => throw new UnreachableException(),
+            };
+        else
+            throw new UnreachableException();
+    }
+}
+
+sealed class Human : IMonkey
+{
+    private long? _value;
+    public long Value => _value!.Value;
+
+    public bool ContainsHuman => !_value.HasValue;
+
+    public long GetHumanValue(long equalsTo)
+    => (_value = equalsTo)!.Value;
+}
+
+sealed class RootMonkey : RelationalMonkey
+{
+    [System.Diagnostics.CodeAnalysis.SetsRequiredMembers]
+    public RootMonkey(OperationMonkey previous)
+    => (Left, Right, Cache) = (previous.Left, previous.Right, previous.Cache);
+
+    public override long Value => throw new NotImplementedException();
+    public long GetHumanValue()
+    {
+        if (LeftMonkey.ContainsHuman)
+            return LeftMonkey.GetHumanValue(RightMonkey.Value);
+        else if (RightMonkey.ContainsHuman)
+            return RightMonkey.GetHumanValue(LeftMonkey.Value);
+        else
+            throw new UnreachableException();
+    }
+
+    public override long GetHumanValue(long equalsTo)
+    {
+        throw new NotImplementedException();
+    }
 }
