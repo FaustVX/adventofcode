@@ -5,7 +5,7 @@ namespace AdventOfCode.Y2022.Day21;
 public class Solution : Solver //, IDisplay
 {
     public object PartOne(string input)
-    => IMonkey<long>.ParseMonkeys(input.AsMemory().SplitLine())["root"].Value;
+    => IMonkey.ParseMonkeys(input.AsMemory().SplitLine())["root"].Value;
 
     public object PartTwo(string input)
     {

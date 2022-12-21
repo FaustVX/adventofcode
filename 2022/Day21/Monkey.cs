@@ -1,24 +1,23 @@
 #nullable enable
 namespace AdventOfCode.Y2022.Day21;
 
-interface IMonkey<T>
-where T : struct, ISpanParsable<T>, System.Numerics.IAdditionOperators<T, T, T>, System.Numerics.ISubtractionOperators<T, T, T>, System.Numerics.IDivisionOperators<T, T, T>, System.Numerics.IMultiplyOperators<T, T, T>
+interface IMonkey
 {
-    public abstract T Value { get; }
-    public static Dictionary<string, IMonkey<T>> ParseMonkeys(ReadOnlyMemory<ReadOnlyMemory<char>> input)
+    public abstract long Value { get; }
+    public static Dictionary<string, IMonkey> ParseMonkeys(ReadOnlyMemory<ReadOnlyMemory<char>> input)
     {
-        var cache = new Dictionary<string, IMonkey<T>>(capacity: input.Length);
+        var cache = new Dictionary<string, IMonkey>(capacity: input.Length);
         foreach (var line in input.AsEnumerable())
         {
             var name = line[..4].ToString();
-            if (T.TryParse(line[6..].Span, null, out var value))
-                cache[name] = new NumberMonkey<T>() { Value = value };
+            if (long.TryParse(line[6..].Span, out var value))
+                cache[name] = new NumberMonkey() { Value = value };
             else
             {
                 var leftName = line.Slice(6, 4).ToString();
                 var op = line.Span[11];
                 var rightName = line.Slice(13, 4).ToString();
-                cache[name] = new OperationMonkey<T>.Builder()
+                cache[name] = new OperationMonkey.Builder()
                 {
                     Left = leftName,
                     Operation = op,
@@ -27,40 +26,38 @@ where T : struct, ISpanParsable<T>, System.Numerics.IAdditionOperators<T, T, T>,
             }
         }
         foreach (var name in cache.Keys)
-            if (cache[name] is OperationMonkey<T>.Builder b)
+            if (cache[name] is OperationMonkey.Builder b)
                 cache[name] = b.Build(cache);
         return cache;
     }
 }
 
-sealed class NumberMonkey<T> : IMonkey<T>
-where T : struct, ISpanParsable<T>, System.Numerics.IAdditionOperators<T, T, T>, System.Numerics.ISubtractionOperators<T, T, T>, System.Numerics.IDivisionOperators<T, T, T>, System.Numerics.IMultiplyOperators<T, T, T>
+sealed class NumberMonkey : IMonkey
 {
-    public required T Value { get; init; }
+    public required long Value { get; init; }
 }
 
-class OperationMonkey<T> : IMonkey<T>
-where T : struct, ISpanParsable<T>, System.Numerics.IAdditionOperators<T, T, T>, System.Numerics.ISubtractionOperators<T, T, T>, System.Numerics.IDivisionOperators<T, T, T>, System.Numerics.IMultiplyOperators<T, T, T>
+class OperationMonkey : IMonkey
 {
-    public class Builder : IMonkey<T>
+    public class Builder : IMonkey
     {
         public required string Left { get; init; }
         public required char Operation { get; init; }
         public required string Right { get; init; }
-        public T Value => throw new NotImplementedException();
-        public IMonkey<T> Build(IDictionary<string, IMonkey<T>> cache)
-        => new OperationMonkey<T>()
+        public long Value => throw new NotImplementedException();
+        public IMonkey Build(IDictionary<string, IMonkey> cache)
+        => new OperationMonkey()
         {
             Left = cache[Left] is Builder l ? (cache[Left] = l.Build(cache)) : cache[Left],
             Operation = Operation,
             Right = cache[Right] is Builder r ? (cache[Right] = r.Build(cache)) : cache[Right],
         };
     }
-    public required IMonkey<T> Left { get; init; }
+    public required IMonkey Left { get; init; }
     public required char Operation { get; init; }
-    public required IMonkey<T> Right { get; init; }
-    private T? _value;
-    public T Value
+    public required IMonkey Right { get; init; }
+    private long? _value;
+    public long Value
     => _value ??= Operation switch
     {
         '+' => Left.Value + Right.Value,
