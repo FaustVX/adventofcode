@@ -28,98 +28,11 @@
             "options": {
                 "statusbar": {
                     "tooltip": "Retrive datas from AoC"
+                },
+                "env": {
+                    "SESSION": "${input:session}"
                 }
             },
-            "windows":{
-                "options": {
-                    "env": {
-                        "SESSION": "${input:session}"
-                    }
-                }
-            },
-            "linux":{
-                "options": {
-                    "env": {
-                        "SESSION": "${input:session}"
-                    }
-                }
-            },
-            "osx":{
-                "options": {
-                    "env": {
-                        "SESSION": "${input:session}"
-                    }
-                }
-            },
-        },
-        {
-            "label": "run today",
-            "command": "dotnet",
-            "args": [
-                "run",
-                "--configuration=Release",
-                "--",
-                "today"
-            ],
-            "problemMatcher": [],
-        },
-        {
-            "label": "upload today",
-            "command": "dotnet",
-            "args": [
-                "run",
-                "--configuration=Release",
-                "--",
-                "upload",
-                "today",
-            ],
-            "problemMatcher": [],
-            "windows":{
-                "options": {
-                    "env": {
-                        "SESSION": "${input:session}"
-                    }
-                }
-            },
-            "linux":{
-                "options": {
-                    "env": {
-                        "SESSION": "${input:session}"
-                    }
-                }
-            },
-            "osx":{
-                "options": {
-                    "env": {
-                        "SESSION": "${input:session}"
-                    }
-                }
-            },
-        },
-        {
-            "label": "display today",
-            "command": "dotnet",
-            "args": [
-                "run",
-                "display",
-                "today"
-            ],
-            "problemMatcher": [],
-            "presentation": {
-                "focus": true,
-            },
-        },
-        {
-            "label": "benchmark today",
-            "command": "dotnet",
-            "args": [
-                "run",
-                "--configuration=Release",
-                "--",
-                "bench",
-                "today"
-            ],
-            "problemMatcher": [],
         },
         {
             "label": "update",
@@ -133,27 +46,9 @@
             "options": {
                 "statusbar": {
                     "tooltip": "Retrive datas from AoC"
-                }
-            },
-            "windows":{
-                "options": {
-                    "env": {
-                        "SESSION": "${input:session}"
-                    }
-                }
-            },
-            "linux":{
-                "options": {
-                    "env": {
-                        "SESSION": "${input:session}"
-                    }
-                }
-            },
-            "osx":{
-                "options": {
-                    "env": {
-                        "SESSION": "${input:session}"
-                    }
+                },
+                "env": {
+                    "SESSION": "${input:session}"
                 }
             },
         },
@@ -164,9 +59,14 @@
                 "run",
                 "--configuration=Release",
                 "--",
-                "${input:year}/${input:day}"
+                "${relativeFileDirname}"
             ],
             "problemMatcher": [],
+            "options": {
+                "statusbar": {
+                    "filePattern": "Solution\\.cs"
+                }
+            },
         },
         {
             "label": "upload",
@@ -176,28 +76,15 @@
                 "--configuration=Release",
                 "--",
                 "upload",
-                "${input:year}/${input:day}",
+                "${relativeFileDirname}",
             ],
             "problemMatcher": [],
-            "windows":{
-                "options": {
-                    "env": {
-                        "SESSION": "${input:session}"
-                    }
-                }
-            },
-            "linux":{
-                "options": {
-                    "env": {
-                        "SESSION": "${input:session}"
-                    }
-                }
-            },
-            "osx":{
-                "options": {
-                    "env": {
-                        "SESSION": "${input:session}"
-                    }
+            "options": {
+                "env": {
+                    "SESSION": "${input:session}"
+                },
+                "statusbar": {
+                    "filePattern": "Solution\\.cs"
                 }
             },
         },
@@ -207,11 +94,16 @@
             "args": [
                 "run",
                 "display",
-                "${input:year}/${input:day}"
+                "${relativeFileDirname}"
             ],
             "problemMatcher": [],
             "presentation": {
                 "focus": true,
+            },
+            "options": {
+                "statusbar": {
+                    "filePattern": "Solution\\.cs"
+                }
             },
         },
         {
@@ -222,9 +114,14 @@
                 "--configuration=Release",
                 "--",
                 "bench",
-                "${input:year}/${input:day}"
+                "${relativeFileDirname}"
             ],
             "problemMatcher": [],
+            "options": {
+                "statusbar": {
+                    "filePattern": "Solution\\.cs"
+                }
+            },
         },
     ],
     "inputs": [

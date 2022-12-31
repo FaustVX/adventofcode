@@ -7,7 +7,7 @@ var tsolvers = Assembly.GetEntryAssembly()!.GetTypes()
     .ToArray();
 
 var action =
-    Command(args, Args("update", "([0-9]+)/([0-9]+)"), m => {
+    Command(args, Args("update", @"([0-9]+)[/\\](?:Day)?([0-9]+)"), m => {
         var year = int.Parse(m[1]);
         var day = int.Parse(m[2]);
         return Updater.UpdateWithGit(year, day).Wait;
@@ -20,7 +20,7 @@ var action =
             throw new AocCommuncationError("Event is not active. This option works in Dec 1-25 only)");
         }
     }) ??
-    Command(args, Args("upload", "([0-9]+)/([0-9]+)"), m => {
+    Command(args, Args("upload", @"([0-9]+)[/\\](?:Day)?([0-9]+)"), m => {
         var year = int.Parse(m[1]);
         var day = int.Parse(m[2]);
         return () => {
@@ -45,7 +45,7 @@ var action =
             throw new AocCommuncationError("Event is not active. This option works in Dec 1-25 only)");
         }
     }) ??
-    Command(args, Args("display", "([0-9]+)/([0-9]+)"), m => {
+    Command(args, Args("display", @"([0-9]+)[/\\](?:Day)?([0-9]+)"), m => {
         var year = int.Parse(m[1]);
         var day = int.Parse(m[2]);
         return () => {
@@ -72,7 +72,7 @@ var action =
             throw new AocCommuncationError("Event is not active. This option works in Dec 1-25 only)");
         }
     }) ??
-    Command(args, Args("bench(mark)?", "([0-9]+)/([0-9]+)"), m => {
+    Command(args, Args("bench(mark)?", @"([0-9]+)[/\\](?:Day)?([0-9]+)"), m => {
         var year = int.Parse(m[1]);
         var day = int.Parse(m[2]);
         return () => {
@@ -95,7 +95,7 @@ var action =
             throw new AocCommuncationError("Event is not active. This option works in Dec 1-25 only)");
         }
     }) ??
-    Command(args, Args("([0-9]+)/([0-9]+)"), m => {
+    Command(args, Args(@"([0-9]+)[/\\](?:Day)?([0-9]+)"), m => {
         var year = int.Parse(m[0]);
         var day = int.Parse(m[1]);
         var tsolversSelected = tsolvers.First(tsolver =>
@@ -109,7 +109,7 @@ var action =
             SolverExtensions.Year(tsolver) == year);
         return () => Runner.RunAll(GetSolvers(tsolversSelected.ToArray()));
     }) ??
-    Command(args, Args("([0-9]+)/all"), m => {
+    Command(args, Args(@"([0-9]+)[/\\](?:Day)?all"), m => {
         var year = int.Parse(m[0]);
         var tsolversSelected = tsolvers.Where(tsolver =>
             SolverExtensions.Year(tsolver) == year);
