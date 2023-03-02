@@ -239,4 +239,7 @@ public static class Extensions
         for (int i = 0; i < memory.Length; i++)
             yield return memory.Span[i];
     }
+
+    public static Stream GetEmbededResource(string resourceName)
+    => System.Reflection.Assembly.GetExecutingAssembly().GetManifestResourceStream(resourceName);
 }
