@@ -1,0 +1,8 @@
+<Project>
+    <ItemGroup>
+        <!--
+        Doesn't compile because of `static abstract` interface's members
+        -->
+        <Compile Remove="2021/Day16/*" />
+    </ItemGroup>
+</Project>
