@@ -59,7 +59,7 @@ static class Updater
     private static string GetSession()
     {
         if (!Environment.GetEnvironmentVariables().Contains("SESSION"))
-            throw new AocCommuncationError("Specify SESSION environment variable", null);
+            throw new AocCommuncationException("Specify SESSION environment variable");
         return Environment.GetEnvironmentVariable("SESSION");
     }
     private static IBrowsingContext GetContext()
@@ -232,7 +232,7 @@ static class Updater
     {
         var document = await context.OpenAsync(baseUri.ToString() + year);
         if (document.StatusCode != HttpStatusCode.OK)
-            throw new AocCommuncationError("Could not fetch calendar", document.StatusCode, document.TextContent);
+            throw new AocCommuncationException("Could not fetch calendar", document.StatusCode, document.TextContent);
         return Calendar.Parse(year, document);
     }
 
@@ -248,7 +248,7 @@ static class Updater
         var input = await context.GetService<IDocumentLoader>().FetchAsync(new DocumentRequest(new Url(baseUri + $"{year}/day/{day}/input"))).Task;
 
         if (input.StatusCode != HttpStatusCode.OK)
-            throw new AocCommuncationError("Could not fetch input", input.StatusCode, new StreamReader(input.Content).ReadToEnd());
+            throw new AocCommuncationException("Could not fetch input", input.StatusCode, new StreamReader(input.Content).ReadToEnd());
 
         return Problem.Parse(year, day, baseUri + $"{year}/day/{day}", problemStatement, new StreamReader(input.Content).ReadToEnd()
         );

@@ -1,24 +1,31 @@
 namespace AdventOfCode;
 
-public class AocCommuncationError : System.Exception {
-    public readonly string Title;
-    public readonly System.Net.HttpStatusCode? Status;
-    public readonly string Details;
-    public AocCommuncationError(string title, System.Net.HttpStatusCode? status = null, string details = "") {
-        Title = title;
-        Status = status;
-        Details = details;
+public class AocCommuncationException : System.Exception
+{
+    private readonly string _title;
+    private readonly System.Net.HttpStatusCode? _status;
+    private readonly string _details;
+
+    public AocCommuncationException(string title, System.Net.HttpStatusCode? status = null, string details = "")
+    {
+        _title = title;
+        _status = status;
+        _details = details;
     }
 
-    public override string Message {
-        get {
+    public override string Message
+    {
+        get
+        {
             var sb = new StringBuilder();
-            sb.AppendLine(Title);
-            if (Status != null) {
-                sb.Append($"[{Status}] ");
-            }
-            sb.AppendLine(Details);
+            sb.AppendLine(_title);
+            if (_status != null)
+                sb.Append($"[{_status}] ");
+            sb.AppendLine(_details);
             return sb.ToString();
         }
     }
+
+    public static AocCommuncationException WrongDate()
+    => new("Event is not active. This option works in Dec 1-25 only)");
 }

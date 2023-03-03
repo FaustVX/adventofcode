@@ -17,7 +17,7 @@ var action =
         if (dt is { Month: 12, Day: >= 1 and <= 25 }) {
             return Updater.UpdateWithGit(dt.Year, dt.Day).Wait;
         } else {
-            throw new AocCommuncationError("Event is not active. This option works in Dec 1-25 only)");
+            throw AocCommuncationException.WrongDate();
         }
     }) ??
     Command(args, Args("upload", @"([0-9]+)[/\\](?:Day)?([0-9]+)"), m => {
@@ -42,7 +42,7 @@ var action =
             return Updater.Upload(GetSolvers(tsolver)[0]).Wait;
 
         } else {
-            throw new AocCommuncationError("Event is not active. This option works in Dec 1-25 only)");
+            throw AocCommuncationException.WrongDate();
         }
     }) ??
     Command(args, Args("display", @"([0-9]+)[/\\](?:Day)?([0-9]+)"), m => {
@@ -69,7 +69,7 @@ var action =
             return () => Runner.DisplayAll(GetDisplays(tsolver));
 
         } else {
-            throw new AocCommuncationError("Event is not active. This option works in Dec 1-25 only)");
+            throw AocCommuncationException.WrongDate();
         }
     }) ??
     Command(args, Args("bench(mark)?", @"([0-9]+)[/\\](?:Day)?([0-9]+)"), m => {
@@ -92,7 +92,7 @@ var action =
 
             return () => Runner.RunBenchmark(tsolver);
         } else {
-            throw new AocCommuncationError("Event is not active. This option works in Dec 1-25 only)");
+            throw AocCommuncationException.WrongDate();
         }
     }) ??
     Command(args, Args(@"([0-9]+)[/\\](?:Day)?([0-9]+)"), m => {
@@ -130,7 +130,7 @@ var action =
                 Runner.RunAll(GetSolvers(tsolversSelected));
 
         } else {
-            throw new AocCommuncationError("Event is not active. This option works in Dec 1-25 only)");
+            throw AocCommuncationException.WrongDate();
         }
     }) ??
     Command(args, Args("calendars"), _ => {
@@ -161,7 +161,7 @@ var action =
 try {
     action();
 } catch (AggregateException a){
-    if (a.InnerExceptions.Count == 1 && a.InnerException is AocCommuncationError){
+    if (a is { InnerExceptions: [AocCommuncationException { Message: var msg }]}){
         Console.WriteLine(a.InnerException.Message);
     } else {
         throw;
