@@ -7,12 +7,12 @@ var tsolvers = Assembly.GetEntryAssembly()!.GetTypes()
     .ToArray();
 
 var action =
-    Command(args, Args("update", @"([0-9]+)[/\\](?:Day)?([0-9]+)"), m => {
+    Command(args, Params("update", @"([0-9]+)[/\\](?:Day)?([0-9]+)"), m => {
         var year = int.Parse(m[1]);
         var day = int.Parse(m[2]);
         return Updater.UpdateWithGit(year, day).Wait;
     }) ??
-    Command(args, Args("update", "today"), m => {
+    Command(args, Params("update", "today"), m => {
         var dt = DateTime.UtcNow.AddHours(-5);
         if (dt is { Month: 12, Day: >= 1 and <= 25 }) {
             return Updater.UpdateWithGit(dt.Year, dt.Day).Wait;
@@ -20,7 +20,7 @@ var action =
             throw AocCommuncationException.WrongDate();
         }
     }) ??
-    Command(args, Args("upload", @"([0-9]+)[/\\](?:Day)?([0-9]+)"), m => {
+    Command(args, Params("upload", @"([0-9]+)[/\\](?:Day)?([0-9]+)"), m => {
         var year = int.Parse(m[1]);
         var day = int.Parse(m[2]);
         return () => {
@@ -31,7 +31,7 @@ var action =
             Updater.Upload(GetSolvers(tsolver)[0]).Wait();
         };
     }) ??
-    Command(args, Args("upload", "today"), m => {
+    Command(args, Params("upload", "today"), m => {
         var dt = DateTime.UtcNow.AddHours(-5);
         if (dt is { Month: 12, Day: >= 1 and <= 25 }) {
 
@@ -45,7 +45,7 @@ var action =
             throw AocCommuncationException.WrongDate();
         }
     }) ??
-    Command(args, Args("display", @"([0-9]+)[/\\](?:Day)?([0-9]+)"), m => {
+    Command(args, Params("display", @"([0-9]+)[/\\](?:Day)?([0-9]+)"), m => {
         var year = int.Parse(m[1]);
         var day = int.Parse(m[2]);
         return () => {
@@ -57,7 +57,7 @@ var action =
             Runner.DisplayAll(GetDisplays(tsolver));
         };
     }) ??
-    Command(args, Args("display", "today"), m => {
+    Command(args, Params("display", "today"), m => {
         var dt = DateTime.UtcNow.AddHours(-5);
         if (dt is { Month: 12, Day: >= 1 and <= 25 }) {
 
@@ -72,7 +72,7 @@ var action =
             throw AocCommuncationException.WrongDate();
         }
     }) ??
-    Command(args, Args("bench(mark)?", @"([0-9]+)[/\\](?:Day)?([0-9]+)"), m => {
+    Command(args, Params("bench(mark)?", @"([0-9]+)[/\\](?:Day)?([0-9]+)"), m => {
         var year = int.Parse(m[1]);
         var day = int.Parse(m[2]);
         return () => {
@@ -82,7 +82,7 @@ var action =
                 Runner.RunBenchmark(tsolver);
         };
     }) ??
-    Command(args, Args("bench(mark)?", "today"), m => {
+    Command(args, Params("bench(mark)?", "today"), m => {
         var dt = DateTime.UtcNow.AddHours(-5);
         if (dt is { Month: 12, Day: >= 1 and <= 25 }) {
 
@@ -95,7 +95,7 @@ var action =
             throw AocCommuncationException.WrongDate();
         }
     }) ??
-    Command(args, Args(@"([0-9]+)[/\\](?:Day)?([0-9]+)"), m => {
+    Command(args, Params(@"([0-9]+)[/\\](?:Day)?([0-9]+)"), m => {
         var year = int.Parse(m[0]);
         var day = int.Parse(m[1]);
         var tsolversSelected = tsolvers.First(tsolver =>
@@ -103,22 +103,22 @@ var action =
             SolverExtensions.Day(tsolver) == day);
         return () => Runner.RunAll(GetSolvers(tsolversSelected));
     }) ??
-    Command(args, Args("[0-9]+"), m => {
+    Command(args, Params("[0-9]+"), m => {
         var year = int.Parse(m[0]);
         var tsolversSelected = tsolvers.Where(tsolver =>
             SolverExtensions.Year(tsolver) == year);
         return () => Runner.RunAll(GetSolvers(tsolversSelected.ToArray()));
     }) ??
-    Command(args, Args(@"([0-9]+)[/\\](?:Day)?all"), m => {
+    Command(args, Params(@"([0-9]+)[/\\](?:Day)?all"), m => {
         var year = int.Parse(m[0]);
         var tsolversSelected = tsolvers.Where(tsolver =>
             SolverExtensions.Year(tsolver) == year);
         return () => Runner.RunAll(GetSolvers(tsolversSelected.ToArray()));
     }) ??
-    Command(args, Args("all"), m => {
+    Command(args, Params("all"), m => {
         return () => Runner.RunAll(GetSolvers(tsolvers));
     }) ??
-    Command(args, Args("today"), m => {
+    Command(args, Params("today"), m => {
         var dt = DateTime.UtcNow.AddHours(-5);
         if (dt is { Month: 12, Day: >= 1 and <= 25 }) {
 
@@ -133,7 +133,7 @@ var action =
             throw AocCommuncationException.WrongDate();
         }
     }) ??
-    Command(args, Args("calendars"), _ => {
+    Command(args, Params("calendars"), _ => {
         return () => {
             var tsolversSelected = (
                     from tsolver in tsolvers
@@ -148,10 +148,10 @@ var action =
             }
         };
     }) ??
-    Command(args, Args("init", @".*\.git", ".*"), m => {
+    Command(args, Params("init", @".*\.git", ".*"), m => {
         return new AdventOfCode.Model.Project(m[1], m[2], "") { UserName = "FaustVX" }.Init;
     }) ??
-    Command(args, Args("init", @".*\.git", ".*", ".*"), m => {
+    Command(args, Params("init", @".*\.git", ".*", ".*"), m => {
         return new AdventOfCode.Model.Project(m[1], m[2], m[3]) { UserName = "FaustVX" }.Init;
     }) ??
     new Action(() => {
@@ -195,7 +195,7 @@ Action Command(string[] args, string[] regexes, Func<string[], Action> parse) {
     }
 }
 
-string[] Args(params string[] regex) {
+string[] Params(params string[] regex) {
     return regex;
 }
 
