@@ -24,6 +24,13 @@ static class Updater
         Process.Start("git", new[] { "commit", "-m", $"Initial commit for Y{year}D{day}" }).WaitForExit();
         using (var repo = new Git.Repository(".git"))
             repo.Tags.Add($"Y{year}D{day}P1", repo.Head.Tip);
+        var psi = new ProcessStartInfo()
+        {
+            FileName = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "Programs", "Microsoft VS Code", "Code.exe"),
+            ArgumentList = { "--reuse-window", "--", $"{year}/Day{day:00}/Solution.cs", $"{year}/Day{day:00}/README.md" },
+            UseShellExecute = false,
+        };
+        Process.Start(psi);
     }
 
     public static async Task Update(int year, int day)
