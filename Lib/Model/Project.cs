@@ -2,13 +2,14 @@ namespace AdventOfCode.Model;
 
 public class Project
 {
-    private readonly FileInfo _project;
+    private readonly string _repo;
     private readonly string _sslSalt;
     private readonly string _sslPassword;
+    public required string UserName { get; init; }
 
-    public Project(string m, string sslSalt, string sslPassword)
+    public Project(string url, string sslSalt, string sslPassword)
     {
-        _project = new(m);
+        _repo = url;
         _sslSalt = sslSalt;
         _sslPassword = sslPassword;
     }
@@ -39,15 +40,15 @@ public class Project
         CopyStream(Extensions.GetEmbededResource("adventofcode..vscode.extensions.json"), new FileInfo(Path.Combine(vscode.FullName, "extensions.json")).Create());
         CopyStream(Extensions.GetEmbededResource("adventofcode..vscode.launch.json"), new FileInfo(Path.Combine(vscode.FullName, "launch.json")).Create());
         CopyStream(Extensions.GetEmbededResource("adventofcode..vscode.settings.json"), new FileInfo(Path.Combine(vscode.FullName, "settings.json")).Create());
-        File.AppendAllText(".git/config", $$"""
+        File.AppendAllText(".git/config", $"""
         [filter "crypt"]
-            clean = wsl openssl enc -aes-256-cbc -e -iter 10 -salt -S {{_sslSalt}} -a -A -pass pass:{{_sslPassword}}
-            smudge = wsl openssl enc -aes-256-cbc -d -iter 10 -salt -S {{_sslSalt}} -a -A -pass pass:{{_sslPassword}}
+            clean = wsl openssl enc -aes-256-cbc -e -iter 10 -salt -S {_sslSalt} -a -A -pass pass:{_sslPassword}
+            smudge = wsl openssl enc -aes-256-cbc -d -iter 10 -salt -S {_sslSalt} -a -A -pass pass:{_sslPassword}
             required
 
         """);
-        File.WriteAllText("LICENSE", $$"""
-        Copyright (c) {{DateTime.Now.Year}} FaustVX.
+        File.WriteAllText("LICENSE", $"""
+        Copyright (c) {DateTime.Now.Year} {UserName}.
 
         The license applies to all source code and configuration incluced in
         the repository. It doesn't apply to advent of code problem statements 
@@ -73,7 +74,7 @@ public class Project
         SOFTWARE.
 
         """);
-        Process.Start("git", $@"-c protocol.file.allow=always submodule add {_project} lib/aoc").WaitForExit();
+        Process.Start("git", $@"-c protocol.file.allow=always submodule add {_repo} lib/aoc").WaitForExit();
         Process.Start("git", new[] { "add", "*" }).WaitForExit();
         Process.Start("git", new[] { "commit", "-m", "Initial commit" }).WaitForExit();
     }
