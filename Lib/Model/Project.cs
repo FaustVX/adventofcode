@@ -73,10 +73,8 @@ public class Project
         SOFTWARE.
 
         """);
-        var path = new Uri(new DirectoryInfo("./").FullName).MakeRelativeUri(new(_project.Directory.EnumerateDirectories(".git").First().FullName));
-        Process.Start("git", $@"-c protocol.file.allow=always submodule add {path} lib/aoc").WaitForExit();
-        LibGit2Sharp.Commands.Stage(git, "*");
-        var signature = git.Config.BuildSignature(DateTimeOffset.Now);
-        git.Commit("Initial commit", signature, signature, new());
+        Process.Start("git", $@"-c protocol.file.allow=always submodule add {_project} lib/aoc").WaitForExit();
+        Process.Start("git", new[] { "add", "*" }).WaitForExit();
+        Process.Start("git", new[] { "commit", "-m", "Initial commit" }).WaitForExit();
     }
 }

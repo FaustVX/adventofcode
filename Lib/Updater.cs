@@ -20,13 +20,10 @@ static class Updater
             var today = Git.Commands.Checkout(repo, branch);
         }
         await Update(year, day);
-        Process.Start("git", $"add {year}").WaitForExit();
+        Process.Start("git", new[] { "add", year.ToString() }).WaitForExit();
+        Process.Start("git", new[] { "commit", "-m", $"Initial commit for Y{year}D{day}" }).WaitForExit();
         using (var repo = new Git.Repository(".git"))
-        {
-            var signature = repo.Config.BuildSignature(DateTimeOffset.Now);
-            var commit = repo.Commit($"Initial commit for Y{year}D{day}", signature, signature, new());
-            repo.Tags.Add($"Y{year}D{day}P1", commit);
-        }
+            repo.Tags.Add($"Y{year}D{day}P1", repo.Head.Tip);
     }
 
     public static async Task Update(int year, int day)
@@ -141,7 +138,7 @@ static class Updater
 
             if (article.StartsWith("That's the right answer") || article.Contains("You've finished every puzzle"))
             {
-                Process.Start("git", "add *").WaitForExit();
+                Process.Start("git", new[] { "add", "*" }).WaitForExit();
 
                 Console.ForegroundColor = ConsoleColor.Green;
                 Console.WriteLine(article);
@@ -154,16 +151,17 @@ static class Updater
                     signature = repo.Config.BuildSignature(DateTimeOffset.Now);
                 if (problem.Answers.Length == 0)
                 {
+                    Process.Start("git", new[] { "add", "*/*/input.*" }).WaitForExit();
                     using var repo = new Git.Repository(".git");
                     var tag = repo.Tags[$"Y{problem.Year}D{problem.Day}P1"];
                     var initial = (Git.Commit)tag.Target;
                     var duration = signature.When - initial.Committer.When;
-                    var commit = repo.Commit($"Solved P1 in {duration:h\\:mm\\:ss}", signature, signature, new(){ AllowEmptyCommit = true });
-                    repo.Tags.Add($"Y{problem.Year}D{problem.Day}P2", commit);
+                    Process.Start("git", new[] { "commit", "-m", $"Solved P1 in {duration:h\\:mm\\:ss}", "--allow-empty" }).WaitForExit();
+                    repo.Tags.Add($"Y{problem.Year}D{problem.Day}P2", repo.Head.Tip);
                 }
                 else
                 {
-                    Process.Start("git", "add *").WaitForExit();
+                    Process.Start("git", new[] { "add", "*" }).WaitForExit();
                     Git.Commit initial;
                     TimeSpan duration;
                     using (var repo = new Git.Repository(".git"))
@@ -171,14 +169,14 @@ static class Updater
                         var tag = repo.Tags[$"Y{problem.Year}D{problem.Day}P2"];
                         initial = (Git.Commit)tag.Target;
                         duration = signature.When - initial.Committer.When;
-                        repo.Commit($"Solved P2 in {duration:h\\:mm\\:ss}", signature, signature, new(){ AllowEmptyCommit = true });
+                        Process.Start("git", new[] { "commit", "-m", $"Solved P2 in {duration:h\\:mm\\:ss}", "--allow-empty" }).WaitForExit();
                         repo.Tags.Remove(tag);
                     }
                     Runner.RunBenchmark(solver.GetType());
-                    Process.Start("git", "add *").WaitForExit();
+                    Process.Start("git", new[] { "add", "*" }).WaitForExit();
+                    Process.Start("git", new[] { "commit", "-m", "Added Benchmarks", "--allow-empty" }).WaitForExit();
                     using (var repo = new Git.Repository(".git"))
                     {
-                        repo.Commit("Added Benchmarks", signature, signature, new(){ AllowEmptyCommit = true });
                         var branch = repo.Head;
                         var main = repo.Branches["main"] ?? repo.Branches["master"];
                         Git.Commands.Checkout(repo, main);
@@ -190,10 +188,7 @@ static class Updater
                         var tag = repo.Tags[$"Y{problem.Year}D{problem.Day}P1"];
                         initial = (Git.Commit)tag.Target;
                         duration = signature.When - initial.Committer.When;
-                        repo.Commit($"Solved Y{problem.Year}D{problem.Day} in {duration:h\\:mm\\:ss}", signature, signature, new()
-                            {
-                                AllowEmptyCommit = true
-                            });
+                        Process.Start("git", new[] { "commit", "-m", $"Solved Y{problem.Year}D{problem.Day} in {duration:h\\:mm\\:ss}", "--allow-empty" }).WaitForExit();
                         Git.Commands.Checkout(repo, branch);
                         repo.Tags.Remove(tag);
                     }
@@ -201,7 +196,7 @@ static class Updater
             }
             else if (article.StartsWith("That's not the right answer"))
             {
-                Process.Start("git", "add *").WaitForExit();
+                Process.Start("git", new[] { "add", "*" }).WaitForExit();
 
                 Console.ForegroundColor = ConsoleColor.Red;
                 Console.WriteLine(article);
