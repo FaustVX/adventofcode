@@ -28,7 +28,7 @@ public class Project
 
     public void Init()
     {
-        CopyStream(Extensions.GetEmbededResource("adventofcode.adventofcode.csproj"), File.Create("AoC.csproj"));
+        CopyStream(Extensions.GetEmbededResource("adventofcode.adventofcode.csproj"), File.Create("adventofcode.csproj"));
         LibGit2Sharp.Repository.Init(".");
         new DirectoryInfo("./").EnumerateDirectories("_git*").FirstOrDefault()?.Delete();
         var git = new LibGit2Sharp.Repository(".git");
