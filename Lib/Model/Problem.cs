@@ -55,6 +55,9 @@ class Problem {
             case "em":
                 yield return "_" + UnparseList("", node) + "_";
                 break;
+            case "code" when node.Parent.NodeName.ToLower() == "pre":
+                yield return UnparseList("", node);
+                break;
             case "code":
                 yield return "`" + UnparseList("", node) + "`";
                 break;
@@ -73,7 +76,7 @@ class Problem {
                 yield return " - " + UnparseList("", node);
                 break;
             case "pre":
-                yield return "<pre>\n";
+                yield return "```\n";
                 var freshLine = true;
                 foreach (var item in node.ChildNodes) {
                     foreach (var unparsed in Unparse(item)) {
@@ -82,9 +85,9 @@ class Problem {
                     }
                 }
                 if (freshLine) {
-                    yield return "</pre>\n";
+                    yield return "```\n";
                 } else {
-                    yield return "\n</pre>\n";
+                    yield return "\n```\n";
                 }
                 break;
             case "a":
