@@ -149,10 +149,12 @@ static class Updater
                 Console.WriteLine();
                 await Update(solver.Year(), solver.Day());
 
+                Git.Signature signature;
+                using (var repo = new Git.Repository(".git"))
+                    signature = repo.Config.BuildSignature(DateTimeOffset.Now);
                 if (problem.Answers.Length == 0)
                 {
                     using var repo = new Git.Repository(".git");
-                    var signature = repo.Config.BuildSignature(DateTimeOffset.Now);
                     var tag = repo.Tags[$"Y{problem.Year}D{problem.Day}P1"];
                     var initial = (Git.Commit)tag.Target;
                     var duration = signature.When - initial.Committer.When;
@@ -166,7 +168,6 @@ static class Updater
                     TimeSpan duration;
                     using (var repo = new Git.Repository(".git"))
                     {
-                        var signature = repo.Config.BuildSignature(DateTimeOffset.Now);
                         var tag = repo.Tags[$"Y{problem.Year}D{problem.Day}P2"];
                         initial = (Git.Commit)tag.Target;
                         duration = signature.When - initial.Committer.When;
@@ -177,7 +178,6 @@ static class Updater
                     Process.Start("git", "add *").WaitForExit();
                     using (var repo = new Git.Repository(".git"))
                     {
-                        var signature = repo.Config.BuildSignature(DateTimeOffset.Now);
                         repo.Commit("Added Benchmarks", signature, signature, new(){ AllowEmptyCommit = true });
                         var branch = repo.Head;
                         var main = repo.Branches["main"] ?? repo.Branches["master"];
