@@ -9,7 +9,7 @@ static class ProjectReadmeGenerator {
 C# solutions to the Advent of Code problems.
 Check out https://adventofcode.com.
 
-<a href="https://adventofcode.com"><img src="{lastYear}/calendar.svg" width="80%" /></a>
+[<img src="{lastYear}/calendar.svg" width="80%" />](https://adventofcode.com)
 
 The goal is to keep my C# knowledge fresh and to follow the latest changes of the language.
 
@@ -66,7 +66,7 @@ static class ReadmeGeneratorForYear {
 # Advent of Code ({calendar.Year})
 Check out https://adventofcode.com/{calendar.Year}.
 
-<a href="https://adventofcode.com/{calendar.Year}"><img src="calendar.svg" width="80%" /></a>
+[<img src="calendar.svg" width="80%" />](https://adventofcode.com/{calendar.Year})
 
 """;
 }

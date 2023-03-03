@@ -53,10 +53,10 @@ class Problem {
                 yield return UnparseList("", node) + "\n";
                 break;
             case "em":
-                yield return "<em>" + UnparseList("", node) + "</em>";
+                yield return "_" + UnparseList("", node) + "_";
                 break;
             case "code":
-                yield return "<code>" + UnparseList("", node) + "</code>";
+                yield return "`" + UnparseList("", node) + "`";
                 break;
             case "span":
                 yield return UnparseList("", node);
