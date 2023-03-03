@@ -3,4 +3,7 @@
         "bin": true,
         "obj": true
     },
+    "workbench.editorAssociations": {
+        "*.md": "vscode.markdown.preview.editor"
+    },
 }
