@@ -46,6 +46,33 @@ public class Project
             required
 
         """);
+        File.WriteAllText("LICENSE", $$"""
+        Copyright (c) {{DateTime.Now.Year}} FaustVX.
+
+        The license applies to all source code and configuration incluced in
+        the repository. It doesn't apply to advent of code problem statements 
+        and input files. For the license conditions of those please contact the 
+        original author at https://adventofcode.com.
+
+        Permission is hereby granted, free of charge, to any person obtaining a copy
+        of this software and associated documentation files (the "Software"), to deal
+        in the Software without restriction, including without limitation the rights
+        to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+        copies of the Software, and to permit persons to whom the Software is
+        furnished to do so, subject to the following conditions:
+
+        The above copyright notice and this permission notice shall be included in all
+        copies or substantial portions of the Software.
+
+        THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+        IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+        FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+        AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+        LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+        OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+        SOFTWARE.
+
+        """);
         var path = new Uri(new DirectoryInfo("./").FullName).MakeRelativeUri(new(_project.Directory.EnumerateDirectories(".git").First().FullName));
         Process.Start("git", $@"-c protocol.file.allow=always submodule add {path} lib/aoc").WaitForExit();
         LibGit2Sharp.Commands.Stage(git, "*");
