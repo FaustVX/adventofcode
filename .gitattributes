@@ -1,7 +1,7 @@
 # .git/config
 #[filter "crypt"]
-#	clean = openssl enc -aes-256-cbc -e -iter 10 -salt -S **************** -a -A -pass pass:****
-#	smudge = openssl enc -aes-256-cbc -d -iter 10 -salt -S **************** -a -A -pass pass:****
+#	clean = openssl enc -aes-256-cbc -e -iter 10 -salt -S **************** -pass pass:****
+#	smudge = openssl enc -aes-256-cbc -d -iter 10 -salt -S **************** -pass pass:****
 #	required
 
 */*/input.*	filter=crypt
