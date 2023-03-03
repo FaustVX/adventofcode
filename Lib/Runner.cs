@@ -132,7 +132,7 @@ class Runner
                         var ticks = stopwatch.ElapsedTicks;
                         answers.Add(line.ToString());
                         var (statusColor, status, err) =
-                            refout == null || refout.Length <= iline ? (ConsoleColor.Cyan, "?", null) :
+                            refout == null || refout.Length <= iline || string.IsNullOrWhiteSpace(refout[iline]) ? (ConsoleColor.Cyan, "?", null) :
                             refout[iline] == line.ToString() ? (ConsoleColor.DarkGreen, "✓", null) :
                             (ConsoleColor.Red, "X", $"{solver.DayName()}: In line {iline + 1} expected '{refout[iline]}' but found '{line}'");
 
