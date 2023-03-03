@@ -18,9 +18,6 @@
             "stopAtEntry": false,
             "internalConsoleOptions": "openOnSessionStart",
             "requireExactSource": false,
-            "env": {
-                "SESSION": "${input:session}",
-            },
         },
         {
             "name": ".NET Core Launch (Year/Day)",
@@ -36,9 +33,6 @@
             "stopAtEntry": false,
             "internalConsoleOptions": "openOnSessionStart",
             "requireExactSource": false,
-            "env": {
-                "SESSION": "${input:session}",
-            },
         },
         {
             "name": ".NET Core Attach",
