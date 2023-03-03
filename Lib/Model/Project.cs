@@ -41,8 +41,8 @@ public class Project
         CopyStream(Extensions.GetEmbededResource("adventofcode..vscode.settings.json"), new FileInfo(Path.Combine(vscode.FullName, "settings.json")).Create());
         File.AppendAllText(".git/config", $$"""
         [filter "crypt"]
-            clean = wsl openssl enc -aes-256-cbc -e -iter 10 -salt -S {{_sslSalt}} -a -pass pass:{{_sslPassword}}
-            smudge = wsl openssl enc -aes-256-cbc -d -iter 10 -salt -S {{_sslSalt}} -a -pass pass:{{_sslPassword}}
+            clean = wsl openssl enc -aes-256-cbc -e -iter 10 -salt -S {{_sslSalt}} -a -A -pass pass:{{_sslPassword}}
+            smudge = wsl openssl enc -aes-256-cbc -d -iter 10 -salt -S {{_sslSalt}} -a -A -pass pass:{{_sslPassword}}
             required
 
         """);
