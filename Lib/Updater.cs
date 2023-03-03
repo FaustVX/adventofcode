@@ -198,6 +198,13 @@ static class Updater
                         Process.Start("git", new[] { "commit", "-m", $"Solved Y{problem.Year}D{problem.Day} in {duration:h\\:mm\\:ss}", "--allow-empty" }).WaitForExit();
                         Git.Commands.Checkout(repo, branch);
                         repo.Tags.Remove(tag);
+                        try
+                        {
+                            repo.Network.Push(main);
+                            repo.Network.Push(branch);
+                        }
+                        catch
+                        { }
                     }
                 }
             }
