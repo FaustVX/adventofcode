@@ -15,10 +15,4 @@
     <PackageReference Include="LibGit2Sharp" Version="0.26.2"/>
     <PackageReference Include="BenchmarkDotNet" Version="0.13.2"/>
   </ItemGroup>
-  <ItemGroup>
-  <!--
-    Doesn't compile because of `static abstract` interface's members
-  -->
-    <Compile Remove="2021/Day16/*" />
-  </ItemGroup>
 </Project>

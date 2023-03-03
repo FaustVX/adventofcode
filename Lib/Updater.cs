@@ -13,17 +13,20 @@ static class Updater
 
     public static async Task UpdateWithGit(int year, int day)
     {
-        using var repo = new Git.Repository(".git");
-        var main = repo.Branches["main"] ?? repo.Branches["master"];
-        var branch = repo.Branches[$"problems/Y{year}/D{day}"] ?? repo.Branches.Add($"problems/Y{year}/D{day}", main.Tip, allowOverwrite: true);
-        var today = Git.Commands.Checkout(repo, branch);
-
+        using (var repo = new Git.Repository(".git"))
+        {
+            var main = repo.Branches["main"] ?? repo.Branches["master"];
+            var branch = repo.Branches[$"problems/Y{year}/D{day}"] ?? repo.Branches.Add($"problems/Y{year}/D{day}", main.Tip, allowOverwrite: true);
+            var today = Git.Commands.Checkout(repo, branch);
+        }
         await Update(year, day);
-
-        Git.Commands.Stage(repo, year.ToString());
-        var signature = new Git.Signature(repo.Config.Get<string>("user.name").Value, repo.Config.Get<string>("user.email").Value, DateTime.Now);
-        var commit = repo.Commit($"Initial commit for Y{year}D{day}", signature, signature, new());
-        repo.Tags.Add($"Y{year}D{day}P1", commit);
+        Process.Start("git", $"add {year}").WaitForExit();
+        using (var repo = new Git.Repository(".git"))
+        {
+            var signature = repo.Config.BuildSignature(DateTimeOffset.Now);
+            var commit = repo.Commit($"Initial commit for Y{year}D{day}", signature, signature, new());
+            repo.Tags.Add($"Y{year}D{day}P1", commit);
+        }
     }
 
     public static async Task Update(int year, int day)
@@ -136,37 +139,45 @@ static class Updater
             article = Regex.Replace(article, @"\(You guessed.*", "", RegexOptions.Singleline);
             article = Regex.Replace(article, @"  ", "\n", RegexOptions.Singleline);
 
-            using (var repo = new Git.Repository(".git"))
-                if (article.StartsWith("That's the right answer") || article.Contains("You've finished every puzzle"))
+            if (article.StartsWith("That's the right answer") || article.Contains("You've finished every puzzle"))
+            {
+                Process.Start("git", "add *").WaitForExit();
+
+                Console.ForegroundColor = ConsoleColor.Green;
+                Console.WriteLine(article);
+                Console.ForegroundColor = color;
+                Console.WriteLine();
+                await Update(solver.Year(), solver.Day());
+
+                Git.Signature signature;
+                using (var repo = new Git.Repository(".git"))
+                    signature = repo.Config.BuildSignature(DateTimeOffset.Now);
+                if (problem.Answers.Length == 0)
                 {
-                    Git.Commands.Stage(repo, "*");
-
-                    Console.ForegroundColor = ConsoleColor.Green;
-                    Console.WriteLine(article);
-                    Console.ForegroundColor = color;
-                    Console.WriteLine();
-                    await Update(solver.Year(), solver.Day());
-
-                    var signature = new Git.Signature(repo.Config.Get<string>("user.name").Value, repo.Config.Get<string>("user.email").Value, DateTime.Now);
-                    if (problem.Answers.Length == 0)
-                    {
-                        var tag = repo.Tags[$"Y{problem.Year}D{problem.Day}P1"];
-                        var initial = (Git.Commit)tag.Target;
-                        var duration = signature.When - initial.Committer.When;
-                        Git.Commands.Stage(repo, "*");
-                        var commit = repo.Commit($"Solved P1 in {duration:h\\:mm\\:ss}", signature, signature, new(){ AllowEmptyCommit = true });
-                        repo.Tags.Add($"Y{problem.Year}D{problem.Day}P2", commit);
-                    }
-                    else
+                    using var repo = new Git.Repository(".git");
+                    var tag = repo.Tags[$"Y{problem.Year}D{problem.Day}P1"];
+                    var initial = (Git.Commit)tag.Target;
+                    var duration = signature.When - initial.Committer.When;
+                    var commit = repo.Commit($"Solved P1 in {duration:h\\:mm\\:ss}", signature, signature, new(){ AllowEmptyCommit = true });
+                    repo.Tags.Add($"Y{problem.Year}D{problem.Day}P2", commit);
+                }
+                else
+                {
+                    Process.Start("git", "add *").WaitForExit();
+                    Git.Commit initial;
+                    TimeSpan duration;
+                    using (var repo = new Git.Repository(".git"))
                     {
                         var tag = repo.Tags[$"Y{problem.Year}D{problem.Day}P2"];
-                        var initial = (Git.Commit)tag.Target;
-                        var duration = signature.When - initial.Committer.When;
-                        Git.Commands.Stage(repo, "*");
+                        initial = (Git.Commit)tag.Target;
+                        duration = signature.When - initial.Committer.When;
                         repo.Commit($"Solved P2 in {duration:h\\:mm\\:ss}", signature, signature, new(){ AllowEmptyCommit = true });
                         repo.Tags.Remove(tag);
-                        Runner.RunBenchmark(solver.GetType());
-                        Git.Commands.Stage(repo, "*");
+                    }
+                    Runner.RunBenchmark(solver.GetType());
+                    Process.Start("git", "add *").WaitForExit();
+                    using (var repo = new Git.Repository(".git"))
+                    {
                         repo.Commit("Added Benchmarks", signature, signature, new(){ AllowEmptyCommit = true });
                         var branch = repo.Head;
                         var main = repo.Branches["main"] ?? repo.Branches["master"];
@@ -176,7 +187,7 @@ static class Updater
                                 FastForwardStrategy = Git.FastForwardStrategy.NoFastForward,
                                 CommitOnSuccess = false,
                             });
-                        tag = repo.Tags[$"Y{problem.Year}D{problem.Day}P1"];
+                        var tag = repo.Tags[$"Y{problem.Year}D{problem.Day}P1"];
                         initial = (Git.Commit)tag.Target;
                         duration = signature.When - initial.Committer.When;
                         repo.Commit($"Solved Y{problem.Year}D{problem.Day} in {duration:h\\:mm\\:ss}", signature, signature, new()
@@ -187,28 +198,29 @@ static class Updater
                         repo.Tags.Remove(tag);
                     }
                 }
-                else if (article.StartsWith("That's not the right answer"))
-                {
-                    Git.Commands.Stage(repo, "*");
+            }
+            else if (article.StartsWith("That's not the right answer"))
+            {
+                Process.Start("git", "add *").WaitForExit();
 
-                    Console.ForegroundColor = ConsoleColor.Red;
-                    Console.WriteLine(article);
-                    Console.ForegroundColor = color;
-                    Console.WriteLine();
-                }
-                else if (article.StartsWith("You gave an answer too recently"))
-                {
-                    Console.ForegroundColor = ConsoleColor.Red;
-                    Console.WriteLine(article);
-                    Console.ForegroundColor = color;
-                    Console.WriteLine();
-                }
-                else
-                {
-                    Console.ForegroundColor = ConsoleColor.White;
-                    Console.WriteLine(article);
-                    Console.ForegroundColor = color;
-                }
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine(article);
+                Console.ForegroundColor = color;
+                Console.WriteLine();
+            }
+            else if (article.StartsWith("You gave an answer too recently"))
+            {
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine(article);
+                Console.ForegroundColor = color;
+                Console.WriteLine();
+            }
+            else
+            {
+                Console.ForegroundColor = ConsoleColor.White;
+                Console.WriteLine(article);
+                Console.ForegroundColor = color;
+            }
         }
     }
 

@@ -1,8 +1,6 @@
-# Advent of Code (2020-2022)
+# Advent of Code (Library)
 C# solutions to the Advent of Code problems.
 Check out https://adventofcode.com.
-
-<a href="https://adventofcode.com"><img src="2022/calendar.svg" width="80%" /></a>
 
 The goal is to keep my C# knowledge fresh and to follow the latest changes of the language.
 
@@ -41,12 +39,14 @@ To run the project:
 Usage: dotnet run [arguments]
 1) To run the solutions and admire your advent calendar:
 
- [year]/[day|all]      Solve the specified problems
- today                 Shortcut to the above
- [year]                Solve the whole year
- all                   Solve everything
+ [year]/[day|all]                               Solve the specified problems
+ today                                          Shortcut to the above
+ [year]                                         Solve the whole year
+ all                                            Solve everything
 
- calendars             Show the calendars
+ calendars                                      Show the calendars
+
+init [this csproj] [sslSalt] ([sslPassword])    Initialize the current folder
 
 2) To start working on new problems:
 login to https://adventofcode.com, then copy your session cookie, and export

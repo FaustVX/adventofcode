@@ -5,22 +5,34 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": ".NET Core Launch (run)",
+            "name": ".NET Core Launch (current file)",
             "type": "coreclr",
             "request": "launch",
             "preLaunchTask": "build",
             // If you have changed target frameworks, make sure to update the program path.
             "program": "${workspaceFolder}/bin/Debug/net7.0/adventofcode.dll",
-            "args": "${input:year}/${input:day}",
+            "args": ["${relativeFileDirname}"],
             "cwd": "${workspaceFolder}",
             // For more information about the 'console' field, see https://github.com/OmniSharp/omnisharp-vscode/blob/master/debugger-launchjson.md#console-terminal-window
             "console": "integratedTerminal",
             "stopAtEntry": false,
             "internalConsoleOptions": "openOnSessionStart",
             "requireExactSource": false,
-            "env": {
-                "SESSION": "${input:session}",
-            },
+        },
+        {
+            "name": ".NET Core Launch (Year/Day)",
+            "type": "coreclr",
+            "request": "launch",
+            "preLaunchTask": "build",
+            // If you have changed target frameworks, make sure to update the program path.
+            "program": "${workspaceFolder}/bin/Debug/net7.0/adventofcode.dll",
+            "args": ["${input:year}/${input:day}"],
+            "cwd": "${workspaceFolder}",
+            // For more information about the 'console' field, see https://github.com/OmniSharp/omnisharp-vscode/blob/master/debugger-launchjson.md#console-terminal-window
+            "console": "integratedTerminal",
+            "stopAtEntry": false,
+            "internalConsoleOptions": "openOnSessionStart",
+            "requireExactSource": false,
         },
         {
             "name": ".NET Core Attach",

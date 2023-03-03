@@ -7,7 +7,7 @@ var tsolvers = Assembly.GetEntryAssembly()!.GetTypes()
     .ToArray();
 
 var action =
-    Command(args, Args("update", "([0-9]+)/([0-9]+)"), m => {
+    Command(args, Args("update", @"([0-9]+)[/\\](?:Day)?([0-9]+)"), m => {
         var year = int.Parse(m[1]);
         var day = int.Parse(m[2]);
         return Updater.UpdateWithGit(year, day).Wait;
@@ -20,7 +20,7 @@ var action =
             throw new AocCommuncationError("Event is not active. This option works in Dec 1-25 only)");
         }
     }) ??
-    Command(args, Args("upload", "([0-9]+)/([0-9]+)"), m => {
+    Command(args, Args("upload", @"([0-9]+)[/\\](?:Day)?([0-9]+)"), m => {
         var year = int.Parse(m[1]);
         var day = int.Parse(m[2]);
         return () => {
@@ -45,7 +45,7 @@ var action =
             throw new AocCommuncationError("Event is not active. This option works in Dec 1-25 only)");
         }
     }) ??
-    Command(args, Args("display", "([0-9]+)/([0-9]+)"), m => {
+    Command(args, Args("display", @"([0-9]+)[/\\](?:Day)?([0-9]+)"), m => {
         var year = int.Parse(m[1]);
         var day = int.Parse(m[2]);
         return () => {
@@ -72,7 +72,7 @@ var action =
             throw new AocCommuncationError("Event is not active. This option works in Dec 1-25 only)");
         }
     }) ??
-    Command(args, Args("bench(mark)?", "([0-9]+)/([0-9]+)"), m => {
+    Command(args, Args("bench(mark)?", @"([0-9]+)[/\\](?:Day)?([0-9]+)"), m => {
         var year = int.Parse(m[1]);
         var day = int.Parse(m[2]);
         return () => {
@@ -95,7 +95,7 @@ var action =
             throw new AocCommuncationError("Event is not active. This option works in Dec 1-25 only)");
         }
     }) ??
-    Command(args, Args("([0-9]+)/([0-9]+)"), m => {
+    Command(args, Args(@"([0-9]+)[/\\](?:Day)?([0-9]+)"), m => {
         var year = int.Parse(m[0]);
         var day = int.Parse(m[1]);
         var tsolversSelected = tsolvers.First(tsolver =>
@@ -109,7 +109,7 @@ var action =
             SolverExtensions.Year(tsolver) == year);
         return () => Runner.RunAll(GetSolvers(tsolversSelected.ToArray()));
     }) ??
-    Command(args, Args("([0-9]+)/all"), m => {
+    Command(args, Args(@"([0-9]+)[/\\](?:Day)?all"), m => {
         var year = int.Parse(m[0]);
         var tsolversSelected = tsolvers.Where(tsolver =>
             SolverExtensions.Year(tsolver) == year);
@@ -147,6 +147,12 @@ var action =
                 solver.SplashScreen().Show();
             }
         };
+    }) ??
+    Command(args, Args("init", @".*\.csproj", ".*"), m => {
+        return new AdventOfCode.Model.Project(m[1], m[2], "").Init;
+    }) ??
+    Command(args, Args("init", @".*\.csproj", ".*", ".*"), m => {
+        return new AdventOfCode.Model.Project(m[1], m[2], m[3]).Init;
     }) ??
     new Action(() => {
         Console.WriteLine(Usage.Get());
@@ -199,12 +205,14 @@ static class Usage {
             Usage: dotnet run [arguments]
             1) To run the solutions and admire your advent calendar:
 
-             [year]/[day|all]      Solve the specified problems
-             today                 Shortcut to the above
-             [year]                Solve the whole year
-             all                   Solve everything
+             [year]/[day|all]                               Solve the specified problems
+             today                                          Shortcut to the above
+             [year]                                         Solve the whole year
+             all                                            Solve everything
 
-             calendars             Show the calendars
+             calendars                                      Show the calendars
+
+             init [this csproj] [sslSalt] ([sslPassword])   Initialize the current folder
 
             2) To start working on new problems:
             login to https://adventofcode.com, then copy your session cookie, and export

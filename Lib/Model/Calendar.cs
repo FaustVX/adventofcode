@@ -167,7 +167,14 @@ class Calendar {
 
     public string ToSvg() {
 
-        string font = Convert.ToBase64String(File.ReadAllBytes("Lib/SourceCodePro-Regular.woff2"));
+        string font;
+
+        using (var stream = Extensions.GetEmbededResource("adventofcode.Lib.SourceCodePro-Regular.woff2") ?? File.OpenRead(@"lib/aoc/Lib/SourceCodePro-Regular.woff2"))
+        {
+            var buffer = new byte[stream.Length];
+            stream.ReadExactly(buffer);
+            font = Convert.ToBase64String(buffer);
+        }
 
         var sb = new StringBuilder();
         var height = 0;
