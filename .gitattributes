@@ -4,5 +4,4 @@
 #	smudge = openssl enc -aes-256-cbc -d -iter 10 -salt -S **************** -a -pass pass:****
 #	required
 
-**/input.in	filter=crypt
-**/input.refout	filter=crypt
+*/*/input.*	filter=crypt
