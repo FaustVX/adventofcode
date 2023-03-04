@@ -3,21 +3,21 @@ namespace AdventOfCode;
 public class DefaultableDictionary<TKey, TValue> : Dictionary<TKey, TValue>, IDictionary<TKey, TValue>, IReadOnlyDictionary<TKey, TValue>
     where TKey : notnull
 {
-    private readonly Func<TValue> _defaultValue;
+    private readonly Func<TKey, TValue> _defaultValue;
     public DefaultableDictionary(int capacity, TValue defaultValue = default)
         : base(capacity)
-        => _defaultValue = () => defaultValue;
+        => _defaultValue = _ => defaultValue;
     public DefaultableDictionary(IEnumerable<KeyValuePair<TKey, TValue>> collection, TValue defaultValue = default)
         : base(collection)
-        => _defaultValue = () => defaultValue;
+        => _defaultValue = _ => defaultValue;
 
-    public DefaultableDictionary(Func<TValue> create)
+    public DefaultableDictionary(Func<TKey, TValue> create)
         : base()
         => _defaultValue = create;
 
     public DefaultableDictionary(TValue defaultValue = default)
         : base()
-        => _defaultValue = () => defaultValue;
+        => _defaultValue = _ => defaultValue;
 
     public new TValue this[TKey key]
     {
@@ -25,7 +25,7 @@ public class DefaultableDictionary<TKey, TValue> : Dictionary<TKey, TValue>, IDi
         {
             if (TryGetValue(key, out var value))
                 return value;
-            return base[key] = _defaultValue();
+            return base[key] = _defaultValue(key);
         }
         set => base[key] = value;
     }
