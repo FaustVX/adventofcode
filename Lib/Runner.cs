@@ -99,6 +99,13 @@ class Runner
     {
         BenchmarkDotNet.Running.BenchmarkRunner.Run(typeof(Bench<>).MakeGenericType(solver));
         File.Copy("BenchmarkDotNet.Artifacts/results/Bench_Solution_-report-github.md", Path.Combine(SolverExtensions.WorkingDir(solver), "benchmark.md"), overwrite: true);
+        var psi = new ProcessStartInfo()
+        {
+            FileName = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "Programs", "Microsoft VS Code", "Code.exe"),
+            ArgumentList = { "--reuse-window", "--", $"{SolverExtensions.Year(solver)}/Day{SolverExtensions.Day(solver):00}/benchmark.md" },
+            UseShellExecute = false,
+        };
+        Process.Start(psi);
     }
 
     public static SolverResult RunSolver(Solver solver)
