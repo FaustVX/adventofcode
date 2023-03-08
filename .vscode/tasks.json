@@ -62,11 +62,6 @@
                 "${relativeFileDirname}"
             ],
             "problemMatcher": [],
-            "options": {
-                "statusbar": {
-                    "filePattern": "Solution\\.cs"
-                }
-            },
         },
         {
             "label": "upload",
@@ -83,9 +78,6 @@
                 "env": {
                     "SESSION": "${input:session}"
                 },
-                "statusbar": {
-                    "filePattern": "Solution\\.cs"
-                }
             },
         },
         {
@@ -100,11 +92,6 @@
             "presentation": {
                 "focus": true,
             },
-            "options": {
-                "statusbar": {
-                    "filePattern": "Solution\\.cs"
-                }
-            },
         },
         {
             "label": "benchmark",
@@ -117,11 +104,6 @@
                 "${relativeFileDirname}"
             ],
             "problemMatcher": [],
-            "options": {
-                "statusbar": {
-                    "filePattern": "Solution\\.cs"
-                }
-            },
         },
     ],
     "inputs": [
