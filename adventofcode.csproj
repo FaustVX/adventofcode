@@ -15,4 +15,5 @@
     <PackageReference Include="LibGit2Sharp" Version="0.26.2"/>
     <PackageReference Include="BenchmarkDotNet" Version="0.13.2"/>
   </ItemGroup>
+  <Import Project="**/Project.targets" /> <!-- Import Specific Properties -->
 </Project>
