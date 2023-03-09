@@ -28,7 +28,7 @@
             },
             "dependsOn":[
                 "remove obj"
-            ]
+            ],
         },
         {
             "label": "update today",
@@ -46,8 +46,11 @@
                 },
                 "env": {
                     "SESSION": "${input:session}"
-                },
+                }
             },
+            "dependsOn":[
+                "remove obj"
+            ],
         },
         {
             "label": "update",
@@ -65,8 +68,11 @@
                 },
                 "env": {
                     "SESSION": "${input:session}"
-                }
+                },
             },
+            "dependsOn":[
+                "remove obj"
+            ],
         },
         {
             "label": "run",
@@ -84,6 +90,9 @@
                     "tooltip": "Run",
                 },
             },
+            "dependsOn":[
+                "remove obj"
+            ],
         },
         {
             "label": "upload",
@@ -105,6 +114,9 @@
                     "SESSION": "${input:session}"
                 },
             },
+            "dependsOn":[
+                "remove obj"
+            ],
         },
         {
             "label": "display",
@@ -124,6 +136,9 @@
                     "tooltip": "Display",
                 },
             },
+            "dependsOn":[
+                "remove obj"
+            ],
         },
         {
             "label": "benchmark",
@@ -142,6 +157,9 @@
                     "tooltip": "Benchmark",
                 },
             },
+            "dependsOn":[
+                "remove obj"
+            ],
         },
     ],
     "inputs": [
