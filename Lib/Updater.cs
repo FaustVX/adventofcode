@@ -40,6 +40,10 @@ static class Updater
 
         var calendar = await DownloadCalendar(context, baseAddress, year);
         var problem = await DownloadProblem(context, baseAddress, year, day);
+        var color = Console.ForegroundColor;
+        Console.ForegroundColor = ConsoleColor.Green;
+        Console.WriteLine(problem.Title);
+        Console.ForegroundColor = color;
 
         var dir = Dir(year, day);
         if (!Directory.Exists(dir)) {
