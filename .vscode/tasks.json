@@ -2,6 +2,17 @@
     "version": "2.0.0",
     "tasks": [
         {
+            "label": "remove obj",
+            "command": "(rm -Force -r ${workspaceFolder}/lib/aoc/obj) -or ($true)",
+            "type": "shell",
+            "problemMatcher": "$msCompile",
+            "options": {
+                "statusbar": {
+                    "hide": true,
+                }
+            }
+        },
+        {
             "label": "build",
             "command": "dotnet",
             "type": "process",
@@ -14,7 +25,10 @@
                 "statusbar": {
                     "hide": true,
                 }
-            }
+            },
+            "dependsOn":[
+                "remove obj"
+            ]
         },
         {
             "label": "update today",
