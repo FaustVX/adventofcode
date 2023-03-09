@@ -41,11 +41,12 @@
             "problemMatcher": [],
             "options": {
                 "statusbar": {
-                    "tooltip": "Retrive datas from AoC"
+                    "tooltip": "Retrive datas from AoC",
+                    "label": "$(cloud-download) Today",
                 },
                 "env": {
                     "SESSION": "${input:session}"
-                }
+                },
             },
         },
         {
@@ -59,7 +60,8 @@
             "problemMatcher": [],
             "options": {
                 "statusbar": {
-                    "tooltip": "Retrive datas from AoC"
+                    "tooltip": "Retrive datas from AoC",
+                    "label": "$(cloud-download)",
                 },
                 "env": {
                     "SESSION": "${input:session}"
@@ -76,6 +78,12 @@
                 "${relativeFileDirname}"
             ],
             "problemMatcher": [],
+            "options": {
+                "statusbar": {
+                    "label": "$(run)",
+                    "tooltip": "Run",
+                },
+            },
         },
         {
             "label": "upload",
@@ -89,6 +97,10 @@
             ],
             "problemMatcher": [],
             "options": {
+                "statusbar": {
+                    "label": "$(cloud-upload)",
+                    "tooltip": "Upload",
+                },
                 "env": {
                     "SESSION": "${input:session}"
                 },
@@ -106,6 +118,12 @@
             "presentation": {
                 "focus": true,
             },
+            "options": {
+                "statusbar": {
+                    "label": "$(preview)",
+                    "tooltip": "Display",
+                },
+            },
         },
         {
             "label": "benchmark",
@@ -118,6 +136,12 @@
                 "${relativeFileDirname}"
             ],
             "problemMatcher": [],
+            "options": {
+                "statusbar": {
+                    "label": "$(watch)",
+                    "tooltip": "Benchmark",
+                },
+            },
         },
     ],
     "inputs": [
