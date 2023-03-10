@@ -16,4 +16,5 @@ public enum Mode
 public static class Globals
 {
     public static Mode CurrentRunMode { get; set; } = Mode.Run;
+    public static bool IsTestInput { get; set; } = false;
 }
