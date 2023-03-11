@@ -66,6 +66,8 @@ static class ReadmeGeneratorForYear {
 # Advent of Code ({calendar.Year})
 Check out https://adventofcode.com/{calendar.Year}.
 
+Solution Megathread for [{calendar.Year}](https://www.reddit.com/r/adventofcode/wiki/archives/solution_megathreads/{calendar.Year}/)
+
 [<img src="calendar.svg" width="80%" />](https://adventofcode.com/{calendar.Year})
 
 """;
