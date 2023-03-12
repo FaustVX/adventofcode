@@ -10,7 +10,6 @@ namespace AdventOfCode;
 
 static class Updater
 {
-
     public static async Task UpdateWithGit(int year, int day)
     {
         using (var repo = new Git.Repository(".git"))
@@ -27,7 +26,7 @@ static class Updater
         var psi = new ProcessStartInfo()
         {
             FileName = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "Programs", "Microsoft VS Code", "Code.exe"),
-            ArgumentList = { "--reuse-window", "--", $"{year}/Day{day:00}/Solution.cs", $"{year}/Day{day:00}/README.md" },
+            ArgumentList = { "--reuse-window", "--", $"{year}/Day{day:00}/Solution.cs", $"{year}/Day{day:00}/README.md", $"{year}/Day{day:00}/input.in" },
             UseShellExecute = false,
         };
         Process.Start(psi);
