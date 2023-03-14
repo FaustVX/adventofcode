@@ -2,7 +2,66 @@ using System.Reflection;
 using AdventOfCode;
 using Cocona;
 
-CoconaLiteApp.Run<Program>(args);
+CoconaLiteApp.Run<Commands>(args);
+
+class Commands
+{
+    private static readonly Type[] _tsolvers = Assembly.GetEntryAssembly()!.GetTypes()
+    .Where(t => t.GetTypeInfo().IsClass && typeof(Solver).IsAssignableFrom(t))
+    .OrderBy(t => t.FullName)
+    .ToArray();
+
+    public void Update(DayParameters day)
+    {
+
+    }
+
+    public void Run(DayParameters day)
+    {
+
+    }
+
+    public void Upload(DayParameters day)
+    {
+
+    }
+
+    public void Display(DayParameters day)
+    {
+
+    }
+
+    public void Benchmark(DayParameters day)
+    {
+
+    }
+}
+
+record class DayParameters([Argument]string date) : ICommandParameterSet
+{
+    public static DateTime Today { get; } = DateTime.UtcNow.AddHours(-5);
+    public static DateTime StartDateThisYear { get; } = new(Today.Year, 12, 1);
+    public static DateTime LastValidDate { get; } = Today >= StartDateThisYear ? Today : new(Today.Year - 1, 12, 25);
+
+    public int Year { get; } = ParseYear(date);
+    public int Day { get; } = ParseDay(date);
+
+    private static int ParseYear(string day)
+    {
+        if (day is "today")
+            return Today.Year;
+        return int.Parse(day.AsSpan(0, 4));
+    }
+
+    private static int ParseDay(string day)
+    {
+        if (day is "today")
+            return Today.Day;
+        if (day.Contains("day", StringComparison.InvariantCultureIgnoreCase))
+            return int.Parse(day.AsSpan(8));
+        return int.Parse(day.AsSpan(5));
+    }
+}
 
 static class Usage {
     public static string Get()
