@@ -93,7 +93,7 @@ record class DayParameters([Argument]string date) : ICommandParameterSet
     public int Year { get; } = ParseYear(date);
     public int Day { get; } = ParseDay(date);
     public bool IsValid
-    => Year >= LastValidDate.Year && Day >= LastValidDate.Day;
+    => Year <= LastValidDate.Year && Day <= LastValidDate.Day;
 
     private static int ParseYear(string day)
     {
