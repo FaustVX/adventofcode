@@ -69,6 +69,14 @@ class Commands
         Runner.RunBenchmark(tsolver);
     }
 
+    public void Init([Option("git-repo", new[] { 'g' })]string git_repo, [Option("ssl-salt", new[] { 's' })]string sslSalt, [Option("ssl-password", new[] { 'p' })]string? sslPassword, [Option(new[] { 'u', 'n' })]string username)
+    {
+        if (sslPassword is string password)
+            new AdventOfCode.Model.Project(git_repo, sslSalt, password) { UserName = username }.Init();
+        else
+            new AdventOfCode.Model.Project(git_repo, sslSalt, "") { UserName = username }.Init();
+    }
+
     private static Solver? GetSolver(Type tsolver)
     => (Solver?)Activator.CreateInstance(tsolver);
 
