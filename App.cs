@@ -1,5 +1,6 @@
 #nullable enable
 
+using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 using AdventOfCode;
 using Cocona;
@@ -13,18 +14,22 @@ class Commands
     .OrderBy(t => t.FullName)
     .ToImmutableList();
 
+    [DoesNotReturn]
+    private static void ThrowAoC(AocCommuncationException ex)
+    => throw new CommandExitedException(ex.Message, 1);
+
     [Command]
     public Task Update(DayParameters day, [Option("no-git")]bool no_git)
     {
         if (!day.IsValid)
-            throw AocCommuncationException.WrongDate();
+            ThrowAoC(AocCommuncationException.WrongDate());
         return no_git ? Updater.Update(day.Year, day.Day) : Updater.UpdateWithGit(day.Year, day.Year);
     }
 
     public void Run(DayParameters day)
     {
         if (!day.IsValid)
-            throw AocCommuncationException.WrongDate();
+            ThrowAoC(AocCommuncationException.WrongDate());
 
         var tsolver = _tsolvers.First(tsolver =>
             SolverExtensions.Year(tsolver) == day.Year &&
@@ -36,7 +41,7 @@ class Commands
     public Task Upload(DayParameters day, [Option("no-git")]bool no_git, [Option("no-benchmark")]bool no_benchmark)
     {
         if (!day.IsValid)
-            throw AocCommuncationException.WrongDate();
+            ThrowAoC(AocCommuncationException.WrongDate());
 
         var tsolver = _tsolvers.First(tsolver =>
             SolverExtensions.Year(tsolver) == day.Year &&
@@ -48,7 +53,7 @@ class Commands
     public void Display(DayParameters day)
     {
         if (!day.IsValid)
-            throw AocCommuncationException.WrongDate();
+            ThrowAoC(AocCommuncationException.WrongDate());
 
         var tsolver = _tsolvers.First(tsolver =>
             SolverExtensions.Year(tsolver) == day.Year &&
@@ -60,7 +65,7 @@ class Commands
     public void Benchmark(DayParameters day)
     {
         if (!day.IsValid)
-            throw AocCommuncationException.WrongDate();
+            ThrowAoC(AocCommuncationException.WrongDate());
 
         var tsolver = _tsolvers.First(tsolver =>
             SolverExtensions.Year(tsolver) == day.Year &&
