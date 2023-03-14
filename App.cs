@@ -89,7 +89,7 @@ class Commands
     => (IDisplay?)Activator.CreateInstance(tdisplay);
 }
 
-record class DayParameters([Argument]string date) : ICommandParameterSet
+record class DayParameters([Argument]string date = "today") : ICommandParameterSet
 {
     public static DateTime Today { get; } = DateTime.UtcNow.AddHours(-5);
     public static DateTime StartDateThisYear { get; } = new(Today.Year, 12, 1);
