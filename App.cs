@@ -1,3 +1,5 @@
+#nullable enable
+
 using System.Reflection;
 using AdventOfCode;
 using Cocona;
@@ -6,35 +8,72 @@ CoconaLiteApp.Run<Commands>(args);
 
 class Commands
 {
-    private static readonly Type[] _tsolvers = Assembly.GetEntryAssembly()!.GetTypes()
+    private static readonly IReadOnlyList<Type> _tsolvers = Assembly.GetEntryAssembly()!.GetTypes()
     .Where(t => t.GetTypeInfo().IsClass && typeof(Solver).IsAssignableFrom(t))
     .OrderBy(t => t.FullName)
-    .ToArray();
+    .ToImmutableList();
 
-    public void Update(DayParameters day)
+    [Command]
+    public Task Update(DayParameters day, [Option("no-git")]bool no_git)
     {
-
+        if (!day.IsValid)
+            throw AocCommuncationException.WrongDate();
+        return no_git ? Updater.Update(day.Year, day.Day) : Updater.UpdateWithGit(day.Year, day.Year);
     }
 
     public void Run(DayParameters day)
     {
+        if (!day.IsValid)
+            throw AocCommuncationException.WrongDate();
 
+        var tsolver = _tsolvers.First(tsolver =>
+            SolverExtensions.Year(tsolver) == day.Year &&
+            SolverExtensions.Day(tsolver) == day.Day);
+
+        Runner.RunSolver(GetSolver(tsolver));
     }
 
-    public void Upload(DayParameters day)
+    public Task Upload(DayParameters day, [Option("no-git")]bool no_git, [Option("no-benchmark")]bool no_benchmark)
     {
+        if (!day.IsValid)
+            throw AocCommuncationException.WrongDate();
 
+        var tsolver = _tsolvers.First(tsolver =>
+            SolverExtensions.Year(tsolver) == day.Year &&
+            SolverExtensions.Day(tsolver) == day.Day);
+
+        return Updater.Upload(GetSolver(tsolver), !no_git, !no_benchmark);
     }
 
     public void Display(DayParameters day)
     {
+        if (!day.IsValid)
+            throw AocCommuncationException.WrongDate();
 
+        var tsolver = _tsolvers.First(tsolver =>
+            SolverExtensions.Year(tsolver) == day.Year &&
+            SolverExtensions.Day(tsolver) == day.Day);
+
+        Runner.DisplaySolver(GetDisplay(tsolver));
     }
 
     public void Benchmark(DayParameters day)
     {
+        if (!day.IsValid)
+            throw AocCommuncationException.WrongDate();
 
+        var tsolver = _tsolvers.First(tsolver =>
+            SolverExtensions.Year(tsolver) == day.Year &&
+            SolverExtensions.Day(tsolver) == day.Day);
+
+        Runner.RunBenchmark(tsolver);
     }
+
+    private static Solver? GetSolver(Type tsolver)
+    => (Solver?)Activator.CreateInstance(tsolver);
+
+    private static IDisplay? GetDisplay(Type tdisplay)
+    => (IDisplay?)Activator.CreateInstance(tdisplay);
 }
 
 record class DayParameters([Argument]string date) : ICommandParameterSet
@@ -45,6 +84,8 @@ record class DayParameters([Argument]string date) : ICommandParameterSet
 
     public int Year { get; } = ParseYear(date);
     public int Day { get; } = ParseDay(date);
+    public bool IsValid
+    => Year >= LastValidDate.Year && Day >= LastValidDate.Day;
 
     private static int ParseYear(string day)
     {

@@ -1,4 +1,4 @@
-﻿using System.Reflection;
+using System.Reflection;
 
 namespace AdventOfCode;
 
@@ -171,6 +171,7 @@ class Runner
 
     public static void DisplaySolver(IDisplay display)
     {
+        Globals.CurrentRunMode = Mode.Display;
         var files = GetInputs((Solver)display).ToArray();
         var displays = display.GetDisplays().ToArray();
         var fileSelected = 0;
