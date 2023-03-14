@@ -1,4 +1,4 @@
-using System.Reflection;
+﻿using System.Reflection;
 
 namespace AdventOfCode;
 
@@ -253,41 +253,6 @@ class Runner
                     yield return file;
             }
         }
-    }
-
-    public static void RunAll(params Solver[] solvers)
-    {
-        var errors = new List<string>();
-
-        var lastYear = -1;
-        foreach (var solver in solvers) {
-            if (lastYear != solver.Year()) {
-                solver.SplashScreen().Show();
-                lastYear = solver.Year();
-            }
-
-            var result = RunSolver(solver);
-            WriteLine();
-            errors.AddRange(result.errors);
-        }
-
-        WriteLine();
-
-        if (errors.Any()) {
-            WriteLine(ConsoleColor.Red, "Errors:\n" + string.Join("\n", errors));
-        }
-    }
-
-    public static void DisplayAll(params IDisplay[] displays)
-    {
-        Globals.CurrentRunMode = Mode.Display;
-        foreach (var solver in displays)
-        {
-            DisplaySolver(solver);
-            WriteLine();
-        }
-
-        WriteLine();
     }
 
     private static void WriteLine(ConsoleColor color = ConsoleColor.Gray, string text = "")
