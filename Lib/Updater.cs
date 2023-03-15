@@ -84,7 +84,7 @@ static class Updater
         return context;
     }
 
-    public static async Task Upload(Solver solver)
+    public static async Task Upload(Solver solver, bool git, bool benchmark)
     {
         Globals.CurrentRunMode = Mode.Upload;
         var color = Console.ForegroundColor;
@@ -148,13 +148,21 @@ static class Updater
 
             if (article.StartsWith("That's the right answer") || article.Contains("You've finished every puzzle"))
             {
-                Process.Start("git", new[] { "add", "*" }).WaitForExit();
+                if (git)
+                    Process.Start("git", new[] { "add", "*" }).WaitForExit();
 
                 Console.ForegroundColor = ConsoleColor.Green;
                 Console.WriteLine(article);
                 Console.ForegroundColor = color;
                 Console.WriteLine();
                 await Update(solver.Year(), solver.Day());
+
+                if (!git)
+                {
+                    if (benchmark)
+                        Runner.RunBenchmark(solver.GetType());
+                    return;
+                }
 
                 Git.Signature signature;
                 using (var repo = new Git.Repository(".git"))
@@ -182,9 +190,12 @@ static class Updater
                         Process.Start("git", new[] { "commit", "-m", $"Solved P2 in {duration:h\\:mm\\:ss}", "--allow-empty" }).WaitForExit();
                         repo.Tags.Remove(tag);
                     }
-                    Runner.RunBenchmark(solver.GetType());
-                    Process.Start("git", new[] { "add", "*" }).WaitForExit();
-                    Process.Start("git", new[] { "commit", "-m", "Added Benchmarks", "--allow-empty" }).WaitForExit();
+                    if (benchmark)
+                    {
+                        Runner.RunBenchmark(solver.GetType());
+                        Process.Start("git", new[] { "add", "*" }).WaitForExit();
+                        Process.Start("git", new[] { "commit", "-m", "Added Benchmarks", "--allow-empty" }).WaitForExit();
+                    }
                     using (var repo = new Git.Repository(".git"))
                     {
                         var branch = repo.Head;

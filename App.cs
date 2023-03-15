@@ -1,236 +1,118 @@
+#nullable enable
+
+using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 using AdventOfCode;
+using Cocona;
 
-var tsolvers = Assembly.GetEntryAssembly()!.GetTypes()
+CoconaLiteApp.Run<Commands>(args);
+
+class Commands
+{
+    private static readonly IReadOnlyList<Type> _tsolvers = Assembly.GetEntryAssembly()!.GetTypes()
     .Where(t => t.GetTypeInfo().IsClass && typeof(Solver).IsAssignableFrom(t))
     .OrderBy(t => t.FullName)
-    .ToArray();
+    .ToImmutableList();
 
-var action =
-    Command(args, Params("update", @"([0-9]+)[/\\](?:Day)?([0-9]+)"), m => {
-        var year = int.Parse(m[1]);
-        var day = int.Parse(m[2]);
-        return Updater.UpdateWithGit(year, day).Wait;
-    }) ??
-    Command(args, Params("update", "today"), m => {
-        var dt = DateTime.UtcNow.AddHours(-5);
-        if (dt is { Month: 12, Day: >= 1 and <= 25 }) {
-            return Updater.UpdateWithGit(dt.Year, dt.Day).Wait;
-        } else {
-            throw AocCommuncationException.WrongDate();
-        }
-    }) ??
-    Command(args, Params("upload", @"([0-9]+)[/\\](?:Day)?([0-9]+)"), m => {
-        var year = int.Parse(m[1]);
-        var day = int.Parse(m[2]);
-        return () => {
-            var tsolver = tsolvers.First(tsolver =>
-                SolverExtensions.Year(tsolver) == year &&
-                SolverExtensions.Day(tsolver) == day);
+    [DoesNotReturn]
+    private static void ThrowAoC(AocCommuncationException ex)
+    => throw new CommandExitedException(ex.Message, 1);
 
-            Updater.Upload(GetSolvers(tsolver)[0]).Wait();
-        };
-    }) ??
-    Command(args, Params("upload", "today"), m => {
-        var dt = DateTime.UtcNow.AddHours(-5);
-        if (dt is { Month: 12, Day: >= 1 and <= 25 }) {
-
-            var tsolver = tsolvers.First(tsolver =>
-                SolverExtensions.Year(tsolver) == dt.Year &&
-                SolverExtensions.Day(tsolver) == dt.Day);
-
-            return Updater.Upload(GetSolvers(tsolver)[0]).Wait;
-
-        } else {
-            throw AocCommuncationException.WrongDate();
-        }
-    }) ??
-    Command(args, Params("display", @"([0-9]+)[/\\](?:Day)?([0-9]+)"), m => {
-        var year = int.Parse(m[1]);
-        var day = int.Parse(m[2]);
-        return () => {
-            var tsolver = tsolvers.FirstOrDefault(tsolver =>
-                tsolver.IsAssignableTo(typeof(IDisplay)) &&
-                SolverExtensions.Year(tsolver) == year &&
-                SolverExtensions.Day(tsolver) == day);
-
-            Runner.DisplayAll(GetDisplays(tsolver));
-        };
-    }) ??
-    Command(args, Params("display", "today"), m => {
-        var dt = DateTime.UtcNow.AddHours(-5);
-        if (dt is { Month: 12, Day: >= 1 and <= 25 }) {
-
-            var tsolver = tsolvers.First(tsolver =>
-                tsolver.IsAssignableTo(typeof(IDisplay)) &&
-                SolverExtensions.Year(tsolver) == dt.Year &&
-                SolverExtensions.Day(tsolver) == dt.Day);
-
-            return () => Runner.DisplayAll(GetDisplays(tsolver));
-
-        } else {
-            throw AocCommuncationException.WrongDate();
-        }
-    }) ??
-    Command(args, Params("bench(mark)?", @"([0-9]+)[/\\](?:Day)?([0-9]+)"), m => {
-        var year = int.Parse(m[1]);
-        var day = int.Parse(m[2]);
-        return () => {
-            var tsolver = tsolvers.First(tsolver =>
-                SolverExtensions.Year(tsolver) == year &&
-                SolverExtensions.Day(tsolver) == day);
-                Runner.RunBenchmark(tsolver);
-        };
-    }) ??
-    Command(args, Params("bench(mark)?", "today"), m => {
-        var dt = DateTime.UtcNow.AddHours(-5);
-        if (dt is { Month: 12, Day: >= 1 and <= 25 }) {
-
-            var tsolver = tsolvers.First(tsolver =>
-                SolverExtensions.Year(tsolver) == dt.Year &&
-                SolverExtensions.Day(tsolver) == dt.Day);
-
-            return () => Runner.RunBenchmark(tsolver);
-        } else {
-            throw AocCommuncationException.WrongDate();
-        }
-    }) ??
-    Command(args, Params(@"([0-9]+)[/\\](?:Day)?([0-9]+)"), m => {
-        var year = int.Parse(m[0]);
-        var day = int.Parse(m[1]);
-        var tsolversSelected = tsolvers.First(tsolver =>
-            SolverExtensions.Year(tsolver) == year &&
-            SolverExtensions.Day(tsolver) == day);
-        return () => Runner.RunAll(GetSolvers(tsolversSelected));
-    }) ??
-    Command(args, Params("[0-9]+"), m => {
-        var year = int.Parse(m[0]);
-        var tsolversSelected = tsolvers.Where(tsolver =>
-            SolverExtensions.Year(tsolver) == year);
-        return () => Runner.RunAll(GetSolvers(tsolversSelected.ToArray()));
-    }) ??
-    Command(args, Params(@"([0-9]+)[/\\](?:Day)?all"), m => {
-        var year = int.Parse(m[0]);
-        var tsolversSelected = tsolvers.Where(tsolver =>
-            SolverExtensions.Year(tsolver) == year);
-        return () => Runner.RunAll(GetSolvers(tsolversSelected.ToArray()));
-    }) ??
-    Command(args, Params("all"), m => {
-        return () => Runner.RunAll(GetSolvers(tsolvers));
-    }) ??
-    Command(args, Params("today"), m => {
-        var dt = DateTime.UtcNow.AddHours(-5);
-        if (dt is { Month: 12, Day: >= 1 and <= 25 }) {
-
-            var tsolversSelected = tsolvers.First(tsolver =>
-                SolverExtensions.Year(tsolver) == dt.Year &&
-                SolverExtensions.Day(tsolver) == dt.Day);
-
-            return () =>
-                Runner.RunAll(GetSolvers(tsolversSelected));
-
-        } else {
-            throw AocCommuncationException.WrongDate();
-        }
-    }) ??
-    Command(args, Params("calendars"), _ => {
-        return () => {
-            var tsolversSelected = (
-                    from tsolver in tsolvers
-                    group tsolver by SolverExtensions.Year(tsolver) into g
-                    orderby SolverExtensions.Year(g.First()) descending
-                    select g.First()
-                ).ToArray();
-
-            var solvers = GetSolvers(tsolversSelected);
-            foreach (var solver in solvers) {
-                solver.SplashScreen().Show();
-            }
-        };
-    }) ??
-    Command(args, Params("init", @".*\.git", ".*"), m => {
-        return new AdventOfCode.Model.Project(m[1], m[2], "") { UserName = "FaustVX" }.Init;
-    }) ??
-    Command(args, Params("init", @".*\.git", ".*", ".*"), m => {
-        return new AdventOfCode.Model.Project(m[1], m[2], m[3]) { UserName = "FaustVX" }.Init;
-    }) ??
-    new Action(() => {
-        Console.WriteLine(Usage.Get());
-    });
-
-try {
-    action();
-} catch (AggregateException a){
-    if (a is { InnerExceptions: [AocCommuncationException { Message: var msg }]}){
-        Console.WriteLine(a.InnerException.Message);
-    } else {
-        throw;
+    [Command]
+    public Task Update(DayParameters day, [Option("no-git")]bool no_git)
+    {
+        if (!day.IsValid)
+            ThrowAoC(AocCommuncationException.WrongDate());
+        return no_git ? Updater.Update(day.Year, day.Day) : Updater.UpdateWithGit(day.Year, day.Day);
     }
-}
 
-Solver[] GetSolvers(params Type[] tsolver) {
-    return tsolver.Select(t => Activator.CreateInstance(t) as Solver).ToArray();
-}
+    public void Run(DayParameters day)
+    {
+        if (!day.IsValid)
+            ThrowAoC(AocCommuncationException.WrongDate());
 
-IDisplay[] GetDisplays(params Type[] tdisplay) {
-    return tdisplay.Select(t => Activator.CreateInstance(t) as IDisplay).ToArray();
-}
+        var tsolver = _tsolvers.First(tsolver =>
+            SolverExtensions.Year(tsolver) == day.Year &&
+            SolverExtensions.Day(tsolver) == day.Day);
 
-Action Command(string[] args, string[] regexes, Func<string[], Action> parse) {
-    if (args.Length != regexes.Length) {
-        return null;
+        Runner.RunSolver(GetSolver(tsolver));
     }
-    var matches = Enumerable.Zip(args, regexes, (arg, regex) => new Regex("^" + regex + "$").Match(arg));
-    if (!matches.All(match => match.Success)) {
-        return null;
-    }
-    try {
 
-        return parse(matches.SelectMany(m =>
-                m.Groups.Count > 1 ? m.Groups.Cast<Group>().Skip(1).Select(g => g.Value)
-                                   : new[] { m.Value }
-            ).ToArray());
-    } catch {
-        return null;
+    public Task Upload(DayParameters day, [Option("no-git")]bool no_git, [Option("no-benchmark")]bool no_benchmark)
+    {
+        if (!day.IsValid)
+            ThrowAoC(AocCommuncationException.WrongDate());
+
+        var tsolver = _tsolvers.First(tsolver =>
+            SolverExtensions.Year(tsolver) == day.Year &&
+            SolverExtensions.Day(tsolver) == day.Day);
+
+        return Updater.Upload(GetSolver(tsolver), !no_git, !no_benchmark);
     }
+
+    public void Display(DayParameters day)
+    {
+        if (!day.IsValid)
+            ThrowAoC(AocCommuncationException.WrongDate());
+
+        var tsolver = _tsolvers.First(tsolver =>
+            SolverExtensions.Year(tsolver) == day.Year &&
+            SolverExtensions.Day(tsolver) == day.Day);
+
+        Runner.DisplaySolver(GetDisplay(tsolver));
+    }
+
+    public void Benchmark(DayParameters day)
+    {
+        if (!day.IsValid)
+            ThrowAoC(AocCommuncationException.WrongDate());
+
+        var tsolver = _tsolvers.First(tsolver =>
+            SolverExtensions.Year(tsolver) == day.Year &&
+            SolverExtensions.Day(tsolver) == day.Day);
+
+        Runner.RunBenchmark(tsolver);
+    }
+
+    public void Init([Option("git-repo", new[] { 'g' })]string git_repo, [Option("ssl-salt", new[] { 's' })]string sslSalt, [Option("ssl-password", new[] { 'p' })]string? sslPassword, [Option(new[] { 'u', 'n' })]string username)
+    {
+        if (sslPassword is string password)
+            new AdventOfCode.Model.Project(git_repo, sslSalt, password) { UserName = username }.Init();
+        else
+            new AdventOfCode.Model.Project(git_repo, sslSalt, "") { UserName = username }.Init();
+    }
+
+    private static Solver? GetSolver(Type tsolver)
+    => (Solver?)Activator.CreateInstance(tsolver);
+
+    private static IDisplay? GetDisplay(Type tdisplay)
+    => (IDisplay?)Activator.CreateInstance(tdisplay);
 }
 
-string[] Params(params string[] regex) {
-    return regex;
-}
+record class DayParameters([Argument]string date = "today") : ICommandParameterSet
+{
+    public static DateTime Today { get; } = DateTime.UtcNow.AddHours(-5);
+    public static DateTime StartDateThisYear { get; } = new(Today.Year, 12, 1);
+    public static DateTime LastValidDate { get; } = Today >= StartDateThisYear ? Today : new(Today.Year - 1, 12, 25);
 
-static class Usage {
-    public static string Get()
-        => """
-            Usage: dotnet run [arguments]
-            1) To run the solutions and admire your advent calendar:
+    public int Year { get; } = ParseYear(date);
+    public int Day { get; } = ParseDay(date);
+    public bool IsValid
+    => Year <= LastValidDate.Year && Day <= LastValidDate.Day;
 
-            [year]/[day|all]                                   Solve the specified problems
-            today                                              Shortcut to the above
-            [year]                                             Solve the whole year
-            all                                                Solve everything
+    private static int ParseYear(string day)
+    {
+        if (day is "today")
+            return Today.Year;
+        return int.Parse(day.AsSpan(0, 4));
+    }
 
-            calendars                                          Show the calendars
-
-            init [this .git repo] [sslSalt] ([sslPassword])    Initialize the current folder
-
-            2) To start working on new problems:
-            login to https://adventofcode.com, then copy your session cookie, and export
-            it in your console like this
-
-             export SESSION=73a37e9a72a...
-
-            then run the app with
-
-             update [year]/[day]   Prepares a folder for the given day, updates the input,
-                                   the readme and creates a solution template.
-             update today          Shortcut to the above.
-
-            3) To upload your answer:
-            set up your SESSION variable as above.
-
-             upload [year]/[day]   Upload the answer for the selected year and day.
-             upload today          Shortcut to the above.
-
-            """;
+    private static int ParseDay(string day)
+    {
+        if (day is "today")
+            return Today.Day;
+        if (day.Contains("day", StringComparison.InvariantCultureIgnoreCase))
+            return int.Parse(day.AsSpan(8));
+        return int.Parse(day.AsSpan(5));
+    }
 }

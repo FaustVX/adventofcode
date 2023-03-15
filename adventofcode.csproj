@@ -6,15 +6,17 @@
     <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="AngleSharp" Version="0.13.0"/>
-    <PackageReference Include="AngleSharp.Css" Version="0.13.0"/>
-    <PackageReference Include="Microsoft.CodeAnalysis" Version="4.3.1"/>
-    <PackageReference Include="System.Reflection.Emit" Version="4.7.0"/>
-    <PackageReference Include="System.ValueTuple" Version="4.5.0"/>
-    <PackageReference Include="RegExtract" Version="1.0.18"/>
-    <PackageReference Include="LibGit2Sharp" Version="0.26.2"/>
-    <PackageReference Include="BenchmarkDotNet" Version="0.13.2"/>
-    <PackageReference Include="CommunityToolkit.HighPerformance" Version="8.1.0"/>
+    <PackageReference Include="AngleSharp" Version="0.13.0" />
+    <PackageReference Include="AngleSharp.Css" Version="0.13.0" />
+    <PackageReference Include="Cocona.Lite" Version="2.1.0" />
+    <PackageReference Include="Microsoft.CodeAnalysis" Version="4.3.1" />
+    <PackageReference Include="System.Reflection.Emit" Version="4.7.0" />
+    <PackageReference Include="System.ValueTuple" Version="4.5.0" />
+    <PackageReference Include="RegExtract" Version="1.0.18" />
+    <PackageReference Include="LibGit2Sharp" Version="0.26.2" />
+    <PackageReference Include="BenchmarkDotNet" Version="0.13.2" />
+    <PackageReference Include="CommunityToolkit.HighPerformance" Version="8.1.0" />
+
   </ItemGroup>
   <Import Project="**/Project.targets" /> <!-- Import Specific Properties -->
 </Project>
