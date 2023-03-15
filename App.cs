@@ -23,7 +23,7 @@ class Commands
     {
         if (!day.IsValid)
             ThrowAoC(AocCommuncationException.WrongDate());
-        return no_git ? Updater.Update(day.Year, day.Day) : Updater.UpdateWithGit(day.Year, day.Year);
+        return no_git ? Updater.Update(day.Year, day.Day) : Updater.UpdateWithGit(day.Year, day.Day);
     }
 
     public void Run(DayParameters day)
