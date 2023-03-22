@@ -2,17 +2,6 @@
     "version": "2.0.0",
     "tasks": [
         {
-            "label": "remove obj",
-            "command": "(rm -Force -r ${workspaceFolder}/lib/aoc/obj) -or ($true)",
-            "type": "shell",
-            "problemMatcher": "$msCompile",
-            "options": {
-                "statusbar": {
-                    "hide": true,
-                }
-            }
-        },
-        {
             "label": "build",
             "command": "dotnet",
             "type": "process",
@@ -26,9 +15,6 @@
                     "hide": true,
                 }
             },
-            "dependsOn":[
-                "remove obj"
-            ],
         },
         {
             "label": "update today",
@@ -49,9 +35,6 @@
                     "SESSION": "${input:session}"
                 }
             },
-            "dependsOn":[
-                "remove obj"
-            ],
         },
         {
             "label": "update",
@@ -72,9 +55,6 @@
                     "SESSION": "${input:session}"
                 },
             },
-            "dependsOn":[
-                "remove obj"
-            ],
         },
         {
             "label": "run",
@@ -93,9 +73,6 @@
                     "tooltip": "Run",
                 },
             },
-            "dependsOn":[
-                "remove obj"
-            ],
         },
         {
             "label": "upload",
@@ -118,9 +95,6 @@
                     "SESSION": "${input:session}"
                 },
             },
-            "dependsOn":[
-                "remove obj"
-            ],
         },
         {
             "label": "display",
@@ -141,9 +115,6 @@
                     "tooltip": "Display",
                 },
             },
-            "dependsOn":[
-                "remove obj"
-            ],
         },
         {
             "label": "benchmark",
@@ -162,9 +133,6 @@
                     "tooltip": "Benchmark",
                 },
             },
-            "dependsOn":[
-                "remove obj"
-            ],
         },
     ],
     "inputs": [
