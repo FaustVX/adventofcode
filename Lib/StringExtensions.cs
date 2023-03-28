@@ -6,28 +6,6 @@ namespace AdventOfCode;
 
 public static class StringExtensions
 {
-    [DebuggerStepThrough]
-    public static string StripMargin(this string st, string margin = "|")
-    {
-#pragma warning disable CS0612 // 'StringExtensions.SplitLine(string)' is Obsolete
-        return string.Join("\n",
-            from line in st.SplitLine()
-            select Regex.Replace(line, @"^\s*" + Regex.Escape(margin), "")
-        );
-#pragma warning restore CS0612
-    }
-
-    [DebuggerStepThrough]
-    public static string Indent(this string st, int l)
-    {
-        return string.Join("\n" + new string(' ', l),
-#pragma warning disable CS0612 // 'StringExtensions.SplitLine(string)' is Obsolete
-            from line in st.SplitLine()
-#pragma warning restore CS0612
-            select Regex.Replace(line, @"^\s*\|", "")
-        );
-    }
-
     [DebuggerStepThrough, Obsolete, EditorBrowsable(EditorBrowsableState.Never)]
     public static string[] SplitLine(this string st)
         => Regex.Split(st, "\r?\n");
@@ -89,7 +67,7 @@ public static class StringExtensions
     }
 
     [DebuggerStepThrough]
-    public static ReadOnlyMemory<ReadOnlyMemory<char>> Split(this ReadOnlyMemory<char> st, [StringSyntax(StringSyntaxAttribute.Regex)]string regexSplit)
+    public static ReadOnlyMemory<ReadOnlyMemory<char>> Split(this ReadOnlyMemory<char> st, [StringSyntax(StringSyntaxAttribute.Regex)] string regexSplit)
     {
         var matches = Regex.EnumerateMatches(st.Span, regexSplit);
         var start = 0;
@@ -183,7 +161,7 @@ where T : struct, ITuple
     public bool AppendLiteral(string s)
     {
         if (!_input.StartsWith(s))
-                return IsValid = false;
+            return IsValid = false;
         _input = _input[s.Length..];
         return true;
     }

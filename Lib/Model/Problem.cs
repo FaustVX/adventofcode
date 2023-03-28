@@ -2,7 +2,8 @@
 using AngleSharp.Dom;
 
 namespace AdventOfCode.Model;
-class Problem {
+class Problem
+{
     public string Title { get; private set; }
     public string ContentMd { get; private set; }
     public int Day { get; private set; }
@@ -10,42 +11,43 @@ class Problem {
     public string Input { get; private set; }
     public string[] Answers { get; private set; }
 
-    public static Problem Parse(int year, int day, string url, IDocument document, string input) {
+    public static Problem Parse(int year, int day, string url, IDocument document, string input)
+    {
 
         var md = $"original source: [{url}]({url})\n";
         var answers = new List<string>();
-        foreach (var article in document.QuerySelectorAll("article")) {
+        foreach (var article in document.QuerySelectorAll("article"))
+        {
             md += UnparseList("", article) + "\n";
 
             var answerNode = article.NextSibling;
             while (answerNode != null && !(
                 answerNode.NodeName == "P"
                 && ((IElement)answerNode).QuerySelector("code") != null
-                && answerNode.TextContent.Contains("answer"))
-            ) {
+                && answerNode.TextContent.Contains("answer")))
+            {
                 answerNode = answerNode.NextSibling as IElement;
             }
 
             var code = (answerNode as IElement)?.QuerySelector("code");
-            if (code != null) {
+            if (code != null)
                 answers.Add(code.TextContent);
-            }
         }
         var title = document.QuerySelector("h2").TextContent;
 
         var match = Regex.Match(title, ".*: (.*) ---");
-        if (match.Success) {
+        if (match.Success)
             title = match.Groups[1].Value;
-        }
-        return new Problem {Year = year, Day = day, Title = title, ContentMd = md, Input = input, Answers = answers.ToArray() };
+        return new Problem { Year = year, Day = day, Title = title, ContentMd = md, Input = input, Answers = answers.ToArray() };
     }
 
-    static string UnparseList(string sep, INode element) {
-        return string.Join(sep, element.ChildNodes.SelectMany(Unparse));
-    }
+    static string UnparseList(string sep, INode element)
+    => string.Join(sep, element.ChildNodes.SelectMany(Unparse));
 
-    static IEnumerable<string> Unparse(INode node) {
-        switch (node.NodeName.ToLower()) {
+    static IEnumerable<string> Unparse(INode node)
+    {
+        switch (node.NodeName.ToLower())
+        {
             case "h2":
                 yield return "## " + UnparseList("", node) + "\n";
                 break;
@@ -68,9 +70,8 @@ class Problem {
                 yield return "~~" + UnparseList("", node) + "~~";
                 break;
             case "ul":
-                foreach (var unparsed in node.ChildNodes.SelectMany(Unparse)) {
+                foreach (var unparsed in node.ChildNodes.SelectMany(Unparse))
                     yield return unparsed;
-                }
                 break;
             case "li":
                 yield return " - " + UnparseList("", node);
@@ -78,17 +79,16 @@ class Problem {
             case "pre":
                 yield return "```\n";
                 var freshLine = true;
-                foreach (var item in node.ChildNodes) {
-                    foreach (var unparsed in Unparse(item)) {
+                foreach (var item in node.ChildNodes)
+                    foreach (var unparsed in Unparse(item))
+                    {
                         freshLine = unparsed[^1] == '\n';
                         yield return unparsed;
                     }
-                }
-                if (freshLine) {
+                if (freshLine)
                     yield return "```\n";
-                } else {
+                else
                     yield return "\n```\n";
-                }
                 break;
             case "a":
                 yield return "[" + UnparseList("", node) + "](" + ((IElement)node).Attributes["href"].Value + ")";

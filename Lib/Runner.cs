@@ -12,30 +12,29 @@ class ProblemName : Attribute
     }
 }
 
-public interface Solver
+public interface ISolver
 {
     object PartOne(string input);
-    object PartTwo(string input) => null;
+    object PartTwo(string input);
 }
 
 interface IDisplay
 {
-    public abstract IEnumerable<(string name, Action<string> action)> GetDisplays();
+    IEnumerable<(string name, Action<string> action)> GetDisplays();
 }
 
 static class SolverExtensions
 {
 
-    public static IEnumerable<object> Solve(this Solver solver, string input)
+    public static IEnumerable<object> Solve(this ISolver solver, string input)
     {
         yield return solver.PartOne(input);
         var res = solver.PartTwo(input);
-        if (res != null) {
+        if (res != null)
             yield return res;
-        }
     }
 
-    public static string GetName(this Solver solver)
+    public static string GetName(this ISolver solver)
     {
         return (
             solver
@@ -44,16 +43,16 @@ static class SolverExtensions
         ).Name;
     }
 
-    public static string DayName(this Solver solver)
+    public static string DayName(this ISolver solver)
     => $"Day {solver.Day()}";
 
-    public static int Year(this Solver solver)
+    public static int Year(this ISolver solver)
     => Year(solver.GetType());
 
     public static int Year(Type t)
     => int.Parse(t.FullName.Split('.')[1][1..]);
 
-    public static int Day(this Solver solver)
+    public static int Day(this ISolver solver)
     => Day(solver.GetType());
 
     public static int Day(Type t)
@@ -65,24 +64,24 @@ static class SolverExtensions
     public static string WorkingDir(int year, int day)
     => Path.Combine(WorkingDir(year), "Day" + day.ToString("00"));
 
-    public static string WorkingDir(this Solver solver)
+    public static string WorkingDir(this ISolver solver)
     => WorkingDir(solver.Year(), solver.Day());
 
     public static string WorkingDir(Type solver)
     => WorkingDir(Year(solver), Day(solver));
 
-    public static SplashScreen SplashScreen(this Solver solver)
+    public static ISplashScreen SplashScreen(this ISolver solver)
     {
         var tsplashScreen = Assembly.GetEntryAssembly().GetTypes()
-             .Where(t => t.GetTypeInfo().IsClass && typeof(SplashScreen).IsAssignableFrom(t))
+             .Where(t => t.GetTypeInfo().IsClass && typeof(ISplashScreen).IsAssignableFrom(t))
              .Single(t => Year(t) == solver.Year());
-        return (SplashScreen)Activator.CreateInstance(tsplashScreen);
+        return (ISplashScreen)Activator.CreateInstance(tsplashScreen);
     }
 }
 
 record SolverResult(string[] answers, string[] errors);
 
-class Runner
+static class Runner
 {
 
     public static string GetNormalizedInput(string file)
@@ -108,7 +107,7 @@ class Runner
         Process.Start(psi);
     }
 
-    public static SolverResult RunSolver(Solver solver)
+    public static SolverResult RunSolver(ISolver solver)
     {
 
         var workingDir = solver.WorkingDir();
@@ -172,7 +171,7 @@ class Runner
     public static void DisplaySolver(IDisplay display)
     {
         Globals.CurrentRunMode = Mode.Display;
-        var files = GetInputs((Solver)display).ToArray();
+        var files = GetInputs((ISolver)display).ToArray();
         var displays = display.GetDisplays().ToArray();
         var fileSelected = 0;
         var displaySelected = 0;
@@ -237,7 +236,7 @@ class Runner
                 selected--;
         }
 
-        static IEnumerable<string> GetInputs(Solver solver)
+        static IEnumerable<string> GetInputs(ISolver solver)
         {
             var workingDir = solver?.WorkingDir();
             if (workingDir is null)

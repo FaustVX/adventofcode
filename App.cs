@@ -10,7 +10,7 @@ CoconaLiteApp.Run<Commands>(args);
 class Commands
 {
     private static readonly IReadOnlyList<Type> _tsolvers = Assembly.GetEntryAssembly()!.GetTypes()
-    .Where(t => t.GetTypeInfo().IsClass && typeof(Solver).IsAssignableFrom(t))
+    .Where(t => t.GetTypeInfo().IsClass && typeof(ISolver).IsAssignableFrom(t))
     .OrderBy(t => t.FullName)
     .ToImmutableList();
 
@@ -19,7 +19,7 @@ class Commands
     => throw new CommandExitedException(ex.Message, 1);
 
     [Command]
-    public Task Update(DayParameters day, [Option("no-git")]bool no_git)
+    public Task Update(DayParameters day, [Option("no-git")] bool no_git)
     {
         if (!day.IsValid)
             ThrowAoC(AocCommuncationException.WrongDate());
@@ -38,7 +38,7 @@ class Commands
         Runner.RunSolver(GetSolver(tsolver));
     }
 
-    public Task Upload(DayParameters day, [Option("no-git")]bool no_git, [Option("no-benchmark")]bool no_benchmark)
+    public Task Upload(DayParameters day, [Option("no-git")] bool no_git, [Option("no-benchmark")] bool no_benchmark)
     {
         if (!day.IsValid)
             ThrowAoC(AocCommuncationException.WrongDate());
@@ -74,7 +74,7 @@ class Commands
         Runner.RunBenchmark(tsolver);
     }
 
-    public void Init([Option("git-repo", new[] { 'g' })]string git_repo, [Option("ssl-salt", new[] { 's' })]string sslSalt, [Option("ssl-password", new[] { 'p' })]string? sslPassword, [Option(new[] { 'u', 'n' })]string username)
+    public void Init([Option("git-repo", new[] { 'g' })] string git_repo, [Option("ssl-salt", new[] { 's' })] string sslSalt, [Option("ssl-password", new[] { 'p' })] string? sslPassword, [Option(new[] { 'u', 'n' })] string username)
     {
         if (sslPassword is string password)
             new AdventOfCode.Model.Project(git_repo, sslSalt, password) { UserName = username }.Init();
@@ -82,14 +82,14 @@ class Commands
             new AdventOfCode.Model.Project(git_repo, sslSalt, "") { UserName = username }.Init();
     }
 
-    private static Solver? GetSolver(Type tsolver)
-    => (Solver?)Activator.CreateInstance(tsolver);
+    private static ISolver? GetSolver(Type tsolver)
+    => (ISolver?)Activator.CreateInstance(tsolver);
 
     private static IDisplay? GetDisplay(Type tdisplay)
     => (IDisplay?)Activator.CreateInstance(tdisplay);
 }
 
-record class DayParameters([Argument]string date = "today") : ICommandParameterSet
+record class DayParameters([Argument] string date = "today") : ICommandParameterSet
 {
     public static DateTime Today { get; } = DateTime.UtcNow.AddHours(-5);
     public static DateTime StartDateThisYear { get; } = new(Today.Year, 12, 1);

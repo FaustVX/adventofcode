@@ -45,12 +45,11 @@ static class Updater
         Console.ForegroundColor = color;
 
         var dir = Dir(year, day);
-        if (!Directory.Exists(dir)) {
+        if (!Directory.Exists(dir))
             Directory.CreateDirectory(dir);
-        }
 
         var years = Assembly.GetEntryAssembly().GetTypes()
-            .Where(t => t.GetTypeInfo().IsClass && typeof(Solver).IsAssignableFrom(t))
+            .Where(t => t.GetTypeInfo().IsClass && typeof(ISolver).IsAssignableFrom(t))
             .Select(tsolver => SolverExtensions.Year(tsolver))
             .ToArray();
 
@@ -72,6 +71,7 @@ static class Updater
             throw new AocCommuncationException("Specify SESSION environment variable");
         return Environment.GetEnvironmentVariable("SESSION");
     }
+
     private static IBrowsingContext GetContext()
     {
         var context = BrowsingContext.New(Configuration.Default
@@ -84,7 +84,7 @@ static class Updater
         return context;
     }
 
-    public static async Task Upload(Solver solver, bool git, bool benchmark)
+    public static async Task Upload(ISolver solver, bool git, bool benchmark)
     {
         Globals.CurrentRunMode = Mode.Upload;
         var color = Console.ForegroundColor;
@@ -202,23 +202,16 @@ static class Updater
                         var main = repo.Branches["main"] ?? repo.Branches["master"];
                         Git.Commands.Checkout(repo, main);
                         var merge = repo.Merge(branch, signature, new()
-                            {
-                                FastForwardStrategy = Git.FastForwardStrategy.NoFastForward,
-                                CommitOnSuccess = false,
-                            });
+                        {
+                            FastForwardStrategy = Git.FastForwardStrategy.NoFastForward,
+                            CommitOnSuccess = false,
+                        });
                         var tag = repo.Tags[$"Y{problem.Year}D{problem.Day}P1"];
                         initial = (Git.Commit)tag.Target;
                         duration = signature.When - initial.Committer.When;
                         Process.Start("git", new[] { "commit", "-m", $"Solved Y{problem.Year}D{problem.Day} in {duration:h\\:mm\\:ss}", "--allow-empty" }).WaitForExit();
                         Git.Commands.Checkout(repo, branch);
                         repo.Tags.Remove(tag);
-                        try
-                        {
-                            repo.Network.Push(main);
-                            repo.Network.Push(branch);
-                        }
-                        catch
-                        { }
                     }
                 }
             }
@@ -291,7 +284,8 @@ static class Updater
     private static void UpdateSolutionTemplate(Problem problem)
     {
         var file = Path.Combine(Dir(problem.Year, problem.Day), "Solution.cs");
-        if (!File.Exists(file)) {
+        if (!File.Exists(file))
+        {
             WriteFile(file, SolutionTemplateGenerator.Generate(problem));
         }
     }

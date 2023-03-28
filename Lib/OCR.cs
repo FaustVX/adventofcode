@@ -53,6 +53,7 @@ public static class OCR
         public static implicit operator Char5x5(byte[] array)
             => new(array[0], array[1], array[2], array[3], array[4]);
     }
+
     public struct Char4x6 : IChar<Char4x6>
     {
         public static IReadOnlyDictionary<char, Char4x6> Dictionary { get; } = new Dictionary<char, Char4x6>()

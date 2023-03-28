@@ -43,15 +43,6 @@
     ],
     "inputs": [
         {
-            "id": "session",
-            "type": "command",
-            "command": "memento.promptString",
-            "args": {
-                "id": "session",
-                "description": "Session Cookie"
-            }
-        },
-        {
             "id": "year",
             "type": "command",
             "command": "memento.promptString",

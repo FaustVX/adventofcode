@@ -2,20 +2,26 @@ using AngleSharp.Dom;
 
 namespace AdventOfCode.Model;
 
-class CalendarToken {
-    public string Text { get; set; } = default!;
-    public string RgbaColor { get; set; } = default!;
-    public int ConsoleColor { get; set; }
-    public bool Bold { get; set; }
+class CalendarToken
+{
+    public required string Text { get; init; }
+    public required string RgbaColor { get; init; }
+    public required int ConsoleColor { get; init; }
+    public bool Bold { get; init; }
+
+    public static CalendarToken FromText(string text)
+    => new() { Text = text, RgbaColor = default, ConsoleColor = default };
 }
 
-class Calendar {
+class Calendar
+{
     public int Year;
 
     public Dictionary<string[], int> Theme = new();
     public IReadOnlyList<IReadOnlyList<CalendarToken>> Lines { get; private set; } = default!;
 
-    public static Calendar Parse(int year, IDocument document) {
+    public static Calendar Parse(int year, IDocument document)
+    {
 
         var theme = new Dictionary<string[], int>();
 
@@ -43,18 +49,17 @@ class Calendar {
 
         document.Head.Append(q);
 
-        foreach (var item in document.QuerySelectorAll("link").ToList()) {
+        foreach (var item in document.QuerySelectorAll("link").ToList())
             item.Remove();
-        }
 
-        foreach (var item in document.QuerySelectorAll("script").ToList()) {
+        foreach (var item in document.QuerySelectorAll("script").ToList())
             item.Remove();
-        }
 
         var calendar = document.QuerySelector(".calendar");
 
         var r = new Random();
-        var years = new []{
+        var years = new[]
+        {
             $@"0x0000 | {year}",
             $@"/* {year} */",
             $@"int y = {year};",
@@ -64,69 +69,96 @@ class Calendar {
             $@"sub y{{{year}}}",
             $@"// {year}",
             $@"{{'year': {year}}}",
-            $@"$year = {year}"
+            $@"$year = {year}",
         };
 
         var stYear = years[r.Next(years.Length)];
 
-        var lines = new List<List<CalendarToken>>(){
-                new List<CalendarToken>(){
-                    new CalendarToken {ConsoleColor = 0x00cc00, RgbaColor = "rgba(0,204,0,1)", Text = $@"▄█▄ ▄▄█ ▄ ▄ ▄▄▄ ▄▄ ▄█▄  ▄▄▄ ▄█  ▄▄ ▄▄▄ ▄▄█ ▄▄▄"}
-                },
-                new List<CalendarToken>(){
-                    new CalendarToken {ConsoleColor = 0x00cc00, RgbaColor = "rgba(0,204,0,1)", Text = $@"█▄█ █ █ █ █ █▄█ █ █ █   █ █ █▄  █  █ █ █ █ █▄█"}
-                },
-                new List<CalendarToken>(){
-                    new CalendarToken {ConsoleColor = 0x00cc00, RgbaColor = "rgba(0,204,0,1)", Text = $@"█ █ █▄█ ▀▄▀ █▄▄ █ █ █▄  █▄█ █   █▄ █▄█ █▄█ █▄▄  {stYear}"}
-                },
-                new List<CalendarToken>(){
-                    new CalendarToken {ConsoleColor = 0x00cc00, RgbaColor = "rgba(0,204,0,1)", Text = $@" "}
+        var lines = new List<List<CalendarToken>>()
+        {
+            new()
+            {
+                new()
+                {
+                    ConsoleColor = 0x00cc00,
+                    RgbaColor = "rgba(0,204,0,1)",
+                    Text = $@"▄█▄ ▄▄█ ▄ ▄ ▄▄▄ ▄▄ ▄█▄  ▄▄▄ ▄█  ▄▄ ▄▄▄ ▄▄█ ▄▄▄",
                 }
+            },
+            new()
+            {
+                new()
+                {
+                    ConsoleColor = 0x00cc00,
+                    RgbaColor = "rgba(0,204,0,1)",
+                    Text = $@"█▄█ █ █ █ █ █▄█ █ █ █   █ █ █▄  █  █ █ █ █ █▄█",
+                }
+            },
+            new()
+            {
+                new()
+                {
+                    ConsoleColor = 0x00cc00,
+                    RgbaColor = "rgba(0,204,0,1)",
+                    Text = $@"█ █ █▄█ ▀▄▀ █▄▄ █ █ █▄  █▄█ █   █▄ █▄█ █▄█ █▄▄  {stYear}",
+                }
+            },
+            new()
+            {
+                new()
+                {
+                    ConsoleColor = 0x00cc00,
+                    RgbaColor = "rgba(0,204,0,1)",
+                    Text = $@" ",
+                }
+            }
         };
 
         var line = new List<CalendarToken>();
         lines.Add(line);
 
-        foreach (var textNode in GetText(calendar)) {
+        foreach (var textNode in GetText(calendar))
+        {
             var text = textNode.Text();
             var style = textNode.ParentElement.ComputeCurrentStyle();
             var rgbaColor = style["color"];
             var bold = !string.IsNullOrEmpty(style["text-shadow"]);
 
-            if (style["position"] == "absolute" ||
-                textNode.ParentElement.ParentElement.ComputeCurrentStyle()["position"] == "absolute"
-            ) {
+            if (style["position"] == "absolute" || textNode.ParentElement.ParentElement.ComputeCurrentStyle()["position"] == "absolute")
                 continue;
-            }
-            var widthSpec = string.IsNullOrEmpty(style["width"]) ?
-                textNode.ParentElement.ParentElement.ComputeCurrentStyle()["width"] : style["width"];
-            if (widthSpec != null) {
 
+            var widthSpec = string.IsNullOrEmpty(style["width"])
+                ? textNode.ParentElement.ParentElement.ComputeCurrentStyle()["width"]
+                : style["width"];
+            if (widthSpec != null)
+            {
                 var m = Regex.Match(widthSpec, "[.0-9]+");
-                if (m.Success) {
+                if (m.Success)
+                {
                     var width = double.Parse(m.Value) * 1.7;
                     var c = (int)Math.Round(width - text.Length, MidpointRounding.AwayFromZero);
-                    if (c > 0) {
+                    if (c > 0)
                         text += new string(' ', c);
-                    }
                 }
             }
 
             var i = 0;
-            while (i < text.Length) {
+            while (i < text.Length)
+            {
                 var iNext = text.IndexOf("\n", i);
-                if (iNext == -1) {
+                if (iNext == -1)
                     iNext = text.Length;
-                }
 
-                line.Add(new CalendarToken {
+                line.Add(new()
+                {
                     Text = text[i..iNext],
                     ConsoleColor = ParseRgbaColor(rgbaColor),
                     RgbaColor = rgbaColor,
-                    Bold = bold
+                    Bold = bold,
                 });
 
-                if (iNext < text.Length) {
+                if (iNext < text.Length)
+                {
                     line = new List<CalendarToken>();
                     lines.Add(line);
                 }
@@ -134,28 +166,31 @@ class Calendar {
             }
         }
 
-
-        return new Calendar { Year = year, Theme = theme, Lines = lines };
+        return new() { Year = year, Theme = theme, Lines = lines };
     }
 
-    private static IEnumerable<INode> GetText(INode element) {
-        if (element.NodeType == NodeType.Text) {
+    private static IEnumerable<INode> GetText(INode element)
+    {
+        if (element.NodeType == NodeType.Text)
             yield return element;
-        } else {
+        else
+        {
             element = element.FirstChild;
-            while (element != null) {
-                foreach (var text in GetText(element)) {
+            while (element != null)
+            {
+                foreach (var text in GetText(element))
                     yield return text;
-                }
                 element = element.NextSibling;
             }
         }
     }
 
-    private static int ParseRgbaColor(string st) {
+    private static int ParseRgbaColor(string st)
+    {
         Regex regex = new(@"rgba\((?<r>\d{1,3}), (?<g>\d{1,3}), (?<b>\d{1,3}), (?<a>\d{1,3})\)");
         Match match = regex.Match(st);
-        if (match.Success) {
+        if (match.Success)
+        {
             int r = int.Parse(match.Groups["r"].Value);
             int g = int.Parse(match.Groups["g"].Value);
             int b = int.Parse(match.Groups["b"].Value);
@@ -165,7 +200,8 @@ class Calendar {
         return 0x888888;
     }
 
-    public string ToSvg() {
+    public string ToSvg()
+    {
 
         string font;
 
@@ -192,10 +228,12 @@ class Calendar {
             </style>
             """);
         sb.AppendLine(@"<text xml:space=""preserve"">");
-        foreach (var line in Lines) {
+        foreach (var line in Lines)
+        {
             sb.Append($@"<tspan x=""0"" dy=""1.2em"">");
             var lineWidth = 0;
-            foreach (var token in line) {
+            foreach (var token in line)
+            {
                 var text = token.Text
                     .Replace("<", "&lt;")
                     .Replace(">", "&gt;")
@@ -209,6 +247,6 @@ class Calendar {
             height++;
         }
         sb.AppendLine("</text>");
-        return $"""<svg viewBox="-16 -16 {(width+4) * 8} {(height+2) *16}" style="background-color:black" xmlns="http://www.w3.org/2000/svg">{sb}</svg>""";
+        return $"""<svg viewBox="-16 -16 {(width + 4) * 8} {(height + 2) * 16}" style="background-color:black" xmlns="http://www.w3.org/2000/svg">{sb}</svg>""";
     }
 }

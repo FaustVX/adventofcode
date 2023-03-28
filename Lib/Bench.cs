@@ -3,7 +3,7 @@ using BenchmarkDotNet.Attributes;
 
 [MemoryDiagnoser]
 public class Bench<T>
-where T : Solver, new()
+where T : ISolver, new()
 {
     readonly T _instance;
     readonly string _input;
@@ -12,7 +12,7 @@ where T : Solver, new()
     {
         Globals.CurrentRunMode = Mode.Benchmark;
         _instance = new();
-        _input = Runner.GetNormalizedInput(Path.Combine("..", "..", "..", "..", "..", "..", "..",_instance.WorkingDir(), "input.in"));
+        _input = Runner.GetNormalizedInput(Path.Combine("..", "..", "..", "..", "..", "..", "..", _instance.WorkingDir(), "input.in"));
     }
 
     [Benchmark]
