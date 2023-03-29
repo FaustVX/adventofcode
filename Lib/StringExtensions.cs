@@ -83,6 +83,14 @@ public static class StringExtensions
     }
 
     [DebuggerStepThrough]
+    public static SpanSplitEnumerator EnumerateSplits(this ReadOnlySpan<char> span, ReadOnlySpan<char> separator)
+    => new SpanSplitEnumerator(span, separator);
+
+    [DebuggerStepThrough]
+    public static SpanSplitEnumerator EnumerateSplits(this string span, ReadOnlySpan<char> separator)
+    => new SpanSplitEnumerator(span, separator);
+
+    [DebuggerStepThrough]
     public static void TypeString(this StringBuilder input, TimeSpan maxTotalDuration)
     {
         var offset = maxTotalDuration / input.Length;
