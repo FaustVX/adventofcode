@@ -1,6 +1,8 @@
 namespace AdventOfCode;
 
 // Copied from SpanLineEnumerator: https://source.dot.net/#System.Private.CoreLib/src/libraries/System.Private.CoreLib/src/System/Text/SpanLineEnumerator.cs
+
+[DebuggerStepThrough]
 public ref struct SpanSplitEnumerator
 {
     private ReadOnlySpan<char> _remaining;
