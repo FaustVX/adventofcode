@@ -132,10 +132,10 @@ static class Runner
                     var iline = 0;
                     var answers = new List<string>();
                     var errors = new List<string>();
-                    var stopwatch = Stopwatch.StartNew();
+                    var stopwatch = Stopwatch.GetTimestamp(); // System.TimeProvider
                     foreach (var line in solver.Solve(input))
                     {
-                        var ticks = stopwatch.ElapsedTicks;
+                        var ticks = Stopwatch.GetElapsedTime(stopwatch);
                         answers.Add(line.ToString());
                         var (statusColor, status, err) =
                             refout == null || refout.Length <= iline || string.IsNullOrWhiteSpace(refout[iline]) ? (ConsoleColor.Cyan, "?", null) :
@@ -147,16 +147,15 @@ static class Runner
 
                         Write(statusColor, $"{indent}  {status}");
                         Console.Write($" {line} ");
-                        var diff = ticks * 1000.0 / Stopwatch.Frequency;
 
                         WriteLine(
-                            diff > 1000 ? ConsoleColor.Red :
-                            diff > 500 ? ConsoleColor.Yellow :
+                            ticks > TimeSpan.FromMilliseconds(1000) ? ConsoleColor.Red :
+                            ticks > TimeSpan.FromMilliseconds(500) ? ConsoleColor.Yellow :
                             ConsoleColor.DarkGreen,
-                            $"({diff:F3} ms)"
+                            $"({ticks.TotalMilliseconds:F3} ms)"
                         );
                         iline++;
-                        stopwatch.Restart();
+                        stopwatch = Stopwatch.GetTimestamp();
                     }
                     solverResult = new SolverResult(answers.ToArray(), errors.ToArray());
                 }
