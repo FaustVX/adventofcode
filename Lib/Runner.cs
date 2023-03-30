@@ -149,8 +149,8 @@ static class Runner
                         Console.Write($" {line} ");
 
                         WriteLine(
-                            ticks > TimeSpan.FromMilliseconds(1000) ? ConsoleColor.Red :
-                            ticks > TimeSpan.FromMilliseconds(500) ? ConsoleColor.Yellow :
+                            ticks > TimeSpan.FromSeconds(5) ? ConsoleColor.Red :
+                            ticks > TimeSpan.FromSeconds(1) ? ConsoleColor.Yellow :
                             ConsoleColor.DarkGreen,
                             $"({ticks.TotalMilliseconds:F3} ms)"
                         );
