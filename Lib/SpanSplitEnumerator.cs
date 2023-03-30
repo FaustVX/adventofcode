@@ -5,13 +5,24 @@ public ref struct SpanSplitEnumerator
 {
     private ReadOnlySpan<char> _remaining;
     private readonly ReadOnlySpan<char> _separator;
+    private readonly bool _separateOnAny;
     private ReadOnlySpan<char> _current;
     private bool _isEnumeratorActive;
+
+    public SpanSplitEnumerator(ReadOnlySpan<char> buffer, ReadOnlySpan<char> separator, bool separateOnAny)
+    {
+        _remaining = buffer;
+        _separator = separator;
+        _separateOnAny = separateOnAny;
+        _current = default;
+        _isEnumeratorActive = true;
+    }
 
     public SpanSplitEnumerator(ReadOnlySpan<char> buffer, ReadOnlySpan<char> separator)
     {
         _remaining = buffer;
         _separator = separator;
+        _separateOnAny = false;
         _current = default;
         _isEnumeratorActive = true;
     }
@@ -38,12 +49,12 @@ public ref struct SpanSplitEnumerator
         if (!_isEnumeratorActive)
             return false; // EOF previously reached or enumerator was never initialized
 
-        var idx = _remaining.IndexOf(_separator);
+        var idx = _separateOnAny ? _remaining.IndexOfAny(_separator) : _remaining.IndexOf(_separator);
 
         if ((uint)idx < (uint)_remaining.Length)
         {
             _current = _remaining.Slice(0, idx);
-            _remaining = _remaining.Slice(idx + _separator.Length);
+            _remaining = _remaining.Slice(idx + (_separateOnAny ? 1 : _separator.Length));
         }
         else
         {
