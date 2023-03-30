@@ -219,4 +219,17 @@ public static class Extensions
 
     public static Stream GetEmbededResource(string resourceName)
     => System.Reflection.Assembly.GetExecutingAssembly().GetManifestResourceStream(resourceName);
+
+    public delegate bool CountFunction(ReadOnlySpan<char> line);
+
+    [DebuggerStepThrough]
+    public static int CountLinesWhere(this ReadOnlySpan<char> input, CountFunction where)
+    {
+        var count = 0;
+        foreach (var ip in input.EnumerateLines())
+            if (where(ip))
+                count++;
+        return count;
+    }
+
 }
