@@ -5,6 +5,7 @@
     <LangVersion>11</LangVersion>
     <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
+
   <ItemGroup>
     <PackageReference Include="AngleSharp" Version="0.13.0" />
     <PackageReference Include="AngleSharp.Css" Version="0.13.0" />
@@ -16,12 +17,13 @@
     <PackageReference Include="LibGit2Sharp" Version="0.26.2" />
     <PackageReference Include="BenchmarkDotNet" Version="0.13.2" />
     <PackageReference Include="CommunityToolkit.HighPerformance" Version="8.1.0" />
-
   </ItemGroup>
+
   <ItemGroup>
     <Compile Remove="**\obj\**" />
     <EmbeddedResource Remove="**\obj\**" />
     <None Remove="**\obj\**" />
   </ItemGroup>
+
   <Import Project="**/Project.targets" /> <!-- Import Specific Properties -->
 </Project>
