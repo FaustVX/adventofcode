@@ -13,21 +13,19 @@ public static class OCR
             => x < T.Width
                 ? (this[y] >> (T.Width - x - 1) & 1) == 1
                 : throw new();
-        abstract static implicit operator T(byte[] array);
     }
 
     public struct Char5x5 : IChar<Char5x5>
     {
         public static IReadOnlyDictionary<char, Char5x5> Dictionary { get; } = new Dictionary<char, Char5x5>()
         {
-            ['O'] = new byte[5]
-            {
+            ['O'] = new(
                 0b11111,
                 0b10001,
                 0b10001,
                 0b10001,
-                0b11111,
-            },
+                0b11111
+            ),
         };
 
         public static int Width => 5;
@@ -37,146 +35,130 @@ public static class OCR
         public int this[int y]
             => y switch
             {
-                0 => data0,
-                1 => data1,
-                2 => data2,
-                3 => data3,
-                4 => data4,
+                0 => _line0,
+                1 => _line1,
+                2 => _line2,
+                3 => _line3,
+                4 => _line4,
                 _ => throw new UnreachableException(),
             };
 
-        private readonly byte data0, data1, data2, data3, data4;
+        private readonly byte _line0, _line1, _line2, _line3, _line4;
 
-        public Char5x5(byte d0, byte d1, byte d2, byte d3, byte d4)
-            => (data0, data1, data2, data3, data4) = (d0, d1, d2, d3, d4);
-
-        public static implicit operator Char5x5(byte[] array)
-            => new(array[0], array[1], array[2], array[3], array[4]);
+        private Char5x5(byte l0, byte l1, byte l2, byte l3, byte l4)
+            => (_line0, _line1, _line2, _line3, _line4) = (l0, l1, l2, l3, l4);
     }
 
     public struct Char4x6 : IChar<Char4x6>
     {
         public static IReadOnlyDictionary<char, Char4x6> Dictionary { get; } = new Dictionary<char, Char4x6>()
         {
-            ['A'] = new byte[6]
-            {
+            ['A'] = new(
                 0b0110,
                 0b1001,
                 0b1001,
                 0b1111,
                 0b1001,
-                0b1001,
-            },
-            ['B'] = new byte[6]
-            {
+                0b1001
+            ),
+            ['B'] = new(
                 0b1110,
                 0b1001,
                 0b1110,
                 0b1001,
                 0b1001,
-                0b1110,
-            },
-            ['C'] = new byte[6]
-            {
+                0b1110
+            ),
+            ['C'] = new(
                 0b0110,
                 0b1001,
                 0b1000,
                 0b1000,
                 0b1001,
-                0b0110,
-            },
-            ['G'] = new byte[6]
-            {
+                0b0110
+            ),
+            ['F'] = new(
+                0b1111,
+                0b1000,
+                0b1110,
+                0b1000,
+                0b1000,
+                0b1000
+            ),
+            ['G'] = new(
                 0b0110,
                 0b1001,
                 0b1000,
                 0b1011,
                 0b1001,
-                0b0111,
-            },
-            ['F'] = new byte[6]
-            {
-                0b1111,
-                0b1000,
-                0b1110,
-                0b1000,
-                0b1000,
-                0b1000,
-            },
-            ['H'] = new byte[6]
-            {
+                0b0111
+            ),
+            ['H'] = new(
                 0b1001,
                 0b1001,
                 0b1111,
                 0b1001,
                 0b1001,
-                0b1001,
-            },
-            ['J'] = new byte[6]
-            {
+                0b1001
+            ),
+            ['J'] = new(
                 0b0011,
                 0b0001,
                 0b0001,
                 0b0001,
                 0b1001,
-                0b0110,
-            },
-            ['K'] = new byte[6]
-            {
+                0b0110
+            ),
+            ['K'] = new(
                 0b1001,
                 0b1010,
                 0b1100,
                 0b1010,
                 0b1010,
-                0b1001,
-            },
-            ['L'] = new byte[6]
-            {
+                0b1001
+            ),
+            ['L'] = new(
                 0b1000,
                 0b1000,
                 0b1000,
                 0b1000,
                 0b1000,
-                0b1111,
-            },
-            ['P'] = new byte[6]
-            {
+                0b1111
+            ),
+            ['P'] = new(
                 0b1110,
                 0b1001,
                 0b1001,
                 0b1110,
                 0b1000,
-                0b1000,
-            },
-            ['R'] = new byte[6]
-            {
+                0b1000
+            ),
+            ['R'] = new(
                 0b1110,
                 0b1001,
                 0b1001,
                 0b1110,
                 0b1010,
-                0b1001,
-            },
-            ['U'] = new byte[6]
-            {
-                0b1001,
+                0b1001
+            ),
+            ['U'] = new(
                 0b1001,
                 0b1001,
                 0b1001,
                 0b1001,
-                0b0110,
-            },
-            ['Z'] = new byte[6]
-            {
+                0b1001,
+                0b0110
+            ),
+            ['Z'] = new(
                 0b1111,
                 0b0001,
                 0b0010,
                 0b0100,
                 0b1000,
-                0b1111,
-            },
+                0b1111
+            ),
         };
-        private readonly byte data0, data1, data2, data3, data4, data5;
+        private readonly byte _line0, _line1, _line2, _line3, _line4, _line5;
 
         public static int Width => 4;
         public static int Height => 6;
@@ -184,91 +166,83 @@ public static class OCR
         public int this[int y]
             => y switch
             {
-                0 => data0,
-                1 => data1,
-                2 => data2,
-                3 => data3,
-                4 => data4,
-                5 => data5,
+                0 => _line0,
+                1 => _line1,
+                2 => _line2,
+                3 => _line3,
+                4 => _line4,
+                5 => _line5,
                 _ => throw new UnreachableException(),
             };
 
-        public Char4x6(byte d0, byte d1, byte d2, byte d3, byte d4, byte d5)
-            => (data0, data1, data2, data3, data4, data5) = (d0, d1, d2, d3, d4, d5);
-
-        public static implicit operator Char4x6(byte[] array)
-            => new(array[0], array[1], array[2], array[3], array[4], array[5]);
+        private Char4x6(byte l0, byte l1, byte l2, byte l3, byte l4, byte l5)
+            => (_line0, _line1, _line2, _line3, _line4, _line5) = (l0, l1, l2, l3, l4, l5);
     }
 
     public struct Char5x6 : IChar<Char5x6>
     {
         public static IReadOnlyDictionary<char, Char5x6> Dictionary { get; } = new Dictionary<char, Char5x6>()
         {
-            ['E'] = new byte[6]
-            {
+            ['E'] = new
+            (
                 0b11110,
                 0b10000,
                 0b11100,
                 0b10000,
                 0b10000,
-                0b11110,
-            },
-            ['F'] = new byte[6]
-            {
+                0b11110
+            ),
+            ['F'] = new(
                 0b11110,
                 0b10000,
                 0b11100,
                 0b10000,
                 0b10000,
-                0b10000,
-            },
-            ['I'] = new byte[6]
-            {
+                0b10000
+            ),
+            ['I'] = new(
                 0b01110,
                 0b00100,
                 0b00100,
                 0b00100,
                 0b00100,
-                0b01110,
-            },
-            ['J'] = new byte[6]
-            {
+                0b01110
+            ),
+            ['J'] = new
+            (
                 0b00110,
                 0b00010,
                 0b00010,
                 0b00010,
                 0b10010,
-                0b01100,
-            },
-            ['K'] = new byte[6]
-            {
+                0b01100
+            ),
+            ['K'] = new(
                 0b10010,
                 0b10100,
                 0b11000,
                 0b10100,
                 0b10100,
-                0b10010,
-            },
-            ['R'] = new byte[6]
-            {
+                0b10010
+            ),
+            ['R'] = new(
                 0b11100,
                 0b10010,
                 0b10010,
                 0b11100,
                 0b10100,
-                0b10010,
-            },
-            ['Y'] = new byte[6]
-            {
+                0b10010
+            ),
+            ['Y'] = new(
                 0b10001,
                 0b10001,
                 0b01010,
                 0b00100,
                 0b00100,
-                0b00100,
-            },
+                0b00100
+            ),
         };
-        private readonly byte data0, data1, data2, data3, data4, data5;
+        private readonly byte _line0, _line1, _line2, _line3, _line4, _line5;
 
         public static int Width => 5;
         public static int Height => 6;
@@ -276,20 +250,17 @@ public static class OCR
         public int this[int y]
             => y switch
             {
-                0 => data0,
-                1 => data1,
-                2 => data2,
-                3 => data3,
-                4 => data4,
-                5 => data5,
+                0 => _line0,
+                1 => _line1,
+                2 => _line2,
+                3 => _line3,
+                4 => _line4,
+                5 => _line5,
                 _ => throw new UnreachableException(),
             };
 
-        public Char5x6(byte d0, byte d1, byte d2, byte d3, byte d4, byte d5)
-            => (data0, data1, data2, data3, data4, data5) = (d0, d1, d2, d3, d4, d5);
-
-        public static implicit operator Char5x6(byte[] array)
-            => new(array[0], array[1], array[2], array[3], array[4], array[5]);
+        private Char5x6(byte l0, byte l1, byte l2, byte l3, byte l4, byte l5)
+            => (_line0, _line1, _line2, _line3, _line4, _line5) = (l0, l1, l2, l3, l4, l5);
     }
 
     public static string GetOCR<T>(ReadOnlySpan2D<char> datas, int spacing)
