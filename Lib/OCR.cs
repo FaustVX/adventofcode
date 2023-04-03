@@ -263,44 +263,6 @@ public static class OCR
             => (_line0, _line1, _line2, _line3, _line4, _line5) = (l0, l1, l2, l3, l4, l5);
     }
 
-    public static string GetOCR<T>(ReadOnlySpan2D<char> datas, int spacing)
-        where T : IChar<T>
-    {
-        var sb = new StringBuilder();
-        for (var x = 0; x < datas.Height; x += T.Width + spacing) // Width / Heigth is inversed in (RO)Span2D<>
-        {
-            if (TryGetChar(datas.Slice((x + spacing) * T.Width, T.Height, T.Width, T.Height), out var c))
-                sb.Append(c);
-            else
-                throw new();
-        }
-        return sb.ToString();
-
-        static bool TryGetChar(ReadOnlySpan2D<char>  lines, out char c)
-        {
-            foreach (var kvp in T.Dictionary)
-            {
-                (c, var d) = kvp;
-                if (CheckChar(lines, d))
-                    return true;
-            }
-            throw new();
-
-            static bool CheckChar(ReadOnlySpan2D<char>  lines, T d)
-            {
-                for (int i = 0; i < T.Width; i++)
-                    for (int j = 0; j < T.Height; j++)
-                    {
-                        var a = d[i, j];
-                        var b = !char.IsWhiteSpace(lines[i, j]);
-                        if (a != b)
-                            return false;
-                    }
-                return true;
-            }
-        }
-    }
-
     public static string GetOCR<T>(ReadOnlySpan2D<bool> datas, int spacing)
         where T : IChar<T>
     {
