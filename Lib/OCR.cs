@@ -200,6 +200,98 @@ public static class OCR
             => new(array[0], array[1], array[2], array[3], array[4], array[5]);
     }
 
+    public struct Char5x6 : IChar<Char5x6>
+    {
+        public static IReadOnlyDictionary<char, Char5x6> Dictionary { get; } = new Dictionary<char, Char5x6>()
+        {
+            ['E'] = new byte[6]
+            {
+                0b11110,
+                0b10000,
+                0b11100,
+                0b10000,
+                0b10000,
+                0b11110,
+            },
+            ['F'] = new byte[6]
+            {
+                0b11110,
+                0b10000,
+                0b11100,
+                0b10000,
+                0b10000,
+                0b10000,
+            },
+            ['I'] = new byte[6]
+            {
+                0b01110,
+                0b00100,
+                0b00100,
+                0b00100,
+                0b00100,
+                0b01110,
+            },
+            ['J'] = new byte[6]
+            {
+                0b00110,
+                0b00010,
+                0b00010,
+                0b00010,
+                0b10010,
+                0b01100,
+            },
+            ['K'] = new byte[6]
+            {
+                0b10010,
+                0b10100,
+                0b11000,
+                0b10100,
+                0b10100,
+                0b10010,
+            },
+            ['R'] = new byte[6]
+            {
+                0b11100,
+                0b10010,
+                0b10010,
+                0b11100,
+                0b10100,
+                0b10010,
+            },
+            ['Y'] = new byte[6]
+            {
+                0b10001,
+                0b10001,
+                0b01010,
+                0b00100,
+                0b00100,
+                0b00100,
+            },
+        };
+        private readonly byte data0, data1, data2, data3, data4, data5;
+
+        public static int Width => 5;
+        public static int Height => 6;
+
+        public int this[int y]
+            => y switch
+            {
+                0 => data0,
+                1 => data1,
+                2 => data2,
+                3 => data3,
+                4 => data4,
+                5 => data5,
+                _ => throw new UnreachableException(),
+            };
+
+        public Char5x6(byte d0, byte d1, byte d2, byte d3, byte d4, byte d5)
+            => (data0, data1, data2, data3, data4, data5) = (d0, d1, d2, d3, d4, d5);
+
+        public static implicit operator Char5x6(byte[] array)
+            => new(array[0], array[1], array[2], array[3], array[4], array[5]);
+    }
+
     public static string GetOCR<T>(ReadOnlySpan2D<char> datas, int spacing)
         where T : IChar<T>
     {
