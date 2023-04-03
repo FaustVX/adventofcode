@@ -269,7 +269,7 @@ public static class OCR
         var sb = new StringBuilder();
         for (var x = 0; x < datas.Height; x += T.Width + spacing) // Width / Heigth is inversed in (RO)Span2D<>
         {
-            if (TryGetChar(datas.Slice((x + spacing) * T.Width, 0, T.Width, T.Height), out var c))
+            if (TryGetChar(datas.Slice(x, 0, T.Width, T.Height), out var c))
                 sb.Append(c);
             else
                 throw new();
