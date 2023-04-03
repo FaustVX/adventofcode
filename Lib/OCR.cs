@@ -200,36 +200,74 @@ public static class OCR
             => new(array[0], array[1], array[2], array[3], array[4], array[5]);
     }
 
-    public static string GetOCR<T>(char[][] datas, int spacing)
+    public static string GetOCR<T>(ReadOnlySpan2D<char> datas, int spacing)
         where T : IChar<T>
     {
         var sb = new StringBuilder();
-        for (var x = 0; x < datas[0].Length; x += T.Width + spacing)
+        for (var x = 0; x < datas.Height; x += T.Width + spacing) // Width / Heigth is inversed in (RO)Span2D<>
         {
-            if (TryGetChar(datas, x, out var c))
+            if (TryGetChar(datas.Slice((x + spacing) * T.Width, T.Height, T.Width, T.Height), out var c))
                 sb.Append(c);
             else
                 throw new();
         }
         return sb.ToString();
 
-        static bool TryGetChar(char[][] lines, int x, out char c)
+        static bool TryGetChar(ReadOnlySpan2D<char>  lines, out char c)
         {
             foreach (var kvp in T.Dictionary)
             {
                 (c, var d) = kvp;
-                if (CheckChar(lines, x, d))
+                if (CheckChar(lines, d))
                     return true;
             }
             throw new();
 
-            static bool CheckChar(char[][] lines, int x, T d)
+            static bool CheckChar(ReadOnlySpan2D<char>  lines, T d)
             {
                 for (int i = 0; i < T.Width; i++)
                     for (int j = 0; j < T.Height; j++)
                     {
                         var a = d[i, j];
-                        var b = !char.IsWhiteSpace(lines[j][i + x]);
+                        var b = !char.IsWhiteSpace(lines[i, j]);
+                        if (a != b)
+                            return false;
+                    }
+                return true;
+            }
+        }
+    }
+
+    public static string GetOCR<T>(ReadOnlySpan2D<bool> datas, int spacing)
+        where T : IChar<T>
+    {
+        var sb = new StringBuilder();
+        for (var x = 0; x < datas.Height; x += T.Width + spacing) // Width / Heigth is inversed in (RO)Span2D<>
+        {
+            if (TryGetChar(datas.Slice((x + spacing) * T.Width, 0, T.Width, T.Height), out var c))
+                sb.Append(c);
+            else
+                throw new();
+        }
+        return sb.ToString();
+
+        static bool TryGetChar(ReadOnlySpan2D<bool>  lines, out char c)
+        {
+            foreach (var kvp in T.Dictionary)
+            {
+                (c, var d) = kvp;
+                if (CheckChar(lines, d))
+                    return true;
+            }
+            throw new();
+
+            static bool CheckChar(ReadOnlySpan2D<bool>  lines, T d)
+            {
+                for (int i = 0; i < T.Width; i++)
+                    for (int j = 0; j < T.Height; j++)
+                    {
+                        var a = d[i, j];
+                        var b = lines[i, j];
                         if (a != b)
                             return false;
                     }
