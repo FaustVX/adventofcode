@@ -1,5 +1,8 @@
 namespace AdventOfCode;
 
+#if !LIBRARY
+[DebuggerStepThrough]
+#endif
 public class AocCommuncationException : System.Exception
 {
     private readonly string _title;

@@ -8,6 +8,9 @@ using Git = LibGit2Sharp;
 
 namespace AdventOfCode;
 
+#if !LIBRARY
+[DebuggerStepThrough]
+#endif
 static class Updater
 {
     public static async Task UpdateWithGit(int year, int day)

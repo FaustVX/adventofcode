@@ -1,5 +1,8 @@
 namespace AdventOfCode.Model;
 
+#if !LIBRARY
+[DebuggerStepThrough]
+#endif
 public class Project
 {
     private readonly string _repo;

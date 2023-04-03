@@ -2,6 +2,9 @@ using AdventOfCode.Model;
 
 namespace AdventOfCode.Generator;
 
+#if !LIBRARY
+[DebuggerStepThrough]
+#endif
 static class SplashScreenGenerator
 {
     public static string Generate(Calendar calendar)

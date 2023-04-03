@@ -2,6 +2,9 @@ using AngleSharp.Dom;
 
 namespace AdventOfCode.Model;
 
+#if !LIBRARY
+[DebuggerStepThrough]
+#endif
 class CalendarToken
 {
     public required string Text { get; init; }
@@ -13,6 +16,9 @@ class CalendarToken
     => new() { Text = text, RgbaColor = default, ConsoleColor = default };
 }
 
+#if !LIBRARY
+[DebuggerStepThrough]
+#endif
 class Calendar
 {
     public int Year;

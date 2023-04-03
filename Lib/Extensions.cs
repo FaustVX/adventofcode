@@ -2,37 +2,35 @@ using System.Runtime.CompilerServices;
 
 namespace AdventOfCode;
 
+#if !LIBRARY
+[DebuggerStepThrough]
+#endif
 public static class Extensions
 {
-    [DebuggerStepThrough]
     public static void Deconstruct<T>(this Span<T> span, out T head, out Span<T> tail)
     {
         head = span[0];
         tail = span[1..];
     }
 
-    [DebuggerStepThrough]
     public static void Deconstruct<T>(this ReadOnlySpan<T> span, out T head, out ReadOnlySpan<T> tail)
     {
         head = span[0];
         tail = span[1..];
     }
 
-    [DebuggerStepThrough]
     public static void Deconstruct(this string span, out char head, out ReadOnlySpan<char> tail)
     {
         head = span[0];
         tail = span.AsSpan(1);
     }
 
-    [DebuggerStepThrough]
     public static void Deconstruct<T>(this T[] span, out T head, out Span<T> tail)
     {
         head = span[0];
         tail = span.AsSpan(1);
     }
 
-    [DebuggerStepThrough]
     public static void Deconstruct<T>(this IEnumerable<T> enumarable, out T head, out IEnumerator<T> tail)
     {
         tail = enumarable.GetEnumerator();
@@ -40,7 +38,6 @@ public static class Extensions
         head = tail.Current;
     }
 
-    [DebuggerStepThrough]
     public static void Deconstruct<T>(this IEnumerator<T> enumerator, out T head, out IEnumerator<T> tail)
     {
         tail = enumerator;
@@ -49,30 +46,25 @@ public static class Extensions
     }
 
     [MethodImpl(MethodImplOptions.AggressiveOptimization | MethodImplOptions.AggressiveInlining)]
-    [DebuggerStepThrough]
     public static T[] ParseToArrayOfT<T>(this string input, Func<string, T> parser)
 #pragma warning disable CS0612 // 'StringExtensions.SplitLine(string)' is Obsolete
         => input.SplitLine().Select(parser).ToArray();
 #pragma warning restore CS0612
 
     [MethodImpl(MethodImplOptions.AggressiveOptimization | MethodImplOptions.AggressiveInlining)]
-    [DebuggerStepThrough]
     public static T[] ParseToArrayOfT<T>(this string[] inputs, Func<string, T> parser)
         => inputs.Select(parser).ToArray();
 
     [MethodImpl(MethodImplOptions.AggressiveOptimization | MethodImplOptions.AggressiveInlining)]
-    [DebuggerStepThrough]
     public static IEnumerable<T> ParseToIEnumOfT<T>(this string input, Func<string, T> parser)
 #pragma warning disable CS0612 // 'StringExtensions.SplitLine(string)' is Obsolete
         => input.SplitLine().Select(parser);
 #pragma warning restore CS0612
 
     [MethodImpl(MethodImplOptions.AggressiveOptimization | MethodImplOptions.AggressiveInlining)]
-    [DebuggerStepThrough]
     public static IEnumerable<T> ParseToIEnumOfT<T>(this string[] inputs, Func<string, T> parser)
         => inputs.Select(parser);
 
-    [DebuggerStepThrough]
     public static (T[,], int width, int height) Parse2D<T>(this string input, Func<char, T> creator)
     {
         var lines = input.AsMemory().SplitLine();
@@ -87,11 +79,9 @@ public static class Extensions
         return (datas, width, height);
     }
 
-    [DebuggerStepThrough]
     public static Queue<T> ToQueue<T>(this IEnumerable<T> source)
         => new(source);
 
-    [DebuggerStepThrough]
     public static IReadOnlyDictionary<(int x, int y), T> ToDictionary<T>(this T[,] array)
     {
         var (w, h) = (array.GetLength(0), array.GetLength(1));
@@ -100,7 +90,6 @@ public static class Extensions
             .ToDictionary(static t => t.Item1, static t => t.Item2);
     }
 
-    [DebuggerStepThrough]
     public static IEnumerable<(TFirst first, TSecond second)> ZipRepeated<TFirst, TSecond>(this IEnumerable<TFirst> source, TSecond other)
     {
         var enumerator = source.GetEnumerator();
@@ -108,7 +97,6 @@ public static class Extensions
             yield return (enumerator.Current, other);
     }
 
-    [DebuggerStepThrough]
     public static IEnumerable<TResult> ZipRepeated<TFirst, TSecond, TResult>(this IEnumerable<TFirst> source, TSecond other, Func<TFirst, TSecond, TResult> converter)
     {
         var enumerator = source.GetEnumerator();
@@ -116,7 +104,6 @@ public static class Extensions
             yield return converter(enumerator.Current, other);
     }
 
-    [DebuggerStepThrough]
     public static IEnumerable<T> Loop<T>(this IEnumerable<T> source)
     {
         while (true)
@@ -127,7 +114,6 @@ public static class Extensions
         }
     }
 
-    [DebuggerStepThrough]
     public static void SetMinMax<T>(this T value, ref T min, ref T max)
     where T : System.Numerics.IComparisonOperators<T, T, bool>
     {
@@ -137,7 +123,6 @@ public static class Extensions
             max = value;
     }
 
-    [DebuggerStepThrough]
     public static void SetMinMaxBy<T, TValue>(this T value, ref T min, ref T max, Func<T, TValue> getValue)
     where TValue : System.Numerics.IComparisonOperators<TValue, TValue, bool>
     {
@@ -148,7 +133,6 @@ public static class Extensions
             max = value;
     }
 
-    [DebuggerStepThrough]
     public static void SetMin<T>(this T value, ref T max)
     where T : System.Numerics.IComparisonOperators<T, T, bool>
     {
@@ -156,7 +140,6 @@ public static class Extensions
             max = value;
     }
 
-    [DebuggerStepThrough]
     public static void SetMax<T>(this T value, ref T max)
     where T : System.Numerics.IComparisonOperators<T, T, bool>
     {
@@ -164,7 +147,6 @@ public static class Extensions
             max = value;
     }
 
-    [DebuggerStepThrough]
     public static void SetMinBy<T, TValue>(this T value, ref T max, Func<T, TValue> getValue)
     where TValue : System.Numerics.IComparisonOperators<TValue, TValue, bool>
     {
@@ -172,7 +154,6 @@ public static class Extensions
             max = value;
     }
 
-    [DebuggerStepThrough]
     public static void SetMaxBy<T, TValue>(this T value, ref T max, Func<T, TValue> getValue)
     where TValue : System.Numerics.IComparisonOperators<TValue, TValue, bool>
     {
@@ -180,7 +161,6 @@ public static class Extensions
             max = value;
     }
 
-    [DebuggerStepThrough]
     public static (T1 minX, T1 maxX, T2 minY, T2 maxY) GetMinMax<T1, T2>(this IEnumerable<(T1 x, T2 y)> values)
     where T1 : System.Numerics.IMinMaxValue<T1>, System.Numerics.IComparisonOperators<T1, T1, bool>
     where T2 : System.Numerics.IMinMaxValue<T2>, System.Numerics.IComparisonOperators<T2, T2, bool>
@@ -194,7 +174,6 @@ public static class Extensions
         return (minX, maxX, minY, maxY);
     }
 
-    [DebuggerStepThrough]
     public static (T1 minX, T1 maxX, T2 minY, T2 maxY, T3 minZ, T3 maxZ) GetMinMax<T1, T2, T3>(this IEnumerable<(T1 x, T2 y, T3 z)> values)
     where T1 : System.Numerics.IMinMaxValue<T1>, System.Numerics.IComparisonOperators<T1, T1, bool>
     where T2 : System.Numerics.IMinMaxValue<T2>, System.Numerics.IComparisonOperators<T2, T2, bool>
@@ -210,7 +189,6 @@ public static class Extensions
         return (minX, maxX, minY, maxY, minZ, maxZ);
     }
 
-    [DebuggerStepThrough]
     public static IEnumerable<T> AsEnumerable<T>(this ReadOnlyMemory<T> memory)
     {
         for (int i = 0; i < memory.Length; i++)
@@ -222,7 +200,6 @@ public static class Extensions
 
     public delegate bool CountFunction(ReadOnlySpan<char> line);
 
-    [DebuggerStepThrough]
     public static int CountLinesWhere(this ReadOnlySpan<char> input, CountFunction where)
     {
         var count = 0;

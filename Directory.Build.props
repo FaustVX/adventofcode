@@ -1,4 +1,8 @@
 <Project>
+    <PropertyGroup>
+        <DefineConstants>LIBRARY</DefineConstants>
+    </PropertyGroup>
+
     <ItemGroup>
         <EmbeddedResource Include="Lib/SourceCodePro-Regular.woff2" Condition="Exists('Lib/SourceCodePro-Regular.woff2')" />
         <EmbeddedResource Include="adventofcode.csproj" Condition="Exists('adventofcode.csproj')" />
