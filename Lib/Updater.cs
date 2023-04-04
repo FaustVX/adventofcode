@@ -23,6 +23,7 @@ static class Updater
         }
         await Update(year, day);
         Process.Start("git", new[] { "add", year.ToString() }).WaitForExit();
+        Process.Start("git", new[] { "reset", "**/test/*" }).WaitForExit();
         Process.Start("git", new[] { "commit", "-m", $"Initial commit for Y{year}D{day}" }).WaitForExit();
         using (var repo = new Git.Repository(".git"))
             repo.Tags.Add($"Y{year}D{day}P1", repo.Head.Tip);
@@ -62,6 +63,7 @@ static class Updater
         UpdateReadmeForDay(problem);
         UpdateInput(problem);
         UpdateRefout(problem);
+        UpdateTest(problem);
         UpdateSolutionTemplate(problem);
     }
 
@@ -318,16 +320,6 @@ static class Updater
     {
         var file = Path.Combine(Dir(problem.Year, problem.Day), "input.in");
         WriteFile(file, problem.Input);
-
-        if (problem.Answers.Length != 0)
-            return;
-
-        var test = Path.Combine(Dir(problem.Year, problem.Day), "test");
-        Directory.CreateDirectory(test);
-        test = Path.Combine(test, "test1.in");
-        if (File.Exists(test))
-            return;
-        WriteFile(test, "");
     }
 
     private static void UpdateRefout(Problem problem)
@@ -335,14 +327,21 @@ static class Updater
         var file = Path.Combine(Dir(problem.Year, problem.Day), "input.refout");
         if (problem.Answers.Any())
             WriteFile(file, string.Join("\n", problem.Answers));
+    }
 
+    private static void UpdateTest(Problem problem)
+    {
         if (problem.Answers.Length != 0)
             return;
 
         var test = Path.Combine(Dir(problem.Year, problem.Day), "test");
-        test = Path.Combine(test, "test1.refout");
-        if (File.Exists(test))
-            return;
-        WriteFile(test, "");
+        Directory.CreateDirectory(test);
+        var inFile = Path.Combine(test, "test1.in");
+        if (!File.Exists(inFile))
+            WriteFile(inFile, "");
+
+        var outFile = Path.Combine(test, "test1.refout");
+        if (!File.Exists(outFile))
+            WriteFile(outFile, "");
     }
 }
