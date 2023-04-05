@@ -15,18 +15,25 @@ static class Updater
 {
     public static async Task UpdateWithGit(int year, int day)
     {
+        var isBranchExisting = true;
         using (var repo = new Git.Repository(".git"))
         {
             var main = repo.Branches["main"] ?? repo.Branches["master"];
-            var branch = repo.Branches[$"problems/Y{year}/D{day}"] ?? repo.Branches.Add($"problems/Y{year}/D{day}", main.Tip, allowOverwrite: true);
-            var today = Git.Commands.Checkout(repo, branch);
+            var branch = repo.Branches[$"problems/Y{year}/D{day}"];
+            isBranchExisting = branch is not null;
+            var today = Git.Commands.Checkout(repo, branch ?? repo.Branches.Add($"problems/Y{year}/D{day}", main.Tip, allowOverwrite: true));
         }
-        await Update(year, day);
-        Process.Start("git", new[] { "add", year.ToString() }).WaitForExit();
-        Process.Start("git", new[] { "reset", "**/test/*" }).WaitForExit();
-        Process.Start("git", new[] { "commit", "-m", $"Initial commit for Y{year}D{day}" }).WaitForExit();
-        using (var repo = new Git.Repository(".git"))
-            repo.Tags.Add($"Y{year}D{day}P1", repo.Head.Tip);
+        if (!isBranchExisting)
+        {
+            await Update(year, day);
+            Process.Start("git", new[] { "add", year.ToString() }).WaitForExit();
+            Process.Start("git", new[] { "reset", "**/test/*" }).WaitForExit();
+            Process.Start("git", new[] { "commit", "-m", $"Initial commit for Y{year}D{day}" }).WaitForExit();
+            using (var repo = new Git.Repository(".git"))
+                repo.Tags.Add($"Y{year}D{day}P1", repo.Head.Tip);
+        }
+        else
+            Console.WriteLine($"{year}/Day{day:00} already exists");
         var psi = new ProcessStartInfo()
         {
             FileName = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "Programs", "Microsoft VS Code", "Code.exe"),
