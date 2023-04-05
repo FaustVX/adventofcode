@@ -133,6 +133,25 @@
                 },
             },
         },
+        {
+            "label": "format",
+            "command": "dotnet",
+            "args": [
+                "format",
+                "--include",
+                "${relativeFileDirname}"
+            ],
+            "problemMatcher": [],
+            "presentation": {
+                "focus": true,
+            },
+            "options": {
+                "statusbar": {
+                    "label": "$(note)",
+                    "tooltip": "Format today files",
+                },
+            },
+        },
     ],
     "inputs": [
         {
