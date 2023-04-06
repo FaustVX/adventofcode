@@ -127,6 +127,28 @@ public static class StringExtensions
         values = (T)handler.Values;
         return handler.IsValid && (allowTrailling || !handler.HasTrailling);
     }
+
+    /// <summary>
+    /// Returns an enumeration of lines over the provided memory.
+    /// </summary>
+    /// <remarks>
+    /// It is recommended that protocol parsers not utilize this API. See the documentation
+    /// for <see cref="string.ReplaceLineEndings"/> for more information on how newline
+    /// sequences are detected.
+    /// </remarks>
+    public static MemoryLineEnumerator EnumerateLines(this ReadOnlyMemory<char> span)
+    => new(span);
+
+    /// <summary>
+    /// Returns an enumeration of lines over the provided memory.
+    /// </summary>
+    /// <remarks>
+    /// It is recommended that protocol parsers not utilize this API. See the documentation
+    /// for <see cref="string.ReplaceLineEndings"/> for more information on how newline
+    /// sequences are detected.
+    /// </remarks>
+    public static MemoryLineEnumerator EnumerateLines(this Memory<char> span)
+    => new(span);
 }
 
 #if !LIBRARY
