@@ -57,7 +57,6 @@ class Calendar
 
         var calendar = document.QuerySelector(".calendar");
 
-        var r = new Random();
         var years = new[]
         {
             $@"0x0000 | {year}",
@@ -72,7 +71,7 @@ class Calendar
             $@"$year = {year}",
         };
 
-        var stYear = years[r.Next(years.Length)];
+        var stYear = years[Random.Shared.Next(years.Length)];
 
         var lines = new List<List<CalendarToken>>()
         {
