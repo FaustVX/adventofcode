@@ -6,4 +6,7 @@
         <EmbeddedResource Include=".gitignore" Condition="Exists('.gitignore')" />
         <EmbeddedResource Include=".vscode/*" Condition="Exists('.vscode')" />
     </ItemGroup>
+    <ItemGroup>
+        <Using Include="PrimaryParameter.SG"/>
+    </ItemGroup>
 </Project>

@@ -3,14 +3,8 @@
 namespace AdventOfCode;
 
 [AttributeUsage(AttributeTargets.Class)]
-class ProblemName : Attribute
-{
-    public readonly string Name;
-    public ProblemName(string name)
-    {
-        Name = name;
-    }
-}
+sealed partial class ProblemName([Property]string name) : Attribute
+{ }
 
 public interface ISolver
 {

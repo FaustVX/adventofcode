@@ -1,18 +1,7 @@
 namespace AdventOfCode;
 
-public class AocCommuncationException : System.Exception
+public partial class AocCommuncationException([Field]string title, [Field]System.Net.HttpStatusCode? status = null, [Field]string details = "") : System.Exception
 {
-    private readonly string _title;
-    private readonly System.Net.HttpStatusCode? _status;
-    private readonly string _details;
-
-    public AocCommuncationException(string title, System.Net.HttpStatusCode? status = null, string details = "")
-    {
-        _title = title;
-        _status = status;
-        _details = details;
-    }
-
     public override string Message
     {
         get

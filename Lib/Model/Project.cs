@@ -1,18 +1,8 @@
 namespace AdventOfCode.Model;
 
-public class Project
+public partial class Project([Field]string url, [Field]string sslSalt, [Field]string sslPassword)
 {
-    private readonly string _repo;
-    private readonly string _sslSalt;
-    private readonly string _sslPassword;
     public required string UserName { get; init; }
-
-    public Project(string url, string sslSalt, string sslPassword)
-    {
-        _repo = url;
-        _sslSalt = sslSalt;
-        _sslPassword = sslPassword;
-    }
 
     private static void CopyStream(Stream from, Stream to)
     {
@@ -74,7 +64,7 @@ public class Project
         SOFTWARE.
 
         """);
-        Process.Start("git", $@"-c protocol.file.allow=always submodule add {_repo} lib/aoc").WaitForExit();
+        Process.Start("git", $@"-c protocol.file.allow=always submodule add {_url} lib/aoc").WaitForExit();
         Process.Start("git", new[] { "add", "*" }).WaitForExit();
         Process.Start("git", new[] { "commit", "-m", "Initial commit" }).WaitForExit();
     }
