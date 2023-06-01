@@ -13,6 +13,9 @@
             "options": {
                 "statusbar": {
                     "hide": true,
+                    "running": {
+                        "label": "building"
+                    }
                 }
             },
         },
@@ -30,6 +33,9 @@
                 "statusbar": {
                     "tooltip": "Retrive datas from AoC",
                     "label": "$(cloud-download) Today",
+                    "running": {
+                        "label": "updating"
+                    }
                 },
                 "env": {
                     "SESSION": "${input:session}"
@@ -50,6 +56,9 @@
                 "statusbar": {
                     "tooltip": "Retrive datas from AoC",
                     "label": "$(cloud-download)",
+                    "running": {
+                        "label": "updating"
+                    }
                 },
                 "env": {
                     "SESSION": "${input:session}"
@@ -71,6 +80,9 @@
                 "statusbar": {
                     "label": "$(run)",
                     "tooltip": "Run",
+                    "running": {
+                        "label": "running"
+                    }
                 },
             },
         },
@@ -89,6 +101,9 @@
                 "statusbar": {
                     "label": "$(cloud-upload)",
                     "tooltip": "Upload",
+                    "running": {
+                        "label": "updating"
+                    }
                 },
                 "env": {
                     "SESSION": "${input:session}"
@@ -112,6 +127,9 @@
                 "statusbar": {
                     "label": "$(preview)",
                     "tooltip": "Display",
+                    "running": {
+                        "label": "running display"
+                    }
                 },
             },
         },
@@ -130,6 +148,9 @@
                 "statusbar": {
                     "label": "$(watch)",
                     "tooltip": "Benchmark",
+                    "running": {
+                        "label": "running benchmark"
+                    }
                 },
             },
         },
