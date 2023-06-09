@@ -14,4 +14,7 @@
     "[csharp]": {
         "files.insertFinalNewline": true,
     },
+    "files.readonlyInclude": {
+        "lib/**": true,
+    },
 }
