@@ -17,4 +17,5 @@
     "files.readonlyInclude": {
         "lib/**": true,
     },
+    "dotnet.defaultSolution": "AdventOfCode.sln",
 }
