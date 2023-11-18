@@ -12,7 +12,7 @@ namespace AdventOfCode;
 #if !LIBRARY
 [DebuggerStepThrough]
 #endif
-static partial class Updater
+internal static partial class Updater
 {
     public static async Task UpdateWithGit(int year, int day)
     {

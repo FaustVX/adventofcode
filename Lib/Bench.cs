@@ -9,8 +9,8 @@ namespace AdventOfCode;
 public class Bench<T>
 where T : ISolver, new()
 {
-    readonly T _instance;
-    readonly string _input;
+    private readonly T _instance;
+    private readonly string _input;
 
     public Bench()
     {

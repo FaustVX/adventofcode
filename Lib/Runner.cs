@@ -3,7 +3,7 @@
 namespace AdventOfCode;
 
 [AttributeUsage(AttributeTargets.Class)]
-sealed partial class ProblemName([Property]string name) : Attribute
+internal sealed partial class ProblemName([Property]string name) : Attribute
 { }
 
 public interface ISolver
@@ -12,7 +12,7 @@ public interface ISolver
     object PartTwo(string input);
 }
 
-interface IDisplay
+internal interface IDisplay
 {
     IEnumerable<(string name, Action<string> action)> GetDisplays();
 }
@@ -20,7 +20,7 @@ interface IDisplay
 #if !LIBRARY
 [DebuggerStepThrough]
 #endif
-static class SolverExtensions
+internal static class SolverExtensions
 {
 
     public static IEnumerable<object> Solve(this ISolver solver, string input)
@@ -79,12 +79,12 @@ static class SolverExtensions
 #if !LIBRARY
 [DebuggerStepThrough]
 #endif
-record SolverResult(string[] answers, string[] errors);
+internal record SolverResult(string[] answers, string[] errors);
 
 #if !LIBRARY
 [DebuggerStepThrough]
 #endif
-static class Runner
+internal static class Runner
 {
 
     public static string GetNormalizedInput(string file)

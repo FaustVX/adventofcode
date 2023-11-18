@@ -5,7 +5,7 @@ namespace AdventOfCode.Generator;
 #if !LIBRARY
 [DebuggerStepThrough]
 #endif
-static class ProjectReadmeGenerator
+internal static class ProjectReadmeGenerator
 {
     public static string Generate(int firstYear, int lastYear)
     => $"""
@@ -101,7 +101,7 @@ static class ProjectReadmeGenerator
 #if !LIBRARY
 [DebuggerStepThrough]
 #endif
-static class ReadmeGeneratorForYear
+internal static class ReadmeGeneratorForYear
 {
     public static string Generate(Calendar calendar)
     => $"""

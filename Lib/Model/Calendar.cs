@@ -5,7 +5,7 @@ namespace AdventOfCode.Model;
 #if !LIBRARY
 [DebuggerStepThrough]
 #endif
-class CalendarToken
+internal class CalendarToken
 {
     public required string Text { get; init; }
     public required string RgbaColor { get; init; }
@@ -19,7 +19,7 @@ class CalendarToken
 #if !LIBRARY
 [DebuggerStepThrough]
 #endif
-partial class Calendar
+internal partial class Calendar
 {
     public int Year;
 

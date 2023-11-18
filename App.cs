@@ -10,7 +10,7 @@ CoconaLiteApp.Run<Commands>(args);
 #if !LIBRARY
 [DebuggerStepThrough]
 #endif
-class Commands
+internal class Commands
 {
     private static readonly IReadOnlyList<Type> _tsolvers = Assembly.GetEntryAssembly()!.GetTypes()
     .Where(t => t.GetTypeInfo().IsClass && typeof(ISolver).IsAssignableFrom(t))
@@ -92,7 +92,7 @@ class Commands
     => (IDisplay?)Activator.CreateInstance(tdisplay);
 }
 
-record class DayParameters([Argument] string date = "today") : ICommandParameterSet
+internal record class DayParameters([Argument] string date = "today") : ICommandParameterSet
 {
     public static DateTime Today { get; } = DateTime.UtcNow.AddHours(-5);
     public static DateTime StartDateThisYear { get; } = new(Today.Year, 12, 1);

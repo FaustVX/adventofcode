@@ -5,7 +5,7 @@ namespace AdventOfCode.Generator;
 #if !LIBRARY
 [DebuggerStepThrough]
 #endif
-static class SplashScreenGenerator
+internal static class SplashScreenGenerator
 {
     public static string Generate(Calendar calendar)
     => $$"""
@@ -40,13 +40,13 @@ static class SplashScreenGenerator
         return bw.GetContent();
     }
 
-    class BufferWriter
+    private class BufferWriter
     {
-        readonly StringBuilder sb = new();
-        int bufferColor = -1;
-        string buffer = "";
-        bool bufferBold;
-        readonly string indent;
+        private readonly StringBuilder sb = new();
+        private int bufferColor = -1;
+        private string buffer = "";
+        private bool bufferBold;
+        private readonly string indent;
 
         public BufferWriter(int indent)
         {

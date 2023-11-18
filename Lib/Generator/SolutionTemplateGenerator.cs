@@ -5,7 +5,7 @@ namespace AdventOfCode.Generator;
 #if !LIBRARY
 [DebuggerStepThrough]
 #endif
-static class SolutionTemplateGenerator
+internal static class SolutionTemplateGenerator
 {
     public static string Generate(Problem problem)
     => $$"""
