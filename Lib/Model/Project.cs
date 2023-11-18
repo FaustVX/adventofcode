@@ -1,9 +1,10 @@
 namespace AdventOfCode.Model;
+using PrimaryParameter.SG;
 
 #if !LIBRARY
 [DebuggerStepThrough]
 #endif
-public partial class Project([Field]string url, [Field]string sslSalt, [Field]string sslPassword)
+public partial class Project([Field]string repo, [Field]string sslSalt, [Field]string sslPassword)
 {
     public required string UserName { get; init; }
 
@@ -68,8 +69,8 @@ public partial class Project([Field]string url, [Field]string sslSalt, [Field]st
         SOFTWARE.
 
         """);
-        Process.Start("git", $@"-c protocol.file.allow=always submodule add {_url} lib/aoc").WaitForExit();
-        Process.Start("git", new[] { "add", "*" }).WaitForExit();
-        Process.Start("git", new[] { "commit", "-m", "Initial commit" }).WaitForExit();
+        Process.Start("git", $"-c protocol.file.allow=always submodule add {_repo} lib/aoc").WaitForExit();
+        Process.Start("git", ["add", "*"]).WaitForExit();
+        Process.Start("git", ["commit", "-m", "Initial commit"]).WaitForExit();
     }
 }

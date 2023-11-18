@@ -183,8 +183,8 @@ where T : struct, ITuple
     private void SetValue<U>(U value)
     => _fields[_fieldIndex++].SetValue(Values, value);
 
-    public bool IsValid { get; private set; } = true;
-    public bool HasTrailling => _input.Length != 0;
+    public bool IsValid { readonly get; private set; } = true;
+    public readonly bool HasTrailling => _input.Length != 0;
 
     public bool AppendLiteral(string s)
     {
@@ -232,10 +232,10 @@ where T : struct, ITuple
             return IsValid = false;
         if (matches.Current.Length == 0)
             return true;
-        if (!U.TryParse(_input.Slice(0, matches.Current.Length), null, out var o))
+        if (!U.TryParse(_input[..matches.Current.Length], null, out var o))
             return IsValid = false;
 
-        _input = _input.Slice(matches.Current.Length);
+        _input = _input[matches.Current.Length..];
         SetValue(o);
         return true;
     }
@@ -248,7 +248,7 @@ where T : struct, ITuple
         if (matches.Current.Length == 0)
             return true;
 
-        _input = _input.Slice(matches.Current.Length);
+        _input = _input[matches.Current.Length..];
         return true;
     }
 }

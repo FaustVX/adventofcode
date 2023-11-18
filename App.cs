@@ -22,14 +22,14 @@ class Commands
     => throw new CommandExitedException(ex.Message, 1);
 
     [Command]
-    public Task Update(DayParameters day, [Option("no-git")] bool no_git)
+    public static Task Update(DayParameters day, [Option("no-git")] bool no_git)
     {
         if (!day.IsValid)
             ThrowAoC(AocCommuncationException.WrongDate());
         return no_git ? Updater.Update(day.Year, day.Day) : Updater.UpdateWithGit(day.Year, day.Day);
     }
 
-    public void Run(DayParameters day)
+    public static void Run(DayParameters day)
     {
         if (!day.IsValid)
             ThrowAoC(AocCommuncationException.WrongDate());
@@ -41,7 +41,7 @@ class Commands
         Runner.RunSolver(GetSolver(tsolver));
     }
 
-    public Task Upload(DayParameters day, [Option("no-git")] bool no_git, [Option("no-benchmark")] bool no_benchmark)
+    public static Task Upload(DayParameters day, [Option("no-git")] bool no_git, [Option("no-benchmark")] bool no_benchmark)
     {
         if (!day.IsValid)
             ThrowAoC(AocCommuncationException.WrongDate());
@@ -53,7 +53,7 @@ class Commands
         return Updater.Upload(GetSolver(tsolver), !no_git, !no_benchmark);
     }
 
-    public void Display(DayParameters day)
+    public static void Display(DayParameters day)
     {
         if (!day.IsValid)
             ThrowAoC(AocCommuncationException.WrongDate());
@@ -65,7 +65,7 @@ class Commands
         Runner.DisplaySolver(GetDisplay(tsolver));
     }
 
-    public void Benchmark(DayParameters day)
+    public static void Benchmark(DayParameters day)
     {
         if (!day.IsValid)
             ThrowAoC(AocCommuncationException.WrongDate());
@@ -77,7 +77,7 @@ class Commands
         Runner.RunBenchmark(tsolver);
     }
 
-    public void Init([Option("git-repo", new[] { 'g' })] string git_repo, [Option("ssl-salt", new[] { 's' })] string sslSalt, [Option("ssl-password", new[] { 'p' })] string? sslPassword, [Option(new[] { 'u', 'n' })] string username)
+    public static void Init([Option("git-repo", ['g'])] string git_repo, [Option("ssl-salt", ['s'])] string sslSalt, [Option("ssl-password", ['p'])] string? sslPassword, [Option(['u', 'n'])] string username)
     {
         if (sslPassword is string password)
             new AdventOfCode.Model.Project(git_repo, sslSalt, password) { UserName = username }.Init();

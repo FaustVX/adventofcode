@@ -42,11 +42,11 @@ static class SplashScreenGenerator
 
     class BufferWriter
     {
-        StringBuilder sb = new StringBuilder();
+        readonly StringBuilder sb = new();
         int bufferColor = -1;
         string buffer = "";
         bool bufferBold;
-        string indent;
+        readonly string indent;
 
         public BufferWriter(int indent)
         {
@@ -69,8 +69,8 @@ static class SplashScreenGenerator
         {
             while (buffer.Length > 0)
             {
-                var block = buffer.Substring(0, Math.Min(100, buffer.Length));
-                buffer = buffer.Substring(block.Length);
+                var block = buffer[..Math.Min(100, buffer.Length)];
+                buffer = buffer[block.Length..];
                 block = block.Replace("\\", "\\\\").Replace("\"", "\\\"").Replace("\n", "\\n");
                 sb.AppendLine(indent + $@"Write(0x{bufferColor.ToString("x")}, {bufferBold.ToString().ToLower()}, ""{block}"");");
             }

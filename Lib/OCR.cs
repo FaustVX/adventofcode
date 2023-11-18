@@ -15,7 +15,7 @@ public static class OCR
                 : throw new();
     }
 
-    public struct Char5x5 : IChar<Char5x5>
+    public readonly struct Char5x5 : IChar<Char5x5>
     {
         public static IReadOnlyDictionary<char, Char5x5> Dictionary { get; } = new Dictionary<char, Char5x5>()
         {
@@ -49,7 +49,7 @@ public static class OCR
             => (_line0, _line1, _line2, _line3, _line4) = (l0, l1, l2, l3, l4);
     }
 
-    public struct Char4x6 : IChar<Char4x6>
+    public readonly struct Char4x6 : IChar<Char4x6>
     {
         public static IReadOnlyDictionary<char, Char4x6> Dictionary { get; } = new Dictionary<char, Char4x6>()
         {
@@ -179,7 +179,7 @@ public static class OCR
             => (_line0, _line1, _line2, _line3, _line4, _line5) = (l0, l1, l2, l3, l4, l5);
     }
 
-    public struct Char5x6 : IChar<Char5x6>
+    public readonly struct Char5x6 : IChar<Char5x6>
     {
         public static IReadOnlyDictionary<char, Char5x6> Dictionary { get; } = new Dictionary<char, Char5x6>()
         {
@@ -247,7 +247,7 @@ public static class OCR
         public static int Width => 5;
         public static int Height => 6;
 
-        public int this[int y]
+        public readonly int this[int y]
             => y switch
             {
                 0 => _line0,
@@ -276,7 +276,7 @@ public static class OCR
         }
         return sb.ToString();
 
-        static bool TryGetChar(ReadOnlySpan2D<bool>  lines, out char c)
+        static bool TryGetChar(ReadOnlySpan2D<bool> lines, out char c)
         {
             foreach (var kvp in T.Dictionary)
             {
@@ -286,7 +286,7 @@ public static class OCR
             }
             throw new();
 
-            static bool CheckChar(ReadOnlySpan2D<bool>  lines, T d)
+            static bool CheckChar(ReadOnlySpan2D<bool> lines, T d)
             {
                 for (int i = 0; i < T.Width; i++)
                     for (int j = 0; j < T.Height; j++)

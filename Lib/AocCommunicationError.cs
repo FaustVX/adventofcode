@@ -1,3 +1,5 @@
+using System.Net;
+
 namespace AdventOfCode;
 
 #if !LIBRARY

@@ -160,7 +160,7 @@ static class Runner
                         iline++;
                         stopwatch = TimeProvider.System.GetTimestamp();
                     }
-                    solverResult = new SolverResult(answers.ToArray(), errors.ToArray());
+                    solverResult = new SolverResult([.. answers], [.. errors]);
                 }
                 catch (Exception ex)
                 {

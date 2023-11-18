@@ -1,3 +1,4 @@
+using System.Numerics;
 using System.Runtime.CompilerServices;
 
 namespace AdventOfCode;
@@ -115,7 +116,7 @@ public static class Extensions
     }
 
     public static void SetMinMax<T>(this T value, ref T min, ref T max)
-    where T : System.Numerics.IComparisonOperators<T, T, bool>
+    where T : IComparisonOperators<T, T, bool>
     {
         if (value < min)
             min = value;
@@ -124,7 +125,7 @@ public static class Extensions
     }
 
     public static void SetMinMaxBy<T, TValue>(this T value, ref T min, ref T max, Func<T, TValue> getValue)
-    where TValue : System.Numerics.IComparisonOperators<TValue, TValue, bool>
+    where TValue : IComparisonOperators<TValue, TValue, bool>
     {
         var v = getValue(value);
         if (v < getValue(min))
@@ -134,36 +135,36 @@ public static class Extensions
     }
 
     public static void SetMin<T>(this T value, ref T max)
-    where T : System.Numerics.IComparisonOperators<T, T, bool>
+    where T : IComparisonOperators<T, T, bool>
     {
         if (value < max)
             max = value;
     }
 
     public static void SetMax<T>(this T value, ref T max)
-    where T : System.Numerics.IComparisonOperators<T, T, bool>
+    where T : IComparisonOperators<T, T, bool>
     {
         if (value > max)
             max = value;
     }
 
     public static void SetMinBy<T, TValue>(this T value, ref T max, Func<T, TValue> getValue)
-    where TValue : System.Numerics.IComparisonOperators<TValue, TValue, bool>
+    where TValue : IComparisonOperators<TValue, TValue, bool>
     {
         if (getValue(value) < getValue(max))
             max = value;
     }
 
     public static void SetMaxBy<T, TValue>(this T value, ref T max, Func<T, TValue> getValue)
-    where TValue : System.Numerics.IComparisonOperators<TValue, TValue, bool>
+    where TValue : IComparisonOperators<TValue, TValue, bool>
     {
         if (getValue(value) > getValue(max))
             max = value;
     }
 
     public static (T1 minX, T1 maxX, T2 minY, T2 maxY) GetMinMax<T1, T2>(this IEnumerable<(T1 x, T2 y)> values)
-    where T1 : System.Numerics.IMinMaxValue<T1>, System.Numerics.IComparisonOperators<T1, T1, bool>
-    where T2 : System.Numerics.IMinMaxValue<T2>, System.Numerics.IComparisonOperators<T2, T2, bool>
+    where T1 : IMinMaxValue<T1>, IComparisonOperators<T1, T1, bool>
+    where T2 : IMinMaxValue<T2>, IComparisonOperators<T2, T2, bool>
     {
         (var minX, var maxX, var minY, var maxY) = (T1.MaxValue, T1.MinValue, T2.MaxValue, T2.MinValue);
         foreach (var (x, y) in values)
@@ -175,9 +176,9 @@ public static class Extensions
     }
 
     public static (T1 minX, T1 maxX, T2 minY, T2 maxY, T3 minZ, T3 maxZ) GetMinMax<T1, T2, T3>(this IEnumerable<(T1 x, T2 y, T3 z)> values)
-    where T1 : System.Numerics.IMinMaxValue<T1>, System.Numerics.IComparisonOperators<T1, T1, bool>
-    where T2 : System.Numerics.IMinMaxValue<T2>, System.Numerics.IComparisonOperators<T2, T2, bool>
-    where T3 : System.Numerics.IMinMaxValue<T3>, System.Numerics.IComparisonOperators<T3, T3, bool>
+    where T1 : IMinMaxValue<T1>, IComparisonOperators<T1, T1, bool>
+    where T2 : IMinMaxValue<T2>, IComparisonOperators<T2, T2, bool>
+    where T3 : IMinMaxValue<T3>, IComparisonOperators<T3, T3, bool>
     {
         (var minX, var maxX, var minY, var maxY, var minZ, var maxZ) = (T1.MaxValue, T1.MinValue, T2.MaxValue, T2.MinValue, T3.MaxValue, T3.MinValue);
         foreach (var (x, y, z) in values)

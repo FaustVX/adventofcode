@@ -1,5 +1,6 @@
-using AdventOfCode;
 using BenchmarkDotNet.Attributes;
+
+namespace AdventOfCode;
 
 #if !LIBRARY
 [DebuggerStepThrough]
