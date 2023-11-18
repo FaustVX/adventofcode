@@ -19,6 +19,16 @@ namespace AdventOfCode
         private readonly string _details = details;
     }
 }
+namespace AdventOfCode.Generator
+{
+    partial class SplashScreenGenerator
+    {
+        partial class BufferWriter
+        {
+            private readonly string indent = new(' ', indent);
+        }
+    }
+}
 namespace AdventOfCode.Model
 {
     partial class Project
@@ -44,6 +54,34 @@ namespace AdventOfCode
 {
     partial class ProblemName
     {
-        public string Name { get; init; } = name;
+        public string Name { get; } = name;
+    }
+}
+namespace AdventOfCode
+{
+    partial struct SpanSplitEnumerator
+    {
+        private readonly System.ReadOnlySpan<char> _buffer = buffer;
+    }
+}
+namespace AdventOfCode
+{
+    partial struct SpanSplitEnumerator
+    {
+        private readonly System.ReadOnlySpan<char> _separator = separator;
+    }
+}
+namespace AdventOfCode
+{
+    partial struct SpanSplitEnumerator
+    {
+        private readonly bool _separateOnAny = separateOnAny;
+    }
+}
+namespace AdventOfCode
+{
+    partial struct ParserInterpolatedHandler<T>
+    {
+        private System.ReadOnlySpan<char> _input = input;
     }
 }

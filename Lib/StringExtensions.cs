@@ -1,6 +1,8 @@
 using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
 using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
+using PrimaryParameter.SG;
 
 namespace AdventOfCode;
 
@@ -154,13 +156,12 @@ public static class StringExtensions
 #if !LIBRARY
 [DebuggerStepThrough]
 #endif
-[InterpolatedStringHandler]
-public ref struct ParserInterpolatedHandler<T>
+[InterpolatedStringHandler, StructLayout(LayoutKind.Auto)]
+public ref partial struct ParserInterpolatedHandler<T>(int literalLength, int formattedCount, [Field(IsReadonly = false)] ReadOnlySpan<char> input)
 where T : struct, ITuple
 {
     private static readonly List<System.Reflection.FieldInfo> _fields;
     public readonly object Values = default(T);
-    private ReadOnlySpan<char> _input;
     private int _fieldIndex;
 
     static ParserInterpolatedHandler()
@@ -174,11 +175,6 @@ where T : struct, ITuple
     public ParserInterpolatedHandler(int literalLength, int formattedCount, ReadOnlyMemory<char> input)
     : this(literalLength, formattedCount, input.Span)
     { }
-
-    public ParserInterpolatedHandler(int literalLength, int formattedCount, ReadOnlySpan<char> input)
-    {
-        _input = input;
-    }
 
     private void SetValue<U>(U value)
     => _fields[_fieldIndex++].SetValue(Values, value);

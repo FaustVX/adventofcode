@@ -4,7 +4,7 @@ using PrimaryParameter.SG;
 #if !LIBRARY
 [DebuggerStepThrough]
 #endif
-public partial class Project([Field]string repo, [Field]string sslSalt, [Field]string sslPassword)
+public partial class Project([Field] string repo, [Field] string sslSalt, [Field] string sslPassword)
 {
     public required string UserName { get; init; }
 

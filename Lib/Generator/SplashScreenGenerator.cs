@@ -1,11 +1,12 @@
 using AdventOfCode.Model;
+using PrimaryParameter.SG;
 
 namespace AdventOfCode.Generator;
 
 #if !LIBRARY
 [DebuggerStepThrough]
 #endif
-internal static class SplashScreenGenerator
+internal static partial class SplashScreenGenerator
 {
     public static string Generate(Calendar calendar)
     => $$"""
@@ -40,18 +41,12 @@ internal static class SplashScreenGenerator
         return bw.GetContent();
     }
 
-    private class BufferWriter
+    private partial class BufferWriter([Field(Name = nameof(BufferWriter.indent), AssignFormat = "new(' ', {0})", Type = typeof(string))] int indent)
     {
         private readonly StringBuilder sb = new();
         private int bufferColor = -1;
         private string buffer = "";
         private bool bufferBold;
-        private readonly string indent;
-
-        public BufferWriter(int indent)
-        {
-            this.indent = new string(' ', indent);
-        }
 
         public void Write(int color, string text, bool bold)
         {

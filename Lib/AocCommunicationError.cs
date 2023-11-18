@@ -1,11 +1,12 @@
 using System.Net;
+using PrimaryParameter.SG;
 
 namespace AdventOfCode;
 
 #if !LIBRARY
 [DebuggerStepThrough]
 #endif
-public partial class AocCommuncationException([Field]string title, [Field]System.Net.HttpStatusCode? status = null, [Field]string details = "") : System.Exception
+public partial class AocCommuncationException([Field] string title, [Field] HttpStatusCode? status = null, [Field] string details = "") : Exception
 {
     public override string Message
     {

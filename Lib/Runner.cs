@@ -1,10 +1,10 @@
 ﻿using System.Reflection;
+using PrimaryParameter.SG;
 
 namespace AdventOfCode;
 
 [AttributeUsage(AttributeTargets.Class)]
-internal sealed partial class ProblemName([Property]string name) : Attribute
-{ }
+internal sealed partial class ProblemName([Property(WithInit = false)] string name) : Attribute;
 
 public interface ISolver
 {

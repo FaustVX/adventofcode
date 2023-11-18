@@ -1,21 +1,13 @@
+using System.Runtime.InteropServices;
+using PrimaryParameter.SG;
+
 namespace AdventOfCode;
 
 // Copied from SpanLineEnumerator: https://source.dot.net/#System.Private.CoreLib/src/libraries/System.Private.CoreLib/src/System/Text/SpanLineEnumerator.cs
 
-[DebuggerStepThrough]
-public ref struct SpanSplitEnumerator
+[DebuggerStepThrough, StructLayout(LayoutKind.Auto)]
+public readonly ref partial struct SpanSplitEnumerator([Field] ReadOnlySpan<char> buffer, [Field] ReadOnlySpan<char> separator, [Field] bool separateOnAny)
 {
-    private readonly ReadOnlySpan<char> _buffer;
-    private readonly ReadOnlySpan<char> _separator;
-    private readonly bool _separateOnAny;
-
-    public SpanSplitEnumerator(ReadOnlySpan<char> buffer, ReadOnlySpan<char> separator, bool separateOnAny)
-    {
-        _buffer = buffer;
-        _separator = separator;
-        _separateOnAny = separateOnAny;
-    }
-
     public SpanSplitEnumerator(ReadOnlySpan<char> buffer, ReadOnlySpan<char> separator)
     : this(buffer, separator, false)
     { }
@@ -48,22 +40,13 @@ public ref struct SpanSplitEnumerator
         }
     }
 
-    public ref struct Enumerator
+    public ref struct Enumerator(SpanSplitEnumerator enumerator)
     {
-        private ReadOnlySpan<char> _remaining;
-        private readonly ReadOnlySpan<char> _separator;
-        private readonly bool _separateOnAny;
-        private ReadOnlySpan<char> _current;
-        private bool _isEnumeratorActive;
-
-        public Enumerator(SpanSplitEnumerator enumerator)
-        {
-            _remaining = enumerator._buffer;
-            _separator = enumerator._separator;
-            _separateOnAny = enumerator._separateOnAny;
-            _current = default;
-            _isEnumeratorActive = true;
-        }
+        private ReadOnlySpan<char> _remaining = enumerator._buffer;
+        private readonly ReadOnlySpan<char> _separator = enumerator._separator;
+        private readonly bool _separateOnAny = enumerator._separateOnAny;
+        private ReadOnlySpan<char> _current = default;
+        private bool _isEnumeratorActive = true;
 
         /// <summary>
         /// Gets the line at the current position of the enumerator.
