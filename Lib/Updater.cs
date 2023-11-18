@@ -3,6 +3,7 @@ using System.Reflection;
 using AdventOfCode.Generator;
 using AdventOfCode.Model;
 using AngleSharp;
+using AngleSharp.Dom;
 using AngleSharp.Io;
 using Git = LibGit2Sharp;
 
