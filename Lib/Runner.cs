@@ -3,14 +3,7 @@
 namespace AdventOfCode;
 
 [AttributeUsage(AttributeTargets.Class)]
-class ProblemName : Attribute
-{
-    public readonly string Name;
-    public ProblemName(string name)
-    {
-        Name = name;
-    }
-}
+internal sealed partial class ProblemName([Property(Setter = "")] string name) : Attribute;
 
 public interface ISolver
 {
@@ -18,7 +11,7 @@ public interface ISolver
     object PartTwo(string input);
 }
 
-interface IDisplay
+internal interface IDisplay
 {
     IEnumerable<(string name, Action<string> action)> GetDisplays();
 }
@@ -26,7 +19,7 @@ interface IDisplay
 #if !LIBRARY
 [DebuggerStepThrough]
 #endif
-static class SolverExtensions
+internal static class SolverExtensions
 {
 
     public static IEnumerable<object> Solve(this ISolver solver, string input)
@@ -85,12 +78,12 @@ static class SolverExtensions
 #if !LIBRARY
 [DebuggerStepThrough]
 #endif
-record SolverResult(string[] answers, string[] errors);
+internal record SolverResult(string[] answers, string[] errors);
 
 #if !LIBRARY
 [DebuggerStepThrough]
 #endif
-static class Runner
+internal static class Runner
 {
 
     public static string GetNormalizedInput(string file)
@@ -105,15 +98,26 @@ static class Runner
 
     public static void RunBenchmark(Type solver)
     {
-        BenchmarkDotNet.Running.BenchmarkRunner.Run(typeof(Bench<>).MakeGenericType(solver));
-        File.Copy("BenchmarkDotNet.Artifacts/results/Bench_Solution_-report-github.md", Path.Combine(SolverExtensions.WorkingDir(solver), "benchmark.md"), overwrite: true);
-        var psi = new ProcessStartInfo()
+        var solution = typeof(Bench<>).MakeGenericType(solver);
+        var fileInfo = new FileInfo("lib/aoc/adventofcode.csproj");
+        fileInfo.MoveTo("lib/aoc/adventofcode.csproj.bak");
+        BenchmarkDotNet.Running.BenchmarkRunner.Run(solution);
+        fileInfo.MoveTo("lib/aoc/adventofcode.csproj");
+        File.Copy($"BenchmarkDotNet.Artifacts/results/{solution.Namespace}.{GetName(solution)}-report-github.md", Path.Combine(SolverExtensions.WorkingDir(solver), "benchmark.md"), overwrite: true);
+        Updater.OpenVsCode([$"{SolverExtensions.Year(solver)}/Day{SolverExtensions.Day(solver):00}/benchmark.md"]);
+
+        static string GetName(Type type)
         {
-            FileName = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "Programs", "Microsoft VS Code", "Code.exe"),
-            ArgumentList = { "--reuse-window", "--", $"{SolverExtensions.Year(solver)}/Day{SolverExtensions.Day(solver):00}/benchmark.md" },
-            UseShellExecute = false,
-        };
-        Process.Start(psi);
+            if (!type.IsGenericType)
+                return type.Name;
+            return GetGenericName(type);
+
+            static string GetGenericName(Type type)
+            => GetNonGenericName(type) + "_" + string.Join(", ", type.GenericTypeArguments.Select(GetName)) + "_";
+
+            static string GetNonGenericName(Type type)
+            => type.Name[..type.Name.IndexOf('`')];
+        }
     }
 
     public static SolverResult RunSolver(ISolver solver)
@@ -141,10 +145,10 @@ static class Runner
                     var iline = 0;
                     var answers = new List<string>();
                     var errors = new List<string>();
-                    var stopwatch = Stopwatch.StartNew();
+                    var stopwatch = TimeProvider.System.GetTimestamp();
                     foreach (var line in solver.Solve(input))
                     {
-                        var ticks = stopwatch.ElapsedTicks;
+                        var ticks = TimeProvider.System.GetElapsedTime(stopwatch);
                         answers.Add(line.ToString());
                         var (statusColor, status, err) =
                             refout == null || refout.Length <= iline || string.IsNullOrWhiteSpace(refout[iline]) ? (ConsoleColor.Cyan, "?", null) :
@@ -156,18 +160,17 @@ static class Runner
 
                         Write(statusColor, $"{indent}  {status}");
                         Console.Write($" {line} ");
-                        var diff = ticks * 1000.0 / Stopwatch.Frequency;
 
                         WriteLine(
-                            diff > 1000 ? ConsoleColor.Red :
-                            diff > 500 ? ConsoleColor.Yellow :
+                            ticks > TimeSpan.FromSeconds(5) ? ConsoleColor.Red :
+                            ticks > TimeSpan.FromSeconds(1) ? ConsoleColor.Yellow :
                             ConsoleColor.DarkGreen,
-                            $"({diff:F3} ms)"
+                            $"({ticks.TotalMilliseconds:F3} ms)"
                         );
                         iline++;
-                        stopwatch.Restart();
+                        stopwatch = TimeProvider.System.GetTimestamp();
                     }
-                    solverResult = new SolverResult(answers.ToArray(), errors.ToArray());
+                    solverResult = new SolverResult([.. answers], [.. errors]);
                 }
                 catch (Exception ex)
                 {

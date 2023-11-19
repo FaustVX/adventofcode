@@ -6,7 +6,7 @@ namespace AdventOfCode.Model;
 #if !LIBRARY
 [DebuggerStepThrough]
 #endif
-class Problem
+internal partial class Problem
 {
     public string Title { get; private set; }
     public string ContentMd { get; private set; }
@@ -39,16 +39,16 @@ class Problem
         }
         var title = document.QuerySelector("h2").TextContent;
 
-        var match = Regex.Match(title, ".*: (.*) ---");
+        var match = TitleRegex().Match(title);
         if (match.Success)
             title = match.Groups[1].Value;
-        return new Problem { Year = year, Day = day, Title = title, ContentMd = md, Input = input, Answers = answers.ToArray() };
+        return new Problem { Year = year, Day = day, Title = title, ContentMd = md, Input = input, Answers = [.. answers] };
     }
 
-    static string UnparseList(string sep, INode element)
+    private static string UnparseList(string sep, INode element)
     => string.Join(sep, element.ChildNodes.SelectMany(Unparse));
 
-    static IEnumerable<string> Unparse(INode node)
+    private static IEnumerable<string> Unparse(INode node)
     {
         switch (node.NodeName.ToLower())
         {
@@ -61,7 +61,7 @@ class Problem
             case "em":
                 yield return "_" + UnparseList("", node) + "_";
                 break;
-            case "code" when node.Parent.NodeName.ToLower() == "pre":
+            case "code" when node.Parent.NodeName.Equals("pre", StringComparison.CurrentCultureIgnoreCase):
                 yield return UnparseList("", node);
                 break;
             case "code":
@@ -107,4 +107,7 @@ class Problem
                 throw new NotImplementedException(node.NodeName);
         }
     }
+
+    [GeneratedRegex(".*: (.*) ---")]
+    private static partial Regex TitleRegex();
 }

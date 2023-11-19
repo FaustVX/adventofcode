@@ -10,7 +10,7 @@ CoconaLiteApp.Run<Commands>(args);
 #if !LIBRARY
 [DebuggerStepThrough]
 #endif
-class Commands
+internal class Commands
 {
     private static readonly IReadOnlyList<Type> _tsolvers = Assembly.GetEntryAssembly()!.GetTypes()
     .Where(t => t.GetTypeInfo().IsClass && typeof(ISolver).IsAssignableFrom(t))
@@ -22,14 +22,15 @@ class Commands
     => throw new CommandExitedException(ex.Message, 1);
 
     [Command]
-    public Task Update(DayParameters day, [Option("no-git")] bool no_git)
+    public static Task Update(DayParameters day, [Option("no-git")] bool no_git)
     {
         if (!day.IsValid)
             ThrowAoC(AocCommuncationException.WrongDate());
         return no_git ? Updater.Update(day.Year, day.Day) : Updater.UpdateWithGit(day.Year, day.Day);
     }
 
-    public void Run(DayParameters day)
+    [Command]
+    public static void Run(DayParameters day)
     {
         if (!day.IsValid)
             ThrowAoC(AocCommuncationException.WrongDate());
@@ -41,7 +42,8 @@ class Commands
         Runner.RunSolver(GetSolver(tsolver));
     }
 
-    public Task Upload(DayParameters day, [Option("no-git")] bool no_git, [Option("no-benchmark")] bool no_benchmark)
+    [Command]
+    public static Task Upload(DayParameters day, [Option("no-git")] bool no_git, [Option("no-benchmark")] bool no_benchmark)
     {
         if (!day.IsValid)
             ThrowAoC(AocCommuncationException.WrongDate());
@@ -53,7 +55,8 @@ class Commands
         return Updater.Upload(GetSolver(tsolver), !no_git, !no_benchmark);
     }
 
-    public void Display(DayParameters day)
+    [Command]
+    public static void Display(DayParameters day)
     {
         if (!day.IsValid)
             ThrowAoC(AocCommuncationException.WrongDate());
@@ -65,7 +68,8 @@ class Commands
         Runner.DisplaySolver(GetDisplay(tsolver));
     }
 
-    public void Benchmark(DayParameters day)
+    [Command]
+    public static void Benchmark(DayParameters day)
     {
         if (!day.IsValid)
             ThrowAoC(AocCommuncationException.WrongDate());
@@ -77,12 +81,14 @@ class Commands
         Runner.RunBenchmark(tsolver);
     }
 
-    public void Init([Option("git-repo", new[] { 'g' })] string git_repo, [Option("ssl-salt", new[] { 's' })] string sslSalt, [Option("ssl-password", new[] { 'p' })] string? sslPassword, [Option(new[] { 'u', 'n' })] string username)
+    [Command]
+    public static void Init([Option("git-repo", ['g'])] string git_repo, [Option("ssl-salt", ['s'])] string sslSalt, [Option("ssl-password", ['p'])] string? sslPassword, [Option(['u', 'n'])] string username, [Option('y')] int? year)
     {
+        year ??= TimeProvider.System.GetLocalNow().Year;
         if (sslPassword is string password)
-            new AdventOfCode.Model.Project(git_repo, sslSalt, password) { UserName = username }.Init();
+            new AdventOfCode.Model.Project(git_repo, sslSalt, password, year.Value) { UserName = username }.Init();
         else
-            new AdventOfCode.Model.Project(git_repo, sslSalt, "") { UserName = username }.Init();
+            new AdventOfCode.Model.Project(git_repo, sslSalt, "", year.Value) { UserName = username }.Init();
     }
 
     private static ISolver? GetSolver(Type tsolver)
@@ -92,9 +98,9 @@ class Commands
     => (IDisplay?)Activator.CreateInstance(tdisplay);
 }
 
-record class DayParameters([Argument] string date = "today") : ICommandParameterSet
+internal record class DayParameters([Argument] string date = "today") : ICommandParameterSet
 {
-    public static DateTime Today { get; } = DateTime.UtcNow.AddHours(-5);
+    public static DateTime Today { get; } = TimeProvider.System.GetUtcNow().AddHours(-5).DateTime;
     public static DateTime StartDateThisYear { get; } = new(Today.Year, 12, 1);
     public static DateTime LastValidDate { get; } = Today >= StartDateThisYear ? Today : new(Today.Year - 1, 12, 25);
 

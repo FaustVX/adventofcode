@@ -1,17 +1,18 @@
-using AdventOfCode;
 using BenchmarkDotNet.Attributes;
+
+namespace AdventOfCode;
 
 #if !LIBRARY
 [DebuggerStepThrough]
 #endif
-[MemoryDiagnoser]
+[MemoryDiagnoser, ShortRunJob]
 public class Bench<T>
 where T : ISolver, new()
 {
-    readonly T _instance;
-    readonly string _input;
+    private static readonly T _instance;
+    private static readonly string _input;
 
-    public Bench()
+    static Bench()
     {
         Globals.CurrentRunMode = Mode.Benchmark;
         _instance = new();

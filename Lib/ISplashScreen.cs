@@ -1,6 +1,6 @@
 namespace AdventOfCode;
 
-interface ISplashScreen
+internal interface ISplashScreen
 {
     void Show();
 }

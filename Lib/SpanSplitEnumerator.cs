@@ -1,26 +1,17 @@
+using System.Runtime.InteropServices;
+
 namespace AdventOfCode;
 
 // Copied from SpanLineEnumerator: https://source.dot.net/#System.Private.CoreLib/src/libraries/System.Private.CoreLib/src/System/Text/SpanLineEnumerator.cs
 
-[DebuggerStepThrough]
-public ref struct SpanSplitEnumerator
+[DebuggerStepThrough, StructLayout(LayoutKind.Auto)]
+public readonly ref partial struct SpanSplitEnumerator([Field] ReadOnlySpan<char> buffer, [Field] ReadOnlySpan<char> separator, [Field] bool separateOnAny)
 {
-    private ReadOnlySpan<char> _buffer;
-    private readonly ReadOnlySpan<char> _separator;
-    private readonly bool _separateOnAny;
-
-    public SpanSplitEnumerator(ReadOnlySpan<char> buffer, ReadOnlySpan<char> separator, bool separateOnAny)
-    {
-        _buffer = buffer;
-        _separator = separator;
-        _separateOnAny = separateOnAny;
-    }
-
     public SpanSplitEnumerator(ReadOnlySpan<char> buffer, ReadOnlySpan<char> separator)
     : this(buffer, separator, false)
     { }
 
-    public int Length
+    public readonly int Length
     {
         get
         {
@@ -32,10 +23,10 @@ public ref struct SpanSplitEnumerator
         }
     }
 
-    public Enumerator GetEnumerator()
+    public readonly Enumerator GetEnumerator()
     => new(this);
 
-    public ReadOnlySpan<char> this[int index]
+    public readonly ReadOnlySpan<char> this[int index]
     {
         get
         {
@@ -48,27 +39,18 @@ public ref struct SpanSplitEnumerator
         }
     }
 
-    public ref struct Enumerator
+    public ref struct Enumerator([DontUse] SpanSplitEnumerator enumerator)
     {
-        private ReadOnlySpan<char> _remaining;
-        private readonly ReadOnlySpan<char> _separator;
-        private readonly bool _separateOnAny;
-        private ReadOnlySpan<char> _current;
-        private bool _isEnumeratorActive;
-
-        public Enumerator(SpanSplitEnumerator enumerator)
-        {
-            _remaining = enumerator._buffer;
-            _separator = enumerator._separator;
-            _separateOnAny = enumerator._separateOnAny;
-            _current = default;
-            _isEnumeratorActive = true;
-        }
+        private ReadOnlySpan<char> _remaining = enumerator._buffer;
+        private readonly ReadOnlySpan<char> _separator = enumerator._separator;
+        private readonly bool _separateOnAny = enumerator._separateOnAny;
+        private ReadOnlySpan<char> _current = default;
+        private bool _isEnumeratorActive = true;
 
         /// <summary>
         /// Gets the line at the current position of the enumerator.
         /// </summary>
-        public ReadOnlySpan<char> Current => _current;
+        public readonly ReadOnlySpan<char> Current => _current;
 
         /// <summary>
         /// Advances the enumerator to the next line of the span.
@@ -86,8 +68,8 @@ public ref struct SpanSplitEnumerator
 
             if ((uint)idx < (uint)_remaining.Length)
             {
-                _current = _remaining.Slice(0, idx);
-                _remaining = _remaining.Slice(idx + (_separateOnAny ? 1 : _separator.Length));
+                _current = _remaining[..idx];
+                _remaining = _remaining[(idx + (_separateOnAny ? 1 : _separator.Length))..];
             }
             else
             {

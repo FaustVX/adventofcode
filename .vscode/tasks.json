@@ -7,6 +7,7 @@
             "type": "process",
             "args": [
                 "build",
+                "/tl",
                 "${workspaceFolder}/adventofcode.csproj"
             ],
             "problemMatcher": "$msCompile",
@@ -173,6 +174,35 @@
                 },
             },
         },
+        {
+            "label": "init",
+            "command": "dotnet",
+            "args": [
+                "run",
+                "--configuration=Release",
+                "--",
+                "init",
+                "--git-repo",
+                "${input:repo}",
+                "--ssl-salt",
+                "${input:salt}",
+                "--ssl-password",
+                "${input:passwd}",
+                "--username",
+                "FaustVX",
+                "--year",
+                "${input:year}",
+            ],
+            "problemMatcher": [],
+            "presentation": {
+                "focus": true,
+            },
+            "options": {
+                "statusbar": {
+                    "hide": true
+                },
+            },
+        },
     ],
     "inputs": [
         {
@@ -201,6 +231,45 @@
                 "id": "day",
                 "options": ["01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25"],
                 "description": "Current day"
+            }
+        },
+        {
+            "id": "year",
+            "type": "command",
+            "command": "memento.pickString",
+            "args": {
+                "id": "year",
+                "description": "Current year (YYYY)",
+                "options": ["2015", "2016", "2017", "2018", "2019", "2020", "2021", "2022", "2023"],
+                "default": "2023",
+            }
+        },
+        {
+            "id": "repo",
+            "type": "command",
+            "command": "memento.promptString",
+            "args": {
+                "id": "repo",
+                "description": "git repository",
+                "default": "git@github.com:FaustVX/adventofcode.git",
+            }
+        },
+        {
+            "id": "salt",
+            "type": "command",
+            "command": "memento.promptString",
+            "args": {
+                "id": "salt",
+                "description": "Openssl salt",
+            }
+        },
+        {
+            "id": "passwd",
+            "type": "command",
+            "command": "memento.promptString",
+            "args": {
+                "id": "passwd",
+                "description": "Openssl password",
             }
         },
     ]

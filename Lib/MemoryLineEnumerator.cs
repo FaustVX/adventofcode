@@ -23,12 +23,12 @@ public struct MemoryLineEnumerator
     /// <summary>
     /// Gets the line at the current position of the enumerator.
     /// </summary>
-    public ReadOnlyMemory<char> Current => _current;
+    public readonly ReadOnlyMemory<char> Current => _current;
 
     /// <summary>
     /// Returns this instance as an enumerator.
     /// </summary>
-    public MemoryLineEnumerator GetEnumerator() => this;
+    public readonly MemoryLineEnumerator GetEnumerator() => this;
 
     /// <summary>
     /// Advances the enumerator to the next line of the span.
@@ -40,9 +40,7 @@ public struct MemoryLineEnumerator
     public bool MoveNext()
     {
         if (!_isEnumeratorActive)
-        {
             return false; // EOF previously reached or enumerator was never initialized
-        }
 
         var remaining = _remaining;
 
@@ -53,12 +51,10 @@ public struct MemoryLineEnumerator
             int stride = 1;
 
             if (remaining.Span[idx] == '\r' && (uint)(idx + 1) < (uint)remaining.Length && remaining.Span[idx + 1] == '\n')
-            {
                 stride = 2;
-            }
 
-            _current = remaining.Slice(0, idx);
-            _remaining = remaining.Slice(idx + stride);
+            _current = remaining[..idx];
+            _remaining = remaining[(idx + stride)..];
         }
         else
         {

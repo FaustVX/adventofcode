@@ -5,7 +5,7 @@ namespace AdventOfCode.Model;
 #if !LIBRARY
 [DebuggerStepThrough]
 #endif
-class CalendarToken
+internal class CalendarToken
 {
     public required string Text { get; init; }
     public required string RgbaColor { get; init; }
@@ -19,7 +19,7 @@ class CalendarToken
 #if !LIBRARY
 [DebuggerStepThrough]
 #endif
-class Calendar
+internal partial class Calendar
 {
     public int Year;
 
@@ -63,7 +63,6 @@ class Calendar
 
         var calendar = document.QuerySelector(".calendar");
 
-        var r = new Random();
         var years = new[]
         {
             $@"0x0000 | {year}",
@@ -78,7 +77,7 @@ class Calendar
             $@"$year = {year}",
         };
 
-        var stYear = years[r.Next(years.Length)];
+        var stYear = years[Random.Shared.Next(years.Length)];
 
         var lines = new List<List<CalendarToken>>()
         {
@@ -138,7 +137,7 @@ class Calendar
                 : style["width"];
             if (widthSpec != null)
             {
-                var m = Regex.Match(widthSpec, "[.0-9]+");
+                var m = WidthRegex().Match(widthSpec);
                 if (m.Success)
                 {
                     var width = double.Parse(m.Value) * 1.7;
@@ -151,7 +150,7 @@ class Calendar
             var i = 0;
             while (i < text.Length)
             {
-                var iNext = text.IndexOf("\n", i);
+                var iNext = text.IndexOf('\n', i);
                 if (iNext == -1)
                     iNext = text.Length;
 
@@ -165,7 +164,7 @@ class Calendar
 
                 if (iNext < text.Length)
                 {
-                    line = new List<CalendarToken>();
+                    line = [];
                     lines.Add(line);
                 }
                 i = iNext + 1;
@@ -193,7 +192,7 @@ class Calendar
 
     private static int ParseRgbaColor(string st)
     {
-        Regex regex = new(@"rgba\((?<r>\d{1,3}), (?<g>\d{1,3}), (?<b>\d{1,3}), (?<a>\d{1,3})\)");
+        Regex regex = RGBAColorRegex();
         Match match = regex.Match(st);
         if (match.Success)
         {
@@ -233,10 +232,10 @@ class Calendar
                 }
             </style>
             """);
-        sb.AppendLine(@"<text xml:space=""preserve"">");
+        sb.AppendLine("""<text xml:space="preserve">""");
         foreach (var line in Lines)
         {
-            sb.Append($@"<tspan x=""0"" dy=""1.2em"">");
+            sb.Append($"""<tspan x="0" dy="1.2em">""");
             var lineWidth = 0;
             foreach (var token in line)
             {
@@ -255,4 +254,9 @@ class Calendar
         sb.AppendLine("</text>");
         return $"""<svg viewBox="-16 -16 {(width + 4) * 8} {(height + 2) * 16}" style="background-color:black" xmlns="http://www.w3.org/2000/svg">{sb}</svg>""";
     }
+
+    [GeneratedRegex("[.0-9]+")]
+    private static partial Regex WidthRegex();
+    [GeneratedRegex(@"rgba\((?<r>\d{1,3}), (?<g>\d{1,3}), (?<b>\d{1,3}), (?<a>\d{1,3})\)")]
+    private static partial Regex RGBAColorRegex();
 }

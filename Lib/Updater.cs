@@ -3,6 +3,7 @@ using System.Reflection;
 using AdventOfCode.Generator;
 using AdventOfCode.Model;
 using AngleSharp;
+using AngleSharp.Dom;
 using AngleSharp.Io;
 using Git = LibGit2Sharp;
 
@@ -11,8 +12,11 @@ namespace AdventOfCode;
 #if !LIBRARY
 [DebuggerStepThrough]
 #endif
-static class Updater
+internal static partial class Updater
 {
+    public static void OpenVsCode(ReadOnlySpan<string> args)
+    => Process.Start(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), @"Programs\Microsoft VS Code\Code.exe"), ["--profile", "C#", "--reuse-window", "--", ..args]).WaitForExit();
+
     public static async Task UpdateWithGit(int year, int day)
     {
         var isBranchExisting = true;
@@ -26,21 +30,15 @@ static class Updater
         if (!isBranchExisting)
         {
             await Update(year, day);
-            Process.Start("git", new[] { "add", year.ToString() }).WaitForExit();
-            Process.Start("git", new[] { "reset", "**/test/*" }).WaitForExit();
-            Process.Start("git", new[] { "commit", "-m", $"Initial commit for Y{year}D{day}" }).WaitForExit();
-            using (var repo = new Git.Repository(".git"))
-                repo.Tags.Add($"Y{year}D{day}P1", repo.Head.Tip);
+            Process.Start("git", ["add", year.ToString()]).WaitForExit();
+            Process.Start("git", ["reset", "**/test/*"]).WaitForExit();
+            Process.Start("git", ["commit", "-m", $"Initial commit for Y{year}D{day}"]).WaitForExit();
+            using var repo = new Git.Repository(".git");
+            repo.Tags.Add($"Y{year}D{day}P1", repo.Head.Tip);
         }
         else
             Console.WriteLine($"{year}/Day{day:00} already exists");
-        var psi = new ProcessStartInfo()
-        {
-            FileName = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "Programs", "Microsoft VS Code", "Code.exe"),
-            ArgumentList = { "--reuse-window", "--", $"{year}/Day{day:00}/Solution.cs", $"{year}/Day{day:00}/README.md", $"{year}/Day{day:00}/input.in" },
-            UseShellExecute = false,
-        };
-        Process.Start(psi);
+        OpenVsCode([$"{year}/Day{day:00}/Solution.cs", $"{year}/Day{day:00}/README.md", $"{year}/Day{day:00}/input.in"]);
     }
 
     public static async Task Update(int year, int day)
@@ -61,7 +59,7 @@ static class Updater
 
         var years = Assembly.GetEntryAssembly().GetTypes()
             .Where(t => t.GetTypeInfo().IsClass && typeof(ISolver).IsAssignableFrom(t))
-            .Select(tsolver => SolverExtensions.Year(tsolver))
+            .Select(SolverExtensions.Year)
             .ToArray();
 
         UpdateProjectReadme(years.Length > 0 ? years.Min() : year, years.Length > 0 ? years.Max() : year);
@@ -75,7 +73,7 @@ static class Updater
     }
 
     private static Uri GetBaseAddress()
-    => new Uri("https://adventofcode.com");
+    => new("https://adventofcode.com");
 
     private static string GetSession()
     {
@@ -92,7 +90,7 @@ static class Updater
             .WithCss()
             .WithDefaultCookies()
         );
-        context.SetCookie(new Url(GetBaseAddress().ToString()), "session=" + GetSession());
+        context.SetCookie(new(GetBaseAddress().ToString()), "session=" + GetSession());
         return context;
     }
 
@@ -104,7 +102,7 @@ static class Updater
         var solverResult = Runner.RunSolver(solver);
         Console.WriteLine();
 
-        if (solverResult.errors.Any())
+        if (solverResult.errors.Length != 0)
         {
             Console.ForegroundColor = ConsoleColor.Red;
             Console.WriteLine("Uhh-ohh the solution doesn't pass the tests...");
@@ -153,15 +151,15 @@ static class Updater
             var context = BrowsingContext.New(config);
             var document = await context.OpenAsync(req => req.Content(responseString));
             var article = document.Body.QuerySelector("body > main > article").TextContent;
-            article = Regex.Replace(article, @"\[Continue to Part Two.*", "", RegexOptions.Singleline);
-            article = Regex.Replace(article, @"You have completed Day.*", "", RegexOptions.Singleline);
-            article = Regex.Replace(article, @"\(You guessed.*", "", RegexOptions.Singleline);
-            article = Regex.Replace(article, @"  ", "\n", RegexOptions.Singleline);
+            article = ContinueToPart2Regex().Replace(article, "");
+            article = YouHaveCompletedDayRegex().Replace(article, "");
+            article = YouGuessedRegex().Replace(article, "");
+            article = SpacesRegex().Replace(article, "\n");
 
             if (article.StartsWith("That's the right answer") || article.Contains("You've finished every puzzle"))
             {
                 if (git)
-                    Process.Start("git", new[] { "add", "*" }).WaitForExit();
+                    Process.Start("git", ["add", "*"]).WaitForExit();
 
                 Console.ForegroundColor = ConsoleColor.Green;
                 Console.WriteLine(article);
@@ -181,17 +179,17 @@ static class Updater
                     signature = repo.Config.BuildSignature(DateTimeOffset.Now);
                 if (problem.Answers.Length == 0)
                 {
-                    Process.Start("git", new[] { "add", "*/*/input.*" }).WaitForExit();
+                    Process.Start("git", ["add", "*/*/input.*"]).WaitForExit();
                     using var repo = new Git.Repository(".git");
                     var tag = repo.Tags[$"Y{problem.Year}D{problem.Day}P1"];
                     var initial = (Git.Commit)tag.Target;
                     var duration = signature.When - initial.Committer.When;
-                    Process.Start("git", new[] { "commit", "-m", $"Solved P1 in {duration:h\\:mm\\:ss}", "--allow-empty" }).WaitForExit();
+                    Process.Start("git", ["commit", "-m", $"Solved P1 in {duration:h\\:mm\\:ss}", "--allow-empty"]).WaitForExit();
                     repo.Tags.Add($"Y{problem.Year}D{problem.Day}P2", repo.Head.Tip);
                 }
                 else
                 {
-                    Process.Start("git", new[] { "add", "*" }).WaitForExit();
+                    Process.Start("git", ["add", "*"]).WaitForExit();
                     Git.Commit initial;
                     TimeSpan duration;
                     using (var repo = new Git.Repository(".git"))
@@ -199,14 +197,14 @@ static class Updater
                         var tag = repo.Tags[$"Y{problem.Year}D{problem.Day}P2"];
                         initial = (Git.Commit)tag.Target;
                         duration = signature.When - initial.Committer.When;
-                        Process.Start("git", new[] { "commit", "-m", $"Solved P2 in {duration:h\\:mm\\:ss}", "--allow-empty" }).WaitForExit();
+                        Process.Start("git", ["commit", "-m", $"Solved P2 in {duration:h\\:mm\\:ss}", "--allow-empty"]).WaitForExit();
                         repo.Tags.Remove(tag);
                     }
                     if (benchmark)
                     {
                         Runner.RunBenchmark(solver.GetType());
-                        Process.Start("git", new[] { "add", "*" }).WaitForExit();
-                        Process.Start("git", new[] { "commit", "-m", "Added Benchmarks", "--allow-empty" }).WaitForExit();
+                        Process.Start("git", ["add", "*"]).WaitForExit();
+                        Process.Start("git", ["commit", "-m", "Added Benchmarks", "--allow-empty"]).WaitForExit();
                     }
                     using (var repo = new Git.Repository(".git"))
                     {
@@ -221,7 +219,7 @@ static class Updater
                         var tag = repo.Tags[$"Y{problem.Year}D{problem.Day}P1"];
                         initial = (Git.Commit)tag.Target;
                         duration = signature.When - initial.Committer.When;
-                        Process.Start("git", new[] { "commit", "-m", $"Solved Y{problem.Year}D{problem.Day} in {duration:h\\:mm\\:ss}", "--allow-empty" }).WaitForExit();
+                        Process.Start("git", ["commit", "-m", $"Solved Y{problem.Year}D{problem.Day} in {duration:h\\:mm\\:ss}", "--allow-empty"]).WaitForExit();
                         Git.Commands.Checkout(repo, branch);
                         repo.Tags.Remove(tag);
                     }
@@ -229,7 +227,7 @@ static class Updater
             }
             else if (article.StartsWith("That's not the right answer"))
             {
-                Process.Start("git", new[] { "add", "*" }).WaitForExit();
+                Process.Start("git", ["add", "*"]).WaitForExit();
 
                 Console.ForegroundColor = ConsoleColor.Red;
                 Console.WriteLine(article);
@@ -283,8 +281,7 @@ static class Updater
         if (input.StatusCode != HttpStatusCode.OK)
             throw new AocCommuncationException("Could not fetch input", input.StatusCode, new StreamReader(input.Content).ReadToEnd());
 
-        return Problem.Parse(year, day, baseUri + $"{year}/day/{day}", problemStatement, new StreamReader(input.Content).ReadToEnd()
-        );
+        return Problem.Parse(year, day, baseUri + $"{year}/day/{day}", problemStatement, new StreamReader(input.Content).ReadToEnd());
     }
 
     private static void UpdateReadmeForDay(Problem problem)
@@ -297,9 +294,7 @@ static class Updater
     {
         var file = Path.Combine(Dir(problem.Year, problem.Day), "Solution.cs");
         if (!File.Exists(file))
-        {
             WriteFile(file, SolutionTemplateGenerator.Generate(problem));
-        }
     }
 
     private static void UpdateProjectReadme(int firstYear, int lastYear)
@@ -332,7 +327,7 @@ static class Updater
     private static void UpdateRefout(Problem problem)
     {
         var file = Path.Combine(Dir(problem.Year, problem.Day), "input.refout");
-        if (problem.Answers.Any())
+        if (problem.Answers.Length != 0)
             WriteFile(file, string.Join("\n", problem.Answers));
     }
 
@@ -351,4 +346,13 @@ static class Updater
         if (!File.Exists(outFile))
             WriteFile(outFile, "");
     }
+
+    [GeneratedRegex(@"\[Continue to Part Two.*", RegexOptions.Singleline)]
+    private static partial Regex ContinueToPart2Regex();
+    [GeneratedRegex(@"You have completed Day.*", RegexOptions.Singleline)]
+    private static partial Regex YouHaveCompletedDayRegex();
+    [GeneratedRegex(@"\(You guessed.*", RegexOptions.Singleline)]
+    private static partial Regex YouGuessedRegex();
+    [GeneratedRegex(@"  ", RegexOptions.Singleline)]
+    private static partial Regex SpacesRegex();
 }
