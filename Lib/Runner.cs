@@ -98,9 +98,26 @@ internal static class Runner
 
     public static void RunBenchmark(Type solver)
     {
-        BenchmarkDotNet.Running.BenchmarkRunner.Run(typeof(Bench<>).MakeGenericType(solver));
-        File.Copy("BenchmarkDotNet.Artifacts/results/Bench_Solution_-report-github.md", Path.Combine(SolverExtensions.WorkingDir(solver), "benchmark.md"), overwrite: true);
+        var solution = typeof(Bench<>).MakeGenericType(solver);
+        var fileInfo = new FileInfo("lib/aoc/adventofcode.csproj");
+        fileInfo.MoveTo("lib/aoc/adventofcode.csproj.bak");
+        BenchmarkDotNet.Running.BenchmarkRunner.Run(solution);
+        fileInfo.MoveTo("lib/aoc/adventofcode.csproj");
+        File.Copy($"BenchmarkDotNet.Artifacts/results/{solution.Namespace}.{GetName(solution)}-report-github.md", Path.Combine(SolverExtensions.WorkingDir(solver), "benchmark.md"), overwrite: true);
         Updater.OpenVsCode([$"{SolverExtensions.Year(solver)}/Day{SolverExtensions.Day(solver):00}/benchmark.md"]);
+
+        static string GetName(Type type)
+        {
+            if (!type.IsGenericType)
+                return type.Name;
+            return GetGenericName(type);
+
+            static string GetGenericName(Type type)
+            => GetNonGenericName(type) + "_" + string.Join(", ", type.GenericTypeArguments.Select(GetName)) + "_";
+
+            static string GetNonGenericName(Type type)
+            => type.Name[..type.Name.IndexOf('`')];
+        }
     }
 
     public static SolverResult RunSolver(ISolver solver)
