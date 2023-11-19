@@ -18,9 +18,12 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Remove="**\obj\**" />
-    <EmbeddedResource Remove="**\obj\**" />
-    <None Remove="**\obj\**" />
+    <Compile Remove="**/obj/**" />
+    <EmbeddedResource Remove="**/obj/**" />
+    <None Remove="**/obj/**" />
+    <Compile Remove="lib/aoc/Generated/**" />
+    <EmbeddedResource Remove="lib/aoc/Generated/**" />
+    <None Remove="lib/aoc/Generated/**" />
   </ItemGroup>
 
   <Import Project="**/Project.targets" /> <!-- Import Specific Properties -->
