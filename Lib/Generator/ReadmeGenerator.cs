@@ -7,13 +7,13 @@ namespace AdventOfCode.Generator;
 #endif
 internal static class ProjectReadmeGenerator
 {
-    public static string Generate(int firstYear, int lastYear)
+    public static string Generate(int year)
     => $"""
-    # Advent of Code ({firstYear}-{lastYear})
+    # Advent of Code ({year})
     C# solutions to the Advent of Code problems.
     Check out https://adventofcode.com.
 
-    [<img src="{lastYear}/calendar.svg" width="80%" />](https://adventofcode.com)
+    [<img src="{year}/calendar.svg" width="80%" />](https://adventofcode.com)
 
     The goal is to keep my C# knowledge fresh and to follow the latest changes of the language.
 

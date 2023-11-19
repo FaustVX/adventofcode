@@ -57,12 +57,7 @@ internal static partial class Updater
         if (!Directory.Exists(dir))
             Directory.CreateDirectory(dir);
 
-        var years = Assembly.GetEntryAssembly().GetTypes()
-            .Where(t => t.GetTypeInfo().IsClass && typeof(ISolver).IsAssignableFrom(t))
-            .Select(SolverExtensions.Year)
-            .ToArray();
-
-        UpdateProjectReadme(years.Length > 0 ? years.Min() : year, years.Length > 0 ? years.Max() : year);
+        UpdateProjectReadme(year);
         UpdateReadmeForYear(calendar);
         UpdateSplashScreen(calendar);
         UpdateReadmeForDay(problem);
@@ -297,10 +292,10 @@ internal static partial class Updater
             WriteFile(file, SolutionTemplateGenerator.Generate(problem));
     }
 
-    private static void UpdateProjectReadme(int firstYear, int lastYear)
+    private static void UpdateProjectReadme(int year)
     {
         var file = Path.Combine("README.md");
-        WriteFile(file, ProjectReadmeGenerator.Generate(firstYear, lastYear));
+        WriteFile(file, ProjectReadmeGenerator.Generate(year));
     }
 
     private static void UpdateReadmeForYear(Calendar calendar)
