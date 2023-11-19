@@ -11,7 +11,6 @@
     <PackageReference Include="AngleSharp.Css" Version="0.17.0" />
     <PackageReference Include="Cocona.Lite" Version="2.2.0" />
     <PackageReference Include="Microsoft.CodeAnalysis" Version="4.7.0" />
-    <PackageReference Include="System.Reflection.Emit" Version="4.7.0" />
     <PackageReference Include="LibGit2Sharp" Version="0.28.0" />
     <PackageReference Include="BenchmarkDotNet" Version="0.13.10" />
     <PackageReference Include="CommunityToolkit.HighPerformance" Version="8.2.2" />
