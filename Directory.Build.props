@@ -1,9 +1,14 @@
 <Project>
+    <PropertyGroup>
+        <DefineConstants>LIBRARY</DefineConstants>
+    </PropertyGroup>
+
     <ItemGroup>
         <EmbeddedResource Include="Lib/SourceCodePro-Regular.woff2" Condition="Exists('Lib/SourceCodePro-Regular.woff2')" />
         <EmbeddedResource Include="adventofcode.csproj" Condition="Exists('adventofcode.csproj')" />
         <EmbeddedResource Include=".gitattributes" Condition="Exists('.gitattributes')" />
         <EmbeddedResource Include=".gitignore" Condition="Exists('.gitignore')" />
         <EmbeddedResource Include=".vscode/*" Condition="Exists('.vscode')" />
+        <EmbeddedResource Include="AdventOfCode.sln" Condition="Exists('AdventOfCode.sln')" />
     </ItemGroup>
 </Project>

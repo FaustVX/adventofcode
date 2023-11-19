@@ -1,5 +1,8 @@
 namespace AdventOfCode.Model;
 
+#if !LIBRARY
+[DebuggerStepThrough]
+#endif
 public partial class Project([Field]string url, [Field]string sslSalt, [Field]string sslPassword)
 {
     public required string UserName { get; init; }
@@ -30,6 +33,7 @@ public partial class Project([Field]string url, [Field]string sslSalt, [Field]st
         CopyStream(Extensions.GetEmbededResource("adventofcode..vscode.extensions.json"), new FileInfo(Path.Combine(vscode.FullName, "extensions.json")).Create());
         CopyStream(Extensions.GetEmbededResource("adventofcode..vscode.launch.json"), new FileInfo(Path.Combine(vscode.FullName, "launch.json")).Create());
         CopyStream(Extensions.GetEmbededResource("adventofcode..vscode.settings.json"), new FileInfo(Path.Combine(vscode.FullName, "settings.json")).Create());
+        CopyStream(Extensions.GetEmbededResource("adventofcode..vscode.AdventOfCode.sln"), new FileInfo(Path.Combine(vscode.FullName, "AdventOfCode.sln")).Create());
         File.AppendAllText(".git/config", $"""
         [filter "crypt"]
             clean = wsl openssl enc -aes-256-cbc -e -iter 10 -salt -S {_sslSalt} -pass pass:{_sslPassword}

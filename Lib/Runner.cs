@@ -17,6 +17,9 @@ interface IDisplay
     IEnumerable<(string name, Action<string> action)> GetDisplays();
 }
 
+#if !LIBRARY
+[DebuggerStepThrough]
+#endif
 static class SolverExtensions
 {
 
@@ -73,8 +76,14 @@ static class SolverExtensions
     }
 }
 
+#if !LIBRARY
+[DebuggerStepThrough]
+#endif
 record SolverResult(string[] answers, string[] errors);
 
+#if !LIBRARY
+[DebuggerStepThrough]
+#endif
 static class Runner
 {
 

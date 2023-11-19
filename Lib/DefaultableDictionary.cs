@@ -1,5 +1,8 @@
 namespace AdventOfCode;
 
+#if !LIBRARY
+[DebuggerStepThrough]
+#endif
 public class DefaultableDictionary<TKey, TValue> : Dictionary<TKey, TValue>, IDictionary<TKey, TValue>, IReadOnlyDictionary<TKey, TValue>
     where TKey : notnull
 {

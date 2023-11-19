@@ -2,6 +2,10 @@
 using AngleSharp.Dom;
 
 namespace AdventOfCode.Model;
+
+#if !LIBRARY
+[DebuggerStepThrough]
+#endif
 class Problem
 {
     public string Title { get; private set; }

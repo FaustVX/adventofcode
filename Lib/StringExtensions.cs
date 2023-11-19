@@ -4,13 +4,15 @@ using System.Runtime.CompilerServices;
 
 namespace AdventOfCode;
 
+#if !LIBRARY
+[DebuggerStepThrough]
+#endif
 public static class StringExtensions
 {
-    [DebuggerStepThrough, Obsolete, EditorBrowsable(EditorBrowsableState.Never)]
+    [Obsolete, EditorBrowsable(EditorBrowsableState.Never)]
     public static string[] SplitLine(this string st)
         => Regex.Split(st, "\r?\n");
 
-    [DebuggerStepThrough]
     public static ReadOnlyMemory<ReadOnlyMemory<char>> SplitLine(this ReadOnlyMemory<char> st)
     {
         var matches = Regex.EnumerateMatches(st.Span, "\r?\n");
@@ -26,11 +28,10 @@ public static class StringExtensions
         return list;
     }
 
-    [DebuggerStepThrough, Obsolete, EditorBrowsable(EditorBrowsableState.Never)]
+    [Obsolete, EditorBrowsable(EditorBrowsableState.Never)]
     public static string[] SplitSpace(this string st)
         => Regex.Split(st, "\\s");
 
-    [DebuggerStepThrough]
     public static ReadOnlyMemory<ReadOnlyMemory<char>> SplitSpace(this ReadOnlyMemory<char> st)
     {
         var matches = Regex.EnumerateMatches(st.Span, "\\s");
@@ -46,11 +47,10 @@ public static class StringExtensions
         return list;
     }
 
-    [DebuggerStepThrough, Obsolete, EditorBrowsable(EditorBrowsableState.Never)]
+    [Obsolete, EditorBrowsable(EditorBrowsableState.Never)]
     public static string[] Split2Lines(this string st)
         => Regex.Split(st, "\r?\n\r?\n");
 
-    [DebuggerStepThrough]
     public static ReadOnlyMemory<ReadOnlyMemory<char>> Split2Lines(this ReadOnlyMemory<char> st)
     {
         var matches = Regex.EnumerateMatches(st.Span, "(\r?\n){2}");
@@ -66,7 +66,6 @@ public static class StringExtensions
         return list;
     }
 
-    [DebuggerStepThrough]
     public static ReadOnlyMemory<ReadOnlyMemory<char>> Split(this ReadOnlyMemory<char> st, [StringSyntax(StringSyntaxAttribute.Regex)] string regexSplit)
     {
         var matches = Regex.EnumerateMatches(st.Span, regexSplit);
@@ -82,15 +81,12 @@ public static class StringExtensions
         return list;
     }
 
-    [DebuggerStepThrough]
     public static SpanSplitEnumerator EnumerateSplits(this ReadOnlySpan<char> span, ReadOnlySpan<char> separator)
     => new SpanSplitEnumerator(span, separator);
 
-    [DebuggerStepThrough]
     public static SpanSplitEnumerator EnumerateSplits(this string span, ReadOnlySpan<char> separator)
     => new SpanSplitEnumerator(span, separator);
 
-    [DebuggerStepThrough]
     public static void TypeString(this StringBuilder input, TimeSpan maxTotalDuration)
     {
         var offset = maxTotalDuration / input.Length;
@@ -102,7 +98,6 @@ public static class StringExtensions
             }
     }
 
-    [DebuggerStepThrough]
     public static void TypeString(this IEnumerable<TypedString> input, TimeSpan maxTotalDuration)
     {
         var strings = input.ToArray();
@@ -132,8 +127,33 @@ public static class StringExtensions
         values = (T)handler.Values;
         return handler.IsValid && (allowTrailling || !handler.HasTrailling);
     }
+
+    /// <summary>
+    /// Returns an enumeration of lines over the provided memory.
+    /// </summary>
+    /// <remarks>
+    /// It is recommended that protocol parsers not utilize this API. See the documentation
+    /// for <see cref="string.ReplaceLineEndings"/> for more information on how newline
+    /// sequences are detected.
+    /// </remarks>
+    public static MemoryLineEnumerator EnumerateLines(this ReadOnlyMemory<char> span)
+    => new(span);
+
+    /// <summary>
+    /// Returns an enumeration of lines over the provided memory.
+    /// </summary>
+    /// <remarks>
+    /// It is recommended that protocol parsers not utilize this API. See the documentation
+    /// for <see cref="string.ReplaceLineEndings"/> for more information on how newline
+    /// sequences are detected.
+    /// </remarks>
+    public static MemoryLineEnumerator EnumerateLines(this Memory<char> span)
+    => new(span);
 }
 
+#if !LIBRARY
+[DebuggerStepThrough]
+#endif
 [InterpolatedStringHandler]
 public ref struct ParserInterpolatedHandler<T>
 where T : struct, ITuple
@@ -233,6 +253,9 @@ where T : struct, ITuple
     }
 }
 
+#if !LIBRARY
+[DebuggerStepThrough]
+#endif
 public class TypedString
 {
     public ConsoleColor? Foregroung { get; init; }

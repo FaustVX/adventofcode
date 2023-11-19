@@ -1,6 +1,9 @@
 using AdventOfCode;
 using BenchmarkDotNet.Attributes;
 
+#if !LIBRARY
+[DebuggerStepThrough]
+#endif
 [MemoryDiagnoser]
 public class Bench<T>
 where T : ISolver, new()

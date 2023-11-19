@@ -2,6 +2,9 @@ using AdventOfCode.Model;
 
 namespace AdventOfCode.Generator;
 
+#if !LIBRARY
+[DebuggerStepThrough]
+#endif
 static class SplashScreenGenerator
 {
     public static string Generate(Calendar calendar)
@@ -19,7 +22,7 @@ static class SplashScreenGenerator
         }
 
         private static void Write(int rgb, bool bold, string text)
-        => Console.Write($"\u001b[38;2;{(rgb>>16)&255};{(rgb>>8)&255};{rgb&255}{(bold ? ";1" : "")}m{text}");
+        => Console.Write($"\u001b[38;2;{(rgb >> 16) & 255};{(rgb >> 8) & 255};{rgb & 255}{(bold ? ";1" : "")}m{text}");
     }
     """;
 

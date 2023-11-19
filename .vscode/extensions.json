@@ -1,6 +1,7 @@
 {
     "recommendations": [
         "spadin.memento-inputs",
-        "actboy168.tasks"
+        "actboy168.tasks",
+        "ms-dotnettools.csdevkit",
     ]
 }

@@ -7,6 +7,9 @@ using Cocona;
 
 CoconaLiteApp.Run<Commands>(args);
 
+#if !LIBRARY
+[DebuggerStepThrough]
+#endif
 class Commands
 {
     private static readonly IReadOnlyList<Type> _tsolvers = Assembly.GetEntryAssembly()!.GetTypes()
