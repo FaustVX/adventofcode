@@ -7,13 +7,13 @@ namespace AdventOfCode;
 #if !LIBRARY
 [DebuggerStepThrough]
 #endif
-public static class StringExtensions
+public static partial class StringExtensions
 {
     public static ReadOnlyMemory<ReadOnlyMemory<char>> SplitLine(this ReadOnlyMemory<char> st)
     {
-        var matches = Regex.EnumerateMatches(st.Span, "\r?\n");
+        var matches = NewLineRegex().EnumerateMatches(st.Span);
         var start = 0;
-        var list = new ReadOnlyMemory<char>[Regex.Count(st.Span, "\r?\n") + 1];
+        var list = new ReadOnlyMemory<char>[NewLineRegex().Count(st.Span) + 1];
         var index = 0;
         foreach (var match in matches)
         {
@@ -25,9 +25,9 @@ public static class StringExtensions
     }
     public static ReadOnlyMemory<ReadOnlyMemory<char>> SplitSpace(this ReadOnlyMemory<char> st)
     {
-        var matches = Regex.EnumerateMatches(st.Span, "\\s");
+        var matches = WhitespaceRegex().EnumerateMatches(st.Span);
         var start = 0;
-        var list = new ReadOnlyMemory<char>[Regex.Count(st.Span, "\\s") + 1];
+        var list = new ReadOnlyMemory<char>[WhitespaceRegex().Count(st.Span) + 1];
         var index = 0;
         foreach (var match in matches)
         {
@@ -39,9 +39,9 @@ public static class StringExtensions
     }
     public static ReadOnlyMemory<ReadOnlyMemory<char>> Split2Lines(this ReadOnlyMemory<char> st)
     {
-        var matches = Regex.EnumerateMatches(st.Span, "(\r?\n){2}");
+        var matches = NewLine2Regex().EnumerateMatches(st.Span);
         var start = 0;
-        var list = new ReadOnlyMemory<char>[Regex.Count(st.Span, "(\r?\n){2}") + 1];
+        var list = new ReadOnlyMemory<char>[NewLine2Regex().Count(st.Span) + 1];
         var index = 0;
         foreach (var match in matches)
         {
@@ -135,6 +135,12 @@ public static class StringExtensions
     /// </remarks>
     public static MemoryLineEnumerator EnumerateLines(this Memory<char> span)
     => new(span);
+    [GeneratedRegex("\r?\n")]
+    private static partial Regex NewLineRegex();
+    [GeneratedRegex("\\s")]
+    private static partial Regex WhitespaceRegex();
+    [GeneratedRegex("(\r?\n){2}")]
+    private static partial Regex NewLine2Regex();
 }
 
 #if !LIBRARY
