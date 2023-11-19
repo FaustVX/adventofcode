@@ -183,7 +183,15 @@
                 "--",
                 "init",
                 "--git-repo",
-                "${relativeFileDirname}"
+                "${input:repo}",
+                "--ssl-salt",
+                "${input:salt}",
+                "--ssl-password",
+                "${input:passwd}",
+                "--username",
+                "FaustVX",
+                "--year",
+                "${input:year}",
             ],
             "problemMatcher": [],
             "presentation": {
@@ -228,10 +236,40 @@
         {
             "id": "year",
             "type": "command",
-            "command": "memento.promptString",
+            "command": "memento.pickString",
             "args": {
                 "id": "year",
-                "description": "Current year (YYYY)"
+                "description": "Current year (YYYY)",
+                "options": ["2015", "2016", "2017", "2018", "2019", "2020", "2021", "2022", "2023"],
+                "default": "2023",
+            }
+        },
+        {
+            "id": "repo",
+            "type": "command",
+            "command": "memento.promptString",
+            "args": {
+                "id": "repo",
+                "description": "git repository",
+                "default": "git@github.com:FaustVX/adventofcode.git",
+            }
+        },
+        {
+            "id": "salt",
+            "type": "command",
+            "command": "memento.promptString",
+            "args": {
+                "id": "salt",
+                "description": "Openssl salt",
+            }
+        },
+        {
+            "id": "passwd",
+            "type": "command",
+            "command": "memento.promptString",
+            "args": {
+                "id": "passwd",
+                "description": "Openssl password",
             }
         },
     ]
