@@ -1,8 +1,6 @@
-using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
-using PrimaryParameter.SG;
 
 namespace AdventOfCode;
 
@@ -11,10 +9,6 @@ namespace AdventOfCode;
 #endif
 public static class StringExtensions
 {
-    [Obsolete, EditorBrowsable(EditorBrowsableState.Never)]
-    public static string[] SplitLine(this string st)
-        => Regex.Split(st, "\r?\n");
-
     public static ReadOnlyMemory<ReadOnlyMemory<char>> SplitLine(this ReadOnlyMemory<char> st)
     {
         var matches = Regex.EnumerateMatches(st.Span, "\r?\n");
@@ -29,11 +23,6 @@ public static class StringExtensions
         list[index] = st[start..];
         return list;
     }
-
-    [Obsolete, EditorBrowsable(EditorBrowsableState.Never)]
-    public static string[] SplitSpace(this string st)
-        => Regex.Split(st, "\\s");
-
     public static ReadOnlyMemory<ReadOnlyMemory<char>> SplitSpace(this ReadOnlyMemory<char> st)
     {
         var matches = Regex.EnumerateMatches(st.Span, "\\s");
@@ -48,11 +37,6 @@ public static class StringExtensions
         list[index] = st[start..];
         return list;
     }
-
-    [Obsolete, EditorBrowsable(EditorBrowsableState.Never)]
-    public static string[] Split2Lines(this string st)
-        => Regex.Split(st, "\r?\n\r?\n");
-
     public static ReadOnlyMemory<ReadOnlyMemory<char>> Split2Lines(this ReadOnlyMemory<char> st)
     {
         var matches = Regex.EnumerateMatches(st.Span, "(\r?\n){2}");

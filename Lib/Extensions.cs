@@ -48,19 +48,15 @@ public static class Extensions
 
     [MethodImpl(MethodImplOptions.AggressiveOptimization | MethodImplOptions.AggressiveInlining)]
     public static T[] ParseToArrayOfT<T>(this string input, Func<string, T> parser)
-#pragma warning disable CS0612 // 'StringExtensions.SplitLine(string)' is Obsolete
-        => input.SplitLine().Select(parser).ToArray();
-#pragma warning restore CS0612
+        => ParseToIEnumOfT(input, parser).ToArray();
 
     [MethodImpl(MethodImplOptions.AggressiveOptimization | MethodImplOptions.AggressiveInlining)]
     public static T[] ParseToArrayOfT<T>(this string[] inputs, Func<string, T> parser)
-        => inputs.Select(parser).ToArray();
+        => ParseToIEnumOfT(inputs, parser).ToArray();
 
     [MethodImpl(MethodImplOptions.AggressiveOptimization | MethodImplOptions.AggressiveInlining)]
     public static IEnumerable<T> ParseToIEnumOfT<T>(this string input, Func<string, T> parser)
-#pragma warning disable CS0612 // 'StringExtensions.SplitLine(string)' is Obsolete
-        => input.SplitLine().Select(parser);
-#pragma warning restore CS0612
+        => input.AsMemory().SplitLine().ToArray().Select(static m => new string(m.ToArray())).Select(parser);
 
     [MethodImpl(MethodImplOptions.AggressiveOptimization | MethodImplOptions.AggressiveInlining)]
     public static IEnumerable<T> ParseToIEnumOfT<T>(this string[] inputs, Func<string, T> parser)

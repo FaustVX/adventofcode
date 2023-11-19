@@ -1,5 +1,4 @@
 using System.Runtime.InteropServices;
-using PrimaryParameter.SG;
 
 namespace AdventOfCode;
 

@@ -1,5 +1,4 @@
 using AdventOfCode.Model;
-using PrimaryParameter.SG;
 
 namespace AdventOfCode.Generator;
 

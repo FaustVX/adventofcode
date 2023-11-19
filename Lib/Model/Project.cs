@@ -1,5 +1,4 @@
 namespace AdventOfCode.Model;
-using PrimaryParameter.SG;
 
 #if !LIBRARY
 [DebuggerStepThrough]
