@@ -40,7 +40,7 @@ public readonly ref partial struct SpanSplitEnumerator([Field] ReadOnlySpan<char
         }
     }
 
-    public ref partial struct Enumerator([DontUse] SpanSplitEnumerator enumerator)
+    public ref struct Enumerator([DontUse] SpanSplitEnumerator enumerator)
     {
         private ReadOnlySpan<char> _remaining = enumerator._buffer;
         private readonly ReadOnlySpan<char> _separator = enumerator._separator;

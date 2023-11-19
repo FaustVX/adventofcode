@@ -29,6 +29,7 @@ internal class Commands
         return no_git ? Updater.Update(day.Year, day.Day) : Updater.UpdateWithGit(day.Year, day.Day);
     }
 
+    [Command]
     public static void Run(DayParameters day)
     {
         if (!day.IsValid)
@@ -41,6 +42,7 @@ internal class Commands
         Runner.RunSolver(GetSolver(tsolver));
     }
 
+    [Command]
     public static Task Upload(DayParameters day, [Option("no-git")] bool no_git, [Option("no-benchmark")] bool no_benchmark)
     {
         if (!day.IsValid)
@@ -53,6 +55,7 @@ internal class Commands
         return Updater.Upload(GetSolver(tsolver), !no_git, !no_benchmark);
     }
 
+    [Command]
     public static void Display(DayParameters day)
     {
         if (!day.IsValid)
@@ -65,6 +68,7 @@ internal class Commands
         Runner.DisplaySolver(GetDisplay(tsolver));
     }
 
+    [Command]
     public static void Benchmark(DayParameters day)
     {
         if (!day.IsValid)
@@ -77,12 +81,14 @@ internal class Commands
         Runner.RunBenchmark(tsolver);
     }
 
-    public static void Init([Option("git-repo", ['g'])] string git_repo, [Option("ssl-salt", ['s'])] string sslSalt, [Option("ssl-password", ['p'])] string? sslPassword, [Option(['u', 'n'])] string username)
+    [Command]
+    public static void Init([Option("git-repo", ['g'])] string git_repo, [Option("ssl-salt", ['s'])] string sslSalt, [Option("ssl-password", ['p'])] string? sslPassword, [Option(['u', 'n'])] string username, [Option('y')] int? year)
     {
+        year ??= TimeProvider.System.GetLocalNow().Year;
         if (sslPassword is string password)
-            new AdventOfCode.Model.Project(git_repo, sslSalt, password) { UserName = username }.Init();
+            new AdventOfCode.Model.Project(git_repo, sslSalt, password, year.Value) { UserName = username }.Init();
         else
-            new AdventOfCode.Model.Project(git_repo, sslSalt, "") { UserName = username }.Init();
+            new AdventOfCode.Model.Project(git_repo, sslSalt, "", year.Value) { UserName = username }.Init();
     }
 
     private static ISolver? GetSolver(Type tsolver)
@@ -94,7 +100,7 @@ internal class Commands
 
 internal record class DayParameters([Argument] string date = "today") : ICommandParameterSet
 {
-    public static DateTime Today { get; } = DateTime.UtcNow.AddHours(-5);
+    public static DateTime Today { get; } = TimeProvider.System.GetUtcNow().AddHours(-5).DateTime;
     public static DateTime StartDateThisYear { get; } = new(Today.Year, 12, 1);
     public static DateTime LastValidDate { get; } = Today >= StartDateThisYear ? Today : new(Today.Year - 1, 12, 25);
 

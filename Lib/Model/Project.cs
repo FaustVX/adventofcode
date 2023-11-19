@@ -4,7 +4,7 @@ using PrimaryParameter.SG;
 #if !LIBRARY
 [DebuggerStepThrough]
 #endif
-public partial class Project([Field] string repo, [Field] string sslSalt, [Field] string sslPassword)
+public partial class Project([Field] string repo, [Field] string sslSalt, [Field] string sslPassword, [Field] int year)
 {
     public required string UserName { get; init; }
 
@@ -23,10 +23,13 @@ public partial class Project([Field] string repo, [Field] string sslSalt, [Field
 
     public void Init()
     {
-        CopyStream(Extensions.GetEmbededResource("adventofcode.adventofcode.csproj"), File.Create("adventofcode.csproj"));
+        var dir = Directory.CreateDirectory(Path.Combine("..", $"AoC-{_year}"));
+        Directory.SetCurrentDirectory(dir.FullName);
         LibGit2Sharp.Repository.Init(".");
         new DirectoryInfo("./").EnumerateDirectories("_git*").FirstOrDefault()?.Delete();
         var git = new LibGit2Sharp.Repository(".git");
+        CopyStream(Extensions.GetEmbededResource("adventofcode.adventofcode.csproj"), File.Create("adventofcode.csproj"));
+        CopyStream(Extensions.GetEmbededResource("adventofcode.AdventOfCode.sln"), File.Create("AdventOfCode.sln"));
         CopyStream(Extensions.GetEmbededResource("adventofcode..gitattributes"), File.Create(".gitattributes"));
         CopyStream(Extensions.GetEmbededResource("adventofcode..gitignore"), File.Create(".gitignore"));
         var vscode = Directory.CreateDirectory(".vscode");
@@ -34,7 +37,6 @@ public partial class Project([Field] string repo, [Field] string sslSalt, [Field
         CopyStream(Extensions.GetEmbededResource("adventofcode..vscode.extensions.json"), new FileInfo(Path.Combine(vscode.FullName, "extensions.json")).Create());
         CopyStream(Extensions.GetEmbededResource("adventofcode..vscode.launch.json"), new FileInfo(Path.Combine(vscode.FullName, "launch.json")).Create());
         CopyStream(Extensions.GetEmbededResource("adventofcode..vscode.settings.json"), new FileInfo(Path.Combine(vscode.FullName, "settings.json")).Create());
-        CopyStream(Extensions.GetEmbededResource("adventofcode..vscode.AdventOfCode.sln"), new FileInfo(Path.Combine(vscode.FullName, "AdventOfCode.sln")).Create());
         File.AppendAllText(".git/config", $"""
         [filter "crypt"]
             clean = wsl openssl enc -aes-256-cbc -e -iter 10 -salt -S {_sslSalt} -pass pass:{_sslPassword}
@@ -69,6 +71,23 @@ public partial class Project([Field] string repo, [Field] string sslSalt, [Field
         SOFTWARE.
 
         """);
+
+        foreach (var file in vscode.EnumerateFiles())
+        {
+            Write(file, Read(file).Replace("${input:year}", _year.ToString()));
+
+            static string Read(FileInfo file)
+            {
+                using var fs = file.OpenText();
+                return fs.ReadToEnd();
+            }
+            static void Write(FileInfo file, string content)
+            {
+                using var fs = file.Open(FileMode.Truncate, FileAccess.Write, FileShare.Read);
+                using var sw = new StreamWriter(fs);
+                sw.Write(content);
+            }
+        }
         Process.Start("git", $"-c protocol.file.allow=always submodule add {_repo} lib/aoc").WaitForExit();
         Process.Start("git", ["add", "*"]).WaitForExit();
         Process.Start("git", ["commit", "-m", "Initial commit"]).WaitForExit();
