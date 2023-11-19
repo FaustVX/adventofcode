@@ -157,7 +157,9 @@ public static class StringExtensions
 [DebuggerStepThrough]
 #endif
 [InterpolatedStringHandler, StructLayout(LayoutKind.Auto)]
-public ref partial struct ParserInterpolatedHandler<T>(int literalLength, int formattedCount, [Field(IsReadonly = false)] ReadOnlySpan<char> input)
+#pragma warning disable CS9113 // Parameter is unread.
+public ref partial struct ParserInterpolatedHandler<T>([DontUse] int literalLength, [DontUse] int formattedCount, [Field(IsReadonly = false)] ReadOnlySpan<char> input)
+#pragma warning restore CS9113 // Parameter is unread.
 where T : struct, ITuple
 {
     private static readonly List<System.Reflection.FieldInfo> _fields;

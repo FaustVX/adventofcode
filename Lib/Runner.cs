@@ -4,7 +4,7 @@ using PrimaryParameter.SG;
 namespace AdventOfCode;
 
 [AttributeUsage(AttributeTargets.Class)]
-internal sealed partial class ProblemName([Property(WithInit = false)] string name) : Attribute;
+internal sealed partial class ProblemName([Property(Setter = "")] string name) : Attribute;
 
 public interface ISolver
 {
