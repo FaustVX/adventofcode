@@ -14,6 +14,9 @@ namespace AdventOfCode;
 #endif
 internal static partial class Updater
 {
+    public static void OpenVsCode(ReadOnlySpan<string> args)
+    => Process.Start(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), @"Programs\Microsoft VS Code\Code.exe"), ["--profile", "C#", "--reuse-window", "--", ..args]).WaitForExit();
+
     public static async Task UpdateWithGit(int year, int day)
     {
         var isBranchExisting = true;
@@ -35,13 +38,7 @@ internal static partial class Updater
         }
         else
             Console.WriteLine($"{year}/Day{day:00} already exists");
-        var psi = new ProcessStartInfo()
-        {
-            FileName = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "Programs", "Microsoft VS Code", "Code.exe"),
-            ArgumentList = { "--reuse-window", "--", $"{year}/Day{day:00}/Solution.cs", $"{year}/Day{day:00}/README.md", $"{year}/Day{day:00}/input.in" },
-            UseShellExecute = false,
-        };
-        Process.Start(psi);
+        OpenVsCode([$"{year}/Day{day:00}/Solution.cs", $"{year}/Day{day:00}/README.md", $"{year}/Day{day:00}/input.in"]);
     }
 
     public static async Task Update(int year, int day)
