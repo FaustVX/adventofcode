@@ -87,7 +87,7 @@ public partial class Project([Field] string repo, [Field] string sslSalt, [Field
                 sw.Write(content);
             }
         }
-        Process.Start("git", $"-c protocol.file.allow=always submodule add {_repo} lib/aoc").WaitForExit();
+        Process.Start("git", ["-c", "protocol.file.allow=always", "submodule", "add", _repo, "lib/aoc"]).WaitForExit();
         Process.Start("git", ["add", "*"]).WaitForExit();
         Process.Start("git", ["commit", "-m", "Initial commit"]).WaitForExit();
     }
