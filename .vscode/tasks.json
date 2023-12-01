@@ -175,11 +175,30 @@
             },
         },
         {
+            "label": "mkdir",
+            "type": "shell",
+            "command": "mkdir",
+            "args": [
+                "${workspaceFolder}/../AoC-${input:year}",
+            ],
+            "problemMatcher": [],
+            "presentation": {
+                "focus": true,
+            },
+            "options": {
+                "statusbar": {
+                    "hide": true
+                },
+            },
+        },
+        {
             "label": "init",
+            "type": "process",
             "command": "dotnet",
             "args": [
                 "run",
                 "--configuration=Release",
+                "--project=${workspaceFolder}",
                 "--",
                 "init",
                 "--git-repo",
@@ -201,7 +220,11 @@
                 "statusbar": {
                     "hide": true
                 },
+                "cwd": "${workspaceFolder}/../AoC-${input:year}"
             },
+            "dependsOn": [
+                "mkdir"
+            ],
         },
     ],
     "inputs": [
