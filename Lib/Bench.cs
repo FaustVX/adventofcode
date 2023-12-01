@@ -10,13 +10,13 @@ public class Bench<T>
 where T : ISolver, new()
 {
     private static readonly T _instance;
-    private static readonly string _input;
+    private static readonly ReadOnlyMemory<char> _input;
 
     static Bench()
     {
         Globals.CurrentRunMode = Mode.Benchmark;
         _instance = new();
-        _input = Runner.GetNormalizedInput(Path.Combine("..", "..", "..", "..", "..", "..", "..", _instance.WorkingDir(), "input.in"));
+        _input = Runner.GetNormalizedInput(Path.Combine("..", "..", "..", "..", "..", "..", "..", _instance.WorkingDir(), "input.in")).AsMemory();
     }
 
     [Benchmark]

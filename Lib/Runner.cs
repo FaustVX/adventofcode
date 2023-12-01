@@ -7,8 +7,8 @@ internal sealed partial class ProblemName([Property(Setter = "")] string name) :
 
 public interface ISolver
 {
-    object PartOne(string input);
-    object PartTwo(string input);
+    object PartOne(ReadOnlyMemory<char> input);
+    object PartTwo(ReadOnlyMemory<char> input);
 }
 
 internal interface IDisplay
@@ -21,11 +21,11 @@ internal interface IDisplay
 #endif
 internal static class SolverExtensions
 {
-
     public static IEnumerable<object> Solve(this ISolver solver, string input)
     {
-        yield return solver.PartOne(input);
-        var res = solver.PartTwo(input);
+        var memory = input.AsMemory();
+        yield return solver.PartOne(memory);
+        var res = solver.PartTwo(memory);
         if (res != null)
             yield return res;
     }
