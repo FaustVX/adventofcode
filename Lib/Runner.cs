@@ -1,4 +1,4 @@
-using System.Reflection;
+﻿using System.Reflection;
 
 namespace AdventOfCode;
 
@@ -135,7 +135,7 @@ internal static class Runner
             (var searchOption, Globals.IsTestInput) = dir.EndsWith("test")
                 ? (SearchOption.AllDirectories, true)
                 : (SearchOption.TopDirectoryOnly, false);
-            foreach (var file in Directory.EnumerateFiles(dir, "*.in", searchOption).OrderBy(static file => file))
+            foreach (var file in Directory.EnumerateFiles(dir, "*.in", searchOption).Order())
                 try
                 {
                     Console.WriteLine("  " + file + ":");
@@ -260,7 +260,7 @@ internal static class Runner
                 var searchOption = dir.EndsWith("test")
                     ? SearchOption.AllDirectories
                     : SearchOption.TopDirectoryOnly;
-                foreach (var file in Directory.EnumerateFiles(dir, "*.in", searchOption).OrderBy(static file => file))
+                foreach (var file in Directory.EnumerateFiles(dir, "*.in", searchOption).Order())
                     yield return file;
             }
         }
