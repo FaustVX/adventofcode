@@ -138,6 +138,8 @@ internal static class Runner
             foreach (var file in Directory.EnumerateFiles(dir, "*.in", searchOption).Order())
                 try
                 {
+                    var slash = file.IndexOfAny(['\\', '/'], file.IndexOfAny(['\\', '/']) + 1) + 1;
+                    Globals.InputFileName = file[slash..];
                     Console.WriteLine("  " + file + ":");
                     var refoutFile = file.Replace(".in", ".refout");
                     var refout = File.Exists(refoutFile) ? File.ReadAllLines(refoutFile) : null;
