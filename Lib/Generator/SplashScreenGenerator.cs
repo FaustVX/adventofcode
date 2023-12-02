@@ -28,7 +28,7 @@ internal static partial class SplashScreenGenerator
 
     private static string CalendarPrinter(Calendar calendar, int indent)
     {
-        var lines = calendar.Lines.Select(line => line.Prepend(CalendarToken.FromText("           ")));
+        var lines = calendar.Lines.Select(static line => line.Prepend(CalendarToken.FromText("           ")));
 
         var bw = new BufferWriter(indent);
         foreach (var line in lines)

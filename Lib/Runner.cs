@@ -1,4 +1,4 @@
-﻿using System.Reflection;
+using System.Reflection;
 
 namespace AdventOfCode;
 
@@ -69,7 +69,7 @@ internal static class SolverExtensions
     public static ISplashScreen SplashScreen(this ISolver solver)
     {
         var tsplashScreen = Assembly.GetEntryAssembly().GetTypes()
-             .Where(t => t.GetTypeInfo().IsClass && typeof(ISplashScreen).IsAssignableFrom(t))
+             .Where(static t => t.GetTypeInfo().IsClass && typeof(ISplashScreen).IsAssignableFrom(t))
              .Single(t => Year(t) == solver.Year());
         return (ISplashScreen)Activator.CreateInstance(tsplashScreen);
     }
@@ -135,7 +135,7 @@ internal static class Runner
             (var searchOption, Globals.IsTestInput) = dir.EndsWith("test")
                 ? (SearchOption.AllDirectories, true)
                 : (SearchOption.TopDirectoryOnly, false);
-            foreach (var file in Directory.EnumerateFiles(dir, "*.in", searchOption).OrderBy(file => file))
+            foreach (var file in Directory.EnumerateFiles(dir, "*.in", searchOption).OrderBy(static file => file))
                 try
                 {
                     Console.WriteLine("  " + file + ":");
@@ -260,7 +260,7 @@ internal static class Runner
                 var searchOption = dir.EndsWith("test")
                     ? SearchOption.AllDirectories
                     : SearchOption.TopDirectoryOnly;
-                foreach (var file in Directory.EnumerateFiles(dir, "*.in", searchOption).OrderBy(file => file))
+                foreach (var file in Directory.EnumerateFiles(dir, "*.in", searchOption).OrderBy(static file => file))
                     yield return file;
             }
         }

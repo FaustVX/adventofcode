@@ -13,8 +13,8 @@ CoconaLiteApp.Run<Commands>(args);
 internal class Commands
 {
     private static readonly IReadOnlyList<Type> _tsolvers = Assembly.GetEntryAssembly()!.GetTypes()
-    .Where(t => t.GetTypeInfo().IsClass && typeof(ISolver).IsAssignableFrom(t))
-    .OrderBy(t => t.FullName)
+    .Where(static t => t.GetTypeInfo().IsClass && typeof(ISolver).IsAssignableFrom(t))
+    .OrderBy(static t => t.FullName)
     .ToImmutableList();
 
     [DoesNotReturn]
