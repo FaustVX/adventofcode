@@ -17,8 +17,8 @@ internal partial class Problem
 
     public static Problem Parse(int year, int day, string url, IDocument document, string input)
     {
-
         var md = $"original source: [{url}]({url})\n";
+        md += $"\nReddit submission megathread: https://www.reddit.com/r/adventofcode/comments/\n";
         var answers = new List<string>();
         foreach (var article in document.QuerySelectorAll("article"))
         {
