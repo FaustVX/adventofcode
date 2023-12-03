@@ -143,7 +143,7 @@ internal static class Runner
                     Console.WriteLine("  " + file + ":");
                     var refoutFile = file.Replace(".in", ".refout");
                     var refout = File.Exists(refoutFile) ? File.ReadAllLines(refoutFile) : null;
-                    var input = GetNormalizedInput(file);
+                    var input = File.ReadAllText(file);
                     var iline = 0;
                     var answers = new List<string>();
                     var errors = new List<string>();
