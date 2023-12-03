@@ -3,7 +3,7 @@
 namespace AdventOfCode;
 
 [AttributeUsage(AttributeTargets.Class)]
-internal sealed partial class ProblemName([Property(Setter = "")] string name) : Attribute;
+internal sealed partial class ProblemInfo([Property(Setter = "")] string name, [Property(Setter = "")] bool normalizeInput = true) : Attribute;
 
 public interface ISolver
 {
@@ -31,13 +31,16 @@ internal static class SolverExtensions
     }
 
     public static string GetName(this ISolver solver)
-    {
-        return (
-            solver
-                .GetType()
-                .GetCustomAttribute(typeof(ProblemName)) as ProblemName
-        ).Name;
-    }
+    => solver
+        .GetType()
+        .GetCustomAttribute<ProblemInfo>()
+        .Name;
+
+    public static bool IsNormalizedInput(this ISolver solver)
+    => solver
+        .GetType()
+        .GetCustomAttribute<ProblemInfo>()
+        .NormalizeInput;
 
     public static string DayName(this ISolver solver)
     => $"Day {solver.Day()}";
@@ -122,7 +125,6 @@ internal static class Runner
 
     public static SolverResult RunSolver(ISolver solver)
     {
-
         var workingDir = solver.WorkingDir();
         var indent = "    ";
         Write(ConsoleColor.White, $"{indent}{solver.DayName()}: {solver.GetName()}");
@@ -143,7 +145,7 @@ internal static class Runner
                     Console.WriteLine("  " + file + ":");
                     var refoutFile = file.Replace(".in", ".refout");
                     var refout = File.Exists(refoutFile) ? File.ReadAllLines(refoutFile) : null;
-                    var input = File.ReadAllText(file);
+                    var input = solver.IsNormalizedInput() ? GetNormalizedInput(file) : File.ReadAllText(file);
                     var iline = 0;
                     var answers = new List<string>();
                     var errors = new List<string>();
@@ -223,7 +225,7 @@ internal static class Runner
                 case ConsoleKey.Enter:
                 case ConsoleKey.Spacebar:
                     Console.Clear();
-                    displays[displaySelected].action(GetNormalizedInput(files[fileSelected]));
+                    displays[displaySelected].action(((ISolver)display).IsNormalizedInput() ? GetNormalizedInput(files[fileSelected]) : File.ReadAllText(files[fileSelected]));
                     Console.ReadLine();
                     break;
             }
