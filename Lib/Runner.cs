@@ -42,6 +42,9 @@ internal static class SolverExtensions
         .GetCustomAttribute<ProblemInfo>()
         .NormalizeInput;
 
+    public static string GetInput(this ISolver solver, string path)
+    => solver.IsNormalizedInput() ? Runner.GetNormalizedInput(path) : File.ReadAllText(path);
+
     public static string DayName(this ISolver solver)
     => $"Day {solver.Day()}";
 
@@ -88,7 +91,6 @@ internal record SolverResult(string[] answers, string[] errors);
 #endif
 internal static class Runner
 {
-
     public static string GetNormalizedInput(string file)
     {
         var input = File.ReadAllText(file);
@@ -145,7 +147,7 @@ internal static class Runner
                     Console.WriteLine("  " + file + ":");
                     var refoutFile = file.Replace(".in", ".refout");
                     var refout = File.Exists(refoutFile) ? File.ReadAllLines(refoutFile) : null;
-                    var input = solver.IsNormalizedInput() ? GetNormalizedInput(file) : File.ReadAllText(file);
+                    var input = solver.GetInput(file);
                     var iline = 0;
                     var answers = new List<string>();
                     var errors = new List<string>();
@@ -225,7 +227,7 @@ internal static class Runner
                 case ConsoleKey.Enter:
                 case ConsoleKey.Spacebar:
                     Console.Clear();
-                    displays[displaySelected].action(((ISolver)display).IsNormalizedInput() ? GetNormalizedInput(files[fileSelected]) : File.ReadAllText(files[fileSelected]));
+                    displays[displaySelected].action(((ISolver)display).GetInput(files[fileSelected]));
                     Console.ReadLine();
                     break;
             }
