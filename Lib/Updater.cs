@@ -179,7 +179,7 @@ internal static partial class Updater
                     var tag = repo.Tags[$"Y{problem.Year}D{problem.Day}P1"];
                     var initial = (Git.Commit)tag.Target;
                     var duration = signature.When - initial.Committer.When;
-                    Process.Start("git", ["commit", "-m", $"Solved P1 in {duration:h\\:mm\\:ss}", "--allow-empty"]).WaitForExit();
+                    Process.Start("git", ["commit", "-m", $"Solved P1 in {(int)duration.TotalHours}:{duration:mm\\:ss}", "--allow-empty"]).WaitForExit();
                     repo.Tags.Add($"Y{problem.Year}D{problem.Day}P2", repo.Head.Tip);
                 }
                 else
@@ -192,7 +192,7 @@ internal static partial class Updater
                         var tag = repo.Tags[$"Y{problem.Year}D{problem.Day}P2"];
                         initial = (Git.Commit)tag.Target;
                         duration = signature.When - initial.Committer.When;
-                        Process.Start("git", ["commit", "-m", $"Solved P2 in {duration:h\\:mm\\:ss}", "--allow-empty"]).WaitForExit();
+                        Process.Start("git", ["commit", "-m", $"Solved P2 in {(int)duration.TotalHours}:{duration:mm\\:ss}", "--allow-empty"]).WaitForExit();
                         repo.Tags.Remove(tag);
                     }
                     if (benchmark)
@@ -214,7 +214,7 @@ internal static partial class Updater
                         var tag = repo.Tags[$"Y{problem.Year}D{problem.Day}P1"];
                         initial = (Git.Commit)tag.Target;
                         duration = signature.When - initial.Committer.When;
-                        Process.Start("git", ["commit", "-m", $"Solved Y{problem.Year}D{problem.Day} in {duration:h\\:mm\\:ss}", "--allow-empty"]).WaitForExit();
+                        Process.Start("git", ["commit", "-m", $"Solved Y{problem.Year}D{problem.Day} in {(int)duration.TotalHours}:{duration:mm\\:ss}", "--allow-empty"]).WaitForExit();
                         Git.Commands.Checkout(repo, branch);
                         repo.Tags.Remove(tag);
                     }
