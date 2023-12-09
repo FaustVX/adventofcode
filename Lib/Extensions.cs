@@ -206,4 +206,38 @@ public static class Extensions
         return count;
     }
 
+    /// <summary>
+    /// Counts the number of times the specified value occurs in the span./// 
+    /// </summary>
+    /// <remarks>
+    /// Similar to <see cref="System.MemoryExtensions.Count{T}(Span{T}, T)"/>, but for <see cref="Enum"/>
+    /// </remarks>
+    /// <param name="span">The span to search.</param>
+    /// <param name="value">The value for which to search.</param>
+    /// <typeparam name="T">The element type of the span.</typeparam>
+    /// <returns>The number of times value was found in the span.</returns>
+    public static int Count<T>(this Span<T> span, T value)
+    where T : struct, Enum
+    => Count((ReadOnlySpan<T>)span, value);
+
+
+    /// <summary>
+    /// Counts the number of times the specified value occurs in the span./// 
+    /// </summary>
+    /// <remarks>
+    /// Similar to <see cref="System.MemoryExtensions.Count{T}(ReadOnlySpan{T}, T)"/>, but for <see cref="Enum"/>
+    /// </remarks>
+    /// <param name="span">The span to search.</param>
+    /// <param name="value">The value for which to search.</param>
+    /// <typeparam name="T">The element type of the span.</typeparam>
+    /// <returns>The number of times value was found in the span.</returns>
+    public static int Count<T>(this ReadOnlySpan<T> span, T value)
+    where T : struct, Enum
+    {
+        var sum = 0;
+        foreach (var item in span)
+            if (item.Equals(value))
+                sum++;
+        return sum;
+    }
 }
