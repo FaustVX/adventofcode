@@ -220,7 +220,6 @@ public static class Extensions
     where T : struct, Enum
     => Count((ReadOnlySpan<T>)span, value);
 
-
     /// <summary>
     /// Counts the number of times the specified value occurs in the span./// 
     /// </summary>
@@ -236,7 +235,7 @@ public static class Extensions
     {
         var sum = 0;
         foreach (var item in span)
-            if (item.Equals(value))
+            if (EqualityComparer<T>.Default.Equals(item, value))
                 sum++;
         return sum;
     }
