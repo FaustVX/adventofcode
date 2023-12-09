@@ -83,7 +83,8 @@
                     "tooltip": "Run",
                     "running": {
                         "label": "running"
-                    }
+                    },
+                    "filePattern": "Solution.cs",
                 },
             },
         },
@@ -104,7 +105,8 @@
                     "tooltip": "Upload",
                     "running": {
                         "label": "updating"
-                    }
+                    },
+                    "filePattern": "Solution.cs",
                 },
                 "env": {
                     "SESSION": "${input:session}"
@@ -129,8 +131,9 @@
                     "label": "$(preview)",
                     "tooltip": "Display",
                     "running": {
-                        "label": "running display"
-                    }
+                        "label": "displaying"
+                    },
+                    "filePattern": "Solution.cs",
                 },
             },
         },
@@ -150,8 +153,9 @@
                     "label": "$(watch)",
                     "tooltip": "Benchmark",
                     "running": {
-                        "label": "running benchmark"
-                    }
+                        "label": "benchmarking"
+                    },
+                    "filePattern": "Solution.cs",
                 },
             },
         },
@@ -171,6 +175,7 @@
                 "statusbar": {
                     "label": "$(note)",
                     "tooltip": "Format today files",
+                    "filePattern": "Solution.cs",
                 },
             },
         },
