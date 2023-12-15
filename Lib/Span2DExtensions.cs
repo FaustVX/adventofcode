@@ -21,27 +21,27 @@ public static partial class Span2DExtensions
     where T : IEquatable<T>?
     => Contains((ReadOnlySpan2D<T>)span, value);
 
-    public static (int ron, int column) IndexOfAny<T>(this Span2D<T> span, SearchValues<T> values)
+    public static (int row, int column) IndexOfAny<T>(this Span2D<T> span, SearchValues<T> values)
     where T : IEquatable<T>?
     => IndexOfAny((ReadOnlySpan2D<T>)span, values);
 
-    public static (int ron, int column) IndexOfAnyExcept<T>(this Span2D<T> span, SearchValues<T> values)
+    public static (int row, int column) IndexOfAnyExcept<T>(this Span2D<T> span, SearchValues<T> values)
     where T : IEquatable<T>?
     => IndexOfAnyExcept((ReadOnlySpan2D<T>)span, values);
 
-    public static (int ron, int column) IndexOf<T>(this Span2D<T> span, T value)
+    public static (int row, int column) IndexOf<T>(this Span2D<T> span, T value)
     where T : IEquatable<T>?
     => IndexOf((ReadOnlySpan2D<T>)span, value);
 
-    public static (int ron, int column) LastIndexOfAny<T>(this Span2D<T> span, SearchValues<T> values)
+    public static (int row, int column) LastIndexOfAny<T>(this Span2D<T> span, SearchValues<T> values)
     where T : IEquatable<T>?
     => LastIndexOfAny((ReadOnlySpan2D<T>)span, values);
 
-    public static (int ron, int column) LastIndexOfAnyExcept<T>(this Span2D<T> span, SearchValues<T> values)
+    public static (int row, int column) LastIndexOfAnyExcept<T>(this Span2D<T> span, SearchValues<T> values)
     where T : IEquatable<T>?
     => LastIndexOfAnyExcept((ReadOnlySpan2D<T>)span, values);
 
-    public static (int ron, int column) LastIndexOf<T>(this Span2D<T> span, T value)
+    public static (int row, int column) LastIndexOf<T>(this Span2D<T> span, T value)
     where T : IEquatable<T>?
     => LastIndexOf((ReadOnlySpan2D<T>)span, value);
 
@@ -72,7 +72,7 @@ public static partial class Span2DExtensions
         return false;
     }
 
-    public static (int ron, int column) IndexOfAny<T>(this ReadOnlySpan2D<T> span, SearchValues<T> values)
+    public static (int row, int column) IndexOfAny<T>(this ReadOnlySpan2D<T> span, SearchValues<T> values)
     where T : IEquatable<T>?
     {
         for (int y = 0; y < span.Height; y++)
@@ -81,7 +81,7 @@ public static partial class Span2DExtensions
         return (-1, -1);
     }
 
-    public static (int ron, int column) IndexOfAnyExcept<T>(this ReadOnlySpan2D<T> span, SearchValues<T> values)
+    public static (int row, int column) IndexOfAnyExcept<T>(this ReadOnlySpan2D<T> span, SearchValues<T> values)
     where T : IEquatable<T>?
     {
         for (int y = 0; y < span.Height; y++)
@@ -90,7 +90,7 @@ public static partial class Span2DExtensions
         return (-1, -1);
     }
 
-    public static (int ron, int column) IndexOf<T>(this ReadOnlySpan2D<T> span, T value)
+    public static (int row, int column) IndexOf<T>(this ReadOnlySpan2D<T> span, T value)
     where T : IEquatable<T>?
     {
         for (int y = 0; y < span.Height; y++)
@@ -99,7 +99,7 @@ public static partial class Span2DExtensions
         return (-1, -1);
     }
 
-    public static (int ron, int column) LastIndexOfAny<T>(this ReadOnlySpan2D<T> span, SearchValues<T> values)
+    public static (int row, int column) LastIndexOfAny<T>(this ReadOnlySpan2D<T> span, SearchValues<T> values)
     where T : IEquatable<T>?
     {
         for (int y = 0; y < span.Height; y++)
@@ -108,7 +108,7 @@ public static partial class Span2DExtensions
         return (-1, -1);
     }
 
-    public static (int ron, int column) LastIndexOfAnyExcept<T>(this ReadOnlySpan2D<T> span, SearchValues<T> values)
+    public static (int row, int column) LastIndexOfAnyExcept<T>(this ReadOnlySpan2D<T> span, SearchValues<T> values)
     where T : IEquatable<T>?
     {
         for (int y = 0; y < span.Height; y++)
@@ -117,7 +117,7 @@ public static partial class Span2DExtensions
         return (-1, -1);
     }
 
-    public static (int ron, int column) LastIndexOf<T>(this ReadOnlySpan2D<T> span, T value)
+    public static (int row, int column) LastIndexOf<T>(this ReadOnlySpan2D<T> span, T value)
     where T : IEquatable<T>?
     {
         for (int y = 0; y < span.Height; y++)
