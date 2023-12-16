@@ -21,10 +21,18 @@ internal interface IDisplay
 #endif
 internal static class SolverExtensions
 {
-    public static IEnumerable<object> Solve(this ISolver solver, string input)
+    public static IEnumerable<object> Solve(this ISolver solver, string input, string[] expected)
     {
         var memory = input.AsMemory();
+        if (expected is [var one, ..] && !string.IsNullOrWhiteSpace(one))
+            Globals.ExpectedOutput = one;
+        else
+            Globals.ExpectedOutput = null;
         yield return solver.PartOne(memory);
+        if (expected is [_, var two, ..] && !string.IsNullOrWhiteSpace(two))
+            Globals.ExpectedOutput = two;
+        else
+            Globals.ExpectedOutput = null;
         var res = solver.PartTwo(memory);
         if (res != null)
             yield return res;
@@ -152,7 +160,7 @@ internal static class Runner
                     var answers = new List<string>();
                     var errors = new List<string>();
                     var stopwatch = TimeProvider.System.GetTimestamp();
-                    foreach (var line in solver.Solve(input))
+                    foreach (var line in solver.Solve(input, refout))
                     {
                         var ticks = TimeProvider.System.GetElapsedTime(stopwatch);
                         answers.Add(line.ToString());
