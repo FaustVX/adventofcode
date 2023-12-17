@@ -38,7 +38,7 @@ internal static partial class Updater
         }
         else
             Console.WriteLine($"{year}/Day{day:00} already exists");
-        OpenVsCode([$"{year}/Day{day:00}/Solution.cs", $"{year}/Day{day:00}/README.md", $"{year}/Day{day:00}/input.in"]);
+        OpenVsCode([$"{year}/Day{day:00}/README.md", $"{year}/Day{day:00}/Solution.cs", $"{year}/Day{day:00}/input.in"]);
     }
 
     public static async Task Update(int year, int day)
