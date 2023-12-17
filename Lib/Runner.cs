@@ -28,14 +28,31 @@ internal static class SolverExtensions
             Globals.ExpectedOutput = one;
         else
             Globals.ExpectedOutput = null;
-        yield return solver.PartOne(memory);
+        object result = null;
+        try
+        {
+            result = solver.PartOne(memory);
+        }
+        catch (Exception ex)
+        {
+            Runner.WriteLine(ConsoleColor.DarkRed, ex.ToString());
+            result = null;
+        }
+        yield return result;
         if (expected is [_, var two, ..] && !string.IsNullOrWhiteSpace(two))
             Globals.ExpectedOutput = two;
         else
             Globals.ExpectedOutput = null;
-        var res = solver.PartTwo(memory);
-        if (res != null)
-            yield return res;
+        try
+        {
+            result = solver.PartTwo(memory);
+        }
+        catch (Exception ex)
+        {
+            Runner.WriteLine(ConsoleColor.DarkRed, ex.ToString());
+            result = null;
+        }
+        yield return result;
     }
 
     public static string GetName(this ISolver solver)
@@ -163,10 +180,10 @@ internal static class Runner
                     foreach (var line in solver.Solve(input, refout))
                     {
                         var ticks = TimeProvider.System.GetElapsedTime(stopwatch);
-                        answers.Add(line.ToString());
+                        answers.Add(line?.ToString());
                         var (statusColor, status, err) =
                             refout == null || refout.Length <= iline || string.IsNullOrWhiteSpace(refout[iline]) ? (ConsoleColor.Cyan, "?", null) :
-                            refout[iline] == line.ToString() ? (ConsoleColor.DarkGreen, "✓", null) :
+                            refout[iline] == line?.ToString() ? (ConsoleColor.DarkGreen, "✓", null) :
                             (ConsoleColor.Red, "X", $"{solver.DayName()}: In line {iline + 1} expected '{refout[iline]}' but found '{line}'");
 
                         if (err is not null)
@@ -280,10 +297,10 @@ internal static class Runner
         }
     }
 
-    private static void WriteLine(ConsoleColor color = ConsoleColor.Gray, string text = "")
+    internal static void WriteLine(ConsoleColor color = ConsoleColor.Gray, string text = "")
     => Write(color, text + "\n");
 
-    private static void Write(ConsoleColor color = ConsoleColor.Gray, string text = "")
+    internal static void Write(ConsoleColor color = ConsoleColor.Gray, string text = "")
     {
         var c = Console.ForegroundColor;
         Console.ForegroundColor = color;
