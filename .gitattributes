@@ -1,3 +1,5 @@
+* eol=lf
+
 # .git/config
 #[filter "crypt"]
 #	clean = openssl enc -aes-256-cbc -e -iter 10 -salt -S **************** -pass pass:****
