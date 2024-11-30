@@ -22,5 +22,5 @@ public partial class AocCommuncationException([Field] string title, [Field] Http
     }
 
     public static AocCommuncationException WrongDate()
-    => new("Event is not active. This option works in Dec 1-25 only)");
+    => new("Event is not active. This option works in Dec 1-25 only");
 }
