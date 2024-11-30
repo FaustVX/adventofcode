@@ -23,7 +23,7 @@ internal partial class Calendar
 {
     public int Year;
 
-    public Dictionary<string[], int> Theme = new();
+    public Dictionary<string[], int> Theme = [];
     public IReadOnlyList<IReadOnlyList<CalendarToken>> Lines { get; private set; } = default!;
 
     public static Calendar Parse(int year, IDocument document)

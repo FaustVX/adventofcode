@@ -16,7 +16,7 @@ namespace AdventOfCode.Model
         /// ○ Match a character in the set [.0-9] atomically at least once.<br/>
         /// </code>
         /// </remarks>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Text.RegularExpressions.Generator", "8.0.9.3103")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Text.RegularExpressions.Generator", "9.0.11.2809")]
         private static partial global::System.Text.RegularExpressions.Regex WidthRegex() => global::System.Text.RegularExpressions.Generated.WidthRegex_0.Instance;
     }
 }
@@ -45,7 +45,7 @@ namespace AdventOfCode.Model
         /// ○ Match ')'.<br/>
         /// </code>
         /// </remarks>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Text.RegularExpressions.Generator", "8.0.9.3103")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Text.RegularExpressions.Generator", "9.0.11.2809")]
         private static partial global::System.Text.RegularExpressions.Regex RGBAColorRegex() => global::System.Text.RegularExpressions.Generated.RGBAColorRegex_1.Instance;
     }
 }
@@ -66,7 +66,7 @@ namespace AdventOfCode.Model
         /// ○ Match the string " ---".<br/>
         /// </code>
         /// </remarks>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Text.RegularExpressions.Generator", "8.0.9.3103")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Text.RegularExpressions.Generator", "9.0.11.2809")]
         private static partial global::System.Text.RegularExpressions.Regex TitleRegex() => global::System.Text.RegularExpressions.Generated.TitleRegex_2.Instance;
     }
 }
@@ -84,7 +84,7 @@ namespace AdventOfCode
         /// ○ Match '\n'.<br/>
         /// </code>
         /// </remarks>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Text.RegularExpressions.Generator", "8.0.9.3103")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Text.RegularExpressions.Generator", "9.0.11.2809")]
         private static partial global::System.Text.RegularExpressions.Regex NewLineRegex() => global::System.Text.RegularExpressions.Generated.NewLineRegex_3.Instance;
     }
 }
@@ -101,7 +101,7 @@ namespace AdventOfCode
         /// ○ Match a whitespace character.<br/>
         /// </code>
         /// </remarks>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Text.RegularExpressions.Generator", "8.0.9.3103")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Text.RegularExpressions.Generator", "9.0.11.2809")]
         private static partial global::System.Text.RegularExpressions.Regex WhitespaceRegex() => global::System.Text.RegularExpressions.Generated.WhitespaceRegex_4.Instance;
     }
 }
@@ -121,7 +121,7 @@ namespace AdventOfCode
         ///         ○ Match '\n'.<br/>
         /// </code>
         /// </remarks>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Text.RegularExpressions.Generator", "8.0.9.3103")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Text.RegularExpressions.Generator", "9.0.11.2809")]
         private static partial global::System.Text.RegularExpressions.Regex NewLine2Regex() => global::System.Text.RegularExpressions.Generated.NewLine2Regex_5.Instance;
     }
 }
@@ -141,7 +141,7 @@ namespace AdventOfCode
         /// ○ Match any character atomically any number of times.<br/>
         /// </code>
         /// </remarks>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Text.RegularExpressions.Generator", "8.0.9.3103")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Text.RegularExpressions.Generator", "9.0.11.2809")]
         private static partial global::System.Text.RegularExpressions.Regex ContinueToPart2Regex() => global::System.Text.RegularExpressions.Generated.ContinueToPart2Regex_6.Instance;
     }
 }
@@ -161,7 +161,7 @@ namespace AdventOfCode
         /// ○ Match any character atomically any number of times.<br/>
         /// </code>
         /// </remarks>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Text.RegularExpressions.Generator", "8.0.9.3103")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Text.RegularExpressions.Generator", "9.0.11.2809")]
         private static partial global::System.Text.RegularExpressions.Regex YouHaveCompletedDayRegex() => global::System.Text.RegularExpressions.Generated.YouHaveCompletedDayRegex_7.Instance;
     }
 }
@@ -181,7 +181,7 @@ namespace AdventOfCode
         /// ○ Match any character atomically any number of times.<br/>
         /// </code>
         /// </remarks>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Text.RegularExpressions.Generator", "8.0.9.3103")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Text.RegularExpressions.Generator", "9.0.11.2809")]
         private static partial global::System.Text.RegularExpressions.Regex YouGuessedRegex() => global::System.Text.RegularExpressions.Generated.YouGuessedRegex_8.Instance;
     }
 }
@@ -200,7 +200,7 @@ namespace AdventOfCode
         /// ○ Match the string "  ".<br/>
         /// </code>
         /// </remarks>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Text.RegularExpressions.Generator", "8.0.9.3103")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Text.RegularExpressions.Generator", "9.0.11.2809")]
         private static partial global::System.Text.RegularExpressions.Regex SpacesRegex() => global::System.Text.RegularExpressions.Generated.SpacesRegex_9.Instance;
     }
 }
@@ -218,7 +218,7 @@ namespace System.Text.RegularExpressions.Generated
     using System.Threading;
 
     /// <summary>Custom <see cref="Regex"/>-derived type for the WidthRegex method.</summary>
-    [GeneratedCodeAttribute("System.Text.RegularExpressions.Generator", "8.0.9.3103")]
+    [GeneratedCodeAttribute("System.Text.RegularExpressions.Generator", "9.0.11.2809")]
     file sealed class WidthRegex_0 : Regex
     {
         /// <summary>Cached, thread-safe singleton instance.</summary>
@@ -234,7 +234,7 @@ namespace System.Text.RegularExpressions.Generated
             base.factory = new RunnerFactory();
             base.capsize = 1;
         }
-    
+            
         /// <summary>Provides a factory for creating <see cref="RegexRunner"/> instances to be used by methods on <see cref="Regex"/>.</summary>
         private sealed class RunnerFactory : RegexRunnerFactory
         {
@@ -323,7 +323,7 @@ namespace System.Text.RegularExpressions.Generated
     }
     
     /// <summary>Custom <see cref="Regex"/>-derived type for the RGBAColorRegex method.</summary>
-    [GeneratedCodeAttribute("System.Text.RegularExpressions.Generator", "8.0.9.3103")]
+    [GeneratedCodeAttribute("System.Text.RegularExpressions.Generator", "9.0.11.2809")]
     file sealed class RGBAColorRegex_1 : Regex
     {
         /// <summary>Cached, thread-safe singleton instance.</summary>
@@ -341,7 +341,7 @@ namespace System.Text.RegularExpressions.Generated
             base.capslist = new string[] {"0", "r", "g", "b", "a" };
             base.capsize = 5;
         }
-    
+            
         /// <summary>Provides a factory for creating <see cref="RegexRunner"/> instances to be used by methods on <see cref="Regex"/>.</summary>
         private sealed class RunnerFactory : RegexRunnerFactory
         {
@@ -380,7 +380,7 @@ namespace System.Text.RegularExpressions.Generated
                     {
                         // The pattern has the literal "rgba(" at the beginning of the pattern. Find the next occurrence.
                         // If it can't be found, there's no match.
-                        int i = inputSpan.Slice(pos).IndexOf("rgba(");
+                        int i = inputSpan.Slice(pos).IndexOfAny(Utilities.s_indexOfString_51CECF572885F990C73E7697216BC69E1AA29EEBA5DD34AEDC627AE466501040);
                         if (i >= 0)
                         {
                             base.runtextpos = pos + i;
@@ -571,7 +571,7 @@ namespace System.Text.RegularExpressions.Generated
     }
     
     /// <summary>Custom <see cref="Regex"/>-derived type for the TitleRegex method.</summary>
-    [GeneratedCodeAttribute("System.Text.RegularExpressions.Generator", "8.0.9.3103")]
+    [GeneratedCodeAttribute("System.Text.RegularExpressions.Generator", "9.0.11.2809")]
     file sealed class TitleRegex_2 : Regex
     {
         /// <summary>Cached, thread-safe singleton instance.</summary>
@@ -587,7 +587,7 @@ namespace System.Text.RegularExpressions.Generated
             base.factory = new RunnerFactory();
             base.capsize = 2;
         }
-    
+            
         /// <summary>Provides a factory for creating <see cref="RegexRunner"/> instances to be used by methods on <see cref="Regex"/>.</summary>
         private sealed class RunnerFactory : RegexRunnerFactory
         {
@@ -787,7 +787,7 @@ namespace System.Text.RegularExpressions.Generated
     }
     
     /// <summary>Custom <see cref="Regex"/>-derived type for the NewLineRegex method.</summary>
-    [GeneratedCodeAttribute("System.Text.RegularExpressions.Generator", "8.0.9.3103")]
+    [GeneratedCodeAttribute("System.Text.RegularExpressions.Generator", "9.0.11.2809")]
     file sealed class NewLineRegex_3 : Regex
     {
         /// <summary>Cached, thread-safe singleton instance.</summary>
@@ -803,7 +803,7 @@ namespace System.Text.RegularExpressions.Generated
             base.factory = new RunnerFactory();
             base.capsize = 1;
         }
-    
+            
         /// <summary>Provides a factory for creating <see cref="RegexRunner"/> instances to be used by methods on <see cref="Regex"/>.</summary>
         private sealed class RunnerFactory : RegexRunnerFactory
         {
@@ -891,7 +891,7 @@ namespace System.Text.RegularExpressions.Generated
     }
     
     /// <summary>Custom <see cref="Regex"/>-derived type for the WhitespaceRegex method.</summary>
-    [GeneratedCodeAttribute("System.Text.RegularExpressions.Generator", "8.0.9.3103")]
+    [GeneratedCodeAttribute("System.Text.RegularExpressions.Generator", "9.0.11.2809")]
     file sealed class WhitespaceRegex_4 : Regex
     {
         /// <summary>Cached, thread-safe singleton instance.</summary>
@@ -907,7 +907,7 @@ namespace System.Text.RegularExpressions.Generated
             base.factory = new RunnerFactory();
             base.capsize = 1;
         }
-    
+            
         /// <summary>Provides a factory for creating <see cref="RegexRunner"/> instances to be used by methods on <see cref="Regex"/>.</summary>
         private sealed class RunnerFactory : RegexRunnerFactory
         {
@@ -942,7 +942,7 @@ namespace System.Text.RegularExpressions.Generated
                     {
                         // The pattern begins with a whitespace character.
                         // Find the next occurrence. If it can't be found, there's no match.
-                        int i = inputSpan.Slice(pos).IndexOfAnyWhiteSpace();
+                        int i = inputSpan.Slice(pos).IndexOfAny(Utilities.s_whitespace);
                         if (i >= 0)
                         {
                             base.runtextpos = pos + i;
@@ -960,7 +960,7 @@ namespace System.Text.RegularExpressions.Generated
     }
     
     /// <summary>Custom <see cref="Regex"/>-derived type for the NewLine2Regex method.</summary>
-    [GeneratedCodeAttribute("System.Text.RegularExpressions.Generator", "8.0.9.3103")]
+    [GeneratedCodeAttribute("System.Text.RegularExpressions.Generator", "9.0.11.2809")]
     file sealed class NewLine2Regex_5 : Regex
     {
         /// <summary>Cached, thread-safe singleton instance.</summary>
@@ -976,7 +976,7 @@ namespace System.Text.RegularExpressions.Generated
             base.factory = new RunnerFactory();
             base.capsize = 2;
         }
-    
+            
         /// <summary>Provides a factory for creating <see cref="RegexRunner"/> instances to be used by methods on <see cref="Regex"/>.</summary>
         private sealed class RunnerFactory : RegexRunnerFactory
         {
@@ -1089,7 +1089,7 @@ namespace System.Text.RegularExpressions.Generated
     }
     
     /// <summary>Custom <see cref="Regex"/>-derived type for the ContinueToPart2Regex method.</summary>
-    [GeneratedCodeAttribute("System.Text.RegularExpressions.Generator", "8.0.9.3103")]
+    [GeneratedCodeAttribute("System.Text.RegularExpressions.Generator", "9.0.11.2809")]
     file sealed class ContinueToPart2Regex_6 : Regex
     {
         /// <summary>Cached, thread-safe singleton instance.</summary>
@@ -1105,7 +1105,7 @@ namespace System.Text.RegularExpressions.Generated
             base.factory = new RunnerFactory();
             base.capsize = 1;
         }
-    
+            
         /// <summary>Provides a factory for creating <see cref="RegexRunner"/> instances to be used by methods on <see cref="Regex"/>.</summary>
         private sealed class RunnerFactory : RegexRunnerFactory
         {
@@ -1144,7 +1144,7 @@ namespace System.Text.RegularExpressions.Generated
                     {
                         // The pattern has the literal "[Continue to Part Two" at the beginning of the pattern. Find the next occurrence.
                         // If it can't be found, there's no match.
-                        int i = inputSpan.Slice(pos).IndexOf("[Continue to Part Two");
+                        int i = inputSpan.Slice(pos).IndexOfAny(Utilities.s_indexOfString_E6A228B76E9376A6FE0666728213354BCEC4D51363BA02D548FA5A6F5FE48479);
                         if (i >= 0)
                         {
                             base.runtextpos = pos + i;
@@ -1192,7 +1192,7 @@ namespace System.Text.RegularExpressions.Generated
     }
     
     /// <summary>Custom <see cref="Regex"/>-derived type for the YouHaveCompletedDayRegex method.</summary>
-    [GeneratedCodeAttribute("System.Text.RegularExpressions.Generator", "8.0.9.3103")]
+    [GeneratedCodeAttribute("System.Text.RegularExpressions.Generator", "9.0.11.2809")]
     file sealed class YouHaveCompletedDayRegex_7 : Regex
     {
         /// <summary>Cached, thread-safe singleton instance.</summary>
@@ -1208,7 +1208,7 @@ namespace System.Text.RegularExpressions.Generated
             base.factory = new RunnerFactory();
             base.capsize = 1;
         }
-    
+            
         /// <summary>Provides a factory for creating <see cref="RegexRunner"/> instances to be used by methods on <see cref="Regex"/>.</summary>
         private sealed class RunnerFactory : RegexRunnerFactory
         {
@@ -1247,7 +1247,7 @@ namespace System.Text.RegularExpressions.Generated
                     {
                         // The pattern has the literal "You have completed Day" at the beginning of the pattern. Find the next occurrence.
                         // If it can't be found, there's no match.
-                        int i = inputSpan.Slice(pos).IndexOf("You have completed Day");
+                        int i = inputSpan.Slice(pos).IndexOfAny(Utilities.s_indexOfString_3DD9FC9747745A7F6807CE02BD0C493CBCEE2062680A6709E2C4F42C93E5C5B2);
                         if (i >= 0)
                         {
                             base.runtextpos = pos + i;
@@ -1295,7 +1295,7 @@ namespace System.Text.RegularExpressions.Generated
     }
     
     /// <summary>Custom <see cref="Regex"/>-derived type for the YouGuessedRegex method.</summary>
-    [GeneratedCodeAttribute("System.Text.RegularExpressions.Generator", "8.0.9.3103")]
+    [GeneratedCodeAttribute("System.Text.RegularExpressions.Generator", "9.0.11.2809")]
     file sealed class YouGuessedRegex_8 : Regex
     {
         /// <summary>Cached, thread-safe singleton instance.</summary>
@@ -1311,7 +1311,7 @@ namespace System.Text.RegularExpressions.Generated
             base.factory = new RunnerFactory();
             base.capsize = 1;
         }
-    
+            
         /// <summary>Provides a factory for creating <see cref="RegexRunner"/> instances to be used by methods on <see cref="Regex"/>.</summary>
         private sealed class RunnerFactory : RegexRunnerFactory
         {
@@ -1350,7 +1350,7 @@ namespace System.Text.RegularExpressions.Generated
                     {
                         // The pattern has the literal "(You guessed" at the beginning of the pattern. Find the next occurrence.
                         // If it can't be found, there's no match.
-                        int i = inputSpan.Slice(pos).IndexOf("(You guessed");
+                        int i = inputSpan.Slice(pos).IndexOfAny(Utilities.s_indexOfString_8BBF393C3188D3D271FBEB4959A25275CA6CDB7C9743E36C4BCCCD1CB765BDF3);
                         if (i >= 0)
                         {
                             base.runtextpos = pos + i;
@@ -1398,7 +1398,7 @@ namespace System.Text.RegularExpressions.Generated
     }
     
     /// <summary>Custom <see cref="Regex"/>-derived type for the SpacesRegex method.</summary>
-    [GeneratedCodeAttribute("System.Text.RegularExpressions.Generator", "8.0.9.3103")]
+    [GeneratedCodeAttribute("System.Text.RegularExpressions.Generator", "9.0.11.2809")]
     file sealed class SpacesRegex_9 : Regex
     {
         /// <summary>Cached, thread-safe singleton instance.</summary>
@@ -1414,7 +1414,7 @@ namespace System.Text.RegularExpressions.Generated
             base.factory = new RunnerFactory();
             base.capsize = 1;
         }
-    
+            
         /// <summary>Provides a factory for creating <see cref="RegexRunner"/> instances to be used by methods on <see cref="Regex"/>.</summary>
         private sealed class RunnerFactory : RegexRunnerFactory
         {
@@ -1449,7 +1449,7 @@ namespace System.Text.RegularExpressions.Generated
                     {
                         // The pattern has the literal "  " at the beginning of the pattern. Find the next occurrence.
                         // If it can't be found, there's no match.
-                        int i = inputSpan.Slice(pos).IndexOf("  ");
+                        int i = inputSpan.Slice(pos).IndexOfAny(Utilities.s_indexOfString_4DF02EB6A8B26A8E8AE968B0C6D57D7D5175C6C3C4EBD7238C244D8A4C1ADD4E);
                         if (i >= 0)
                         {
                             base.runtextpos = pos + i;
@@ -1467,7 +1467,7 @@ namespace System.Text.RegularExpressions.Generated
     }
     
     /// <summary>Helper methods used by generated <see cref="Regex"/>-derived implementations.</summary>
-    [GeneratedCodeAttribute("System.Text.RegularExpressions.Generator", "8.0.9.3103")]
+    [GeneratedCodeAttribute("System.Text.RegularExpressions.Generator", "9.0.11.2809")]
     file static class Utilities
     {
         /// <summary>Default timeout value set in <see cref="AppContext"/>, or <see cref="Regex.InfiniteMatchTimeout"/> if none was set.</summary>
@@ -1476,36 +1476,25 @@ namespace System.Text.RegularExpressions.Generated
         /// <summary>Whether <see cref="s_defaultTimeout"/> is non-infinite.</summary>
         internal static readonly bool s_hasTimeout = s_defaultTimeout != Regex.InfiniteMatchTimeout;
         
-        /// <summary>Finds the next index of any character that matches a whitespace character.</summary>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        internal static int IndexOfAnyWhiteSpace(this ReadOnlySpan<char> span)
-        {
-            int i = span.IndexOfAnyExcept(Utilities.s_asciiExceptWhiteSpace);
-            if ((uint)i < (uint)span.Length)
-            {
-                if (char.IsAscii(span[i]))
-                {
-                    return i;
-                }
-        
-                do
-                {
-                    if (char.IsWhiteSpace(span[i]))
-                    {
-                        return i;
-                    }
-                    i++;
-                }
-                while ((uint)i < (uint)span.Length);
-            }
-        
-            return -1;
-        }
-        
-        /// <summary>Supports searching for characters in or not in "\0\u0001\u0002\u0003\u0004\u0005\u0006\a\b\u000e\u000f\u0010\u0011\u0012\u0013\u0014\u0015\u0016\u0017\u0018\u0019\u001a\u001b\u001c\u001d\u001e\u001f!\"#$%&amp;'()*+,-./0123456789:;&lt;=&gt;?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~\u007f".</summary>
-        internal static readonly SearchValues<char> s_asciiExceptWhiteSpace = SearchValues.Create("\0\u0001\u0002\u0003\u0004\u0005\u0006\a\b\u000e\u000f\u0010\u0011\u0012\u0013\u0014\u0015\u0016\u0017\u0018\u0019\u001a\u001b\u001c\u001d\u001e\u001f!\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~\u007f");
-        
         /// <summary>Supports searching for characters in or not in ".0123456789".</summary>
         internal static readonly SearchValues<char> s_ascii_40FF030000000000000000 = SearchValues.Create(".0123456789");
+        
+        /// <summary>Supports searching for the string "You have completed Day".</summary>
+        internal static readonly SearchValues<string> s_indexOfString_3DD9FC9747745A7F6807CE02BD0C493CBCEE2062680A6709E2C4F42C93E5C5B2 = SearchValues.Create(["You have completed Day"], StringComparison.Ordinal);
+        
+        /// <summary>Supports searching for the string "  ".</summary>
+        internal static readonly SearchValues<string> s_indexOfString_4DF02EB6A8B26A8E8AE968B0C6D57D7D5175C6C3C4EBD7238C244D8A4C1ADD4E = SearchValues.Create(["  "], StringComparison.Ordinal);
+        
+        /// <summary>Supports searching for the string "rgba(".</summary>
+        internal static readonly SearchValues<string> s_indexOfString_51CECF572885F990C73E7697216BC69E1AA29EEBA5DD34AEDC627AE466501040 = SearchValues.Create(["rgba("], StringComparison.Ordinal);
+        
+        /// <summary>Supports searching for the string "(You guessed".</summary>
+        internal static readonly SearchValues<string> s_indexOfString_8BBF393C3188D3D271FBEB4959A25275CA6CDB7C9743E36C4BCCCD1CB765BDF3 = SearchValues.Create(["(You guessed"], StringComparison.Ordinal);
+        
+        /// <summary>Supports searching for the string "[Continue to Part Two".</summary>
+        internal static readonly SearchValues<string> s_indexOfString_E6A228B76E9376A6FE0666728213354BCEC4D51363BA02D548FA5A6F5FE48479 = SearchValues.Create(["[Continue to Part Two"], StringComparison.Ordinal);
+        
+        /// <summary>Supports searching for characters in or not in "\t\n\v\f\r \u0085             \u2028\u2029  　".</summary>
+        internal static readonly SearchValues<char> s_whitespace = SearchValues.Create("\t\n\v\f\r \u0085             \u2028\u2029  　");
     }
 }

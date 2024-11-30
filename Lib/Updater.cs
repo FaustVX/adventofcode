@@ -1,5 +1,4 @@
 using System.Net;
-using System.Reflection;
 using AdventOfCode.Generator;
 using AdventOfCode.Model;
 using AngleSharp;
@@ -131,11 +130,11 @@ internal static partial class Updater
             using var handler = new HttpClientHandler() { CookieContainer = cookieContainer };
             using var client = new HttpClient(handler) { BaseAddress = GetBaseAddress() };
 
-            var content = new FormUrlEncodedContent(new[]
-            {
+            var content = new FormUrlEncodedContent(
+            [
                 new KeyValuePair<string, string>("level", level.ToString()),
                 new KeyValuePair<string, string>("answer", answer),
-            });
+            ]);
 
             cookieContainer.Add(GetBaseAddress(), new Cookie("session", GetSession()));
             var result = await client.PostAsync($"/{solver.Year()}/day/{solver.Day()}/answer", content);

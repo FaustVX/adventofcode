@@ -20,6 +20,19 @@ public partial class Project([Field] string repo, [Field] string sslSalt, [Field
         }
     }
 
+    private static void CopyStream(Stream from, Action<Stream, Stream> converter, Stream to)
+    {
+        try
+        {
+            converter(from, to);
+        }
+        finally
+        {
+            from?.Dispose();
+            to?.Dispose();
+        }
+    }
+
     public void Init()
     {
         var dir = Directory.CreateDirectory(Path.Combine("..", $"AoC-{_year}"));
@@ -32,7 +45,7 @@ public partial class Project([Field] string repo, [Field] string sslSalt, [Field
         CopyStream(Extensions.GetEmbededResource("adventofcode..gitattributes"), File.Create(".gitattributes"));
         CopyStream(Extensions.GetEmbededResource("adventofcode..gitignore"), File.Create(".gitignore"));
         var vscode = Directory.CreateDirectory(".vscode");
-        CopyStream(Extensions.GetEmbededResource("adventofcode..vscode.tasks.json"), new FileInfo(Path.Combine(vscode.FullName, "tasks.json")).Create());
+        CopyStream(Extensions.GetEmbededResource("adventofcode..vscode.tasks.json"), ConvertTask, new FileInfo(Path.Combine(vscode.FullName, "tasks.json")).Create());
         CopyStream(Extensions.GetEmbededResource("adventofcode..vscode.extensions.json"), new FileInfo(Path.Combine(vscode.FullName, "extensions.json")).Create());
         CopyStream(Extensions.GetEmbededResource("adventofcode..vscode.launch.json"), new FileInfo(Path.Combine(vscode.FullName, "launch.json")).Create());
         CopyStream(Extensions.GetEmbededResource("adventofcode..vscode.settings.json"), new FileInfo(Path.Combine(vscode.FullName, "settings.json")).Create());
@@ -91,5 +104,13 @@ public partial class Project([Field] string repo, [Field] string sslSalt, [Field
         Process.Start("git", ["add", "*"]).WaitForExit();
         Process.Start("git", ["commit", "-m", "Initial commit"]).WaitForExit();
         Updater.OpenVsCode([dir.FullName]);
+
+        static void ConvertTask(Stream input, Stream output)
+        {
+            var json = System.Text.Json.JsonDocument.Parse(input, new() { AllowTrailingCommas = true, CommentHandling = System.Text.Json.JsonCommentHandling.Allow });
+            json.RootElement.GetProperty("tasks");
+            using var writer = new System.Text.Json.Utf8JsonWriter(output, new() { Indented = true });
+            json.WriteTo(writer);
+        }
     }
 }
