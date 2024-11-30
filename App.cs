@@ -12,10 +12,9 @@ CoconaLiteApp.Run<Commands>(args);
 #endif
 internal class Commands
 {
-    private static readonly IReadOnlyList<Type> _tsolvers = Assembly.GetEntryAssembly()!.GetTypes()
+    private static readonly IReadOnlyList<Type> _tsolvers = [.. Assembly.GetEntryAssembly()!.GetTypes()
     .Where(static t => t.GetTypeInfo().IsClass && typeof(ISolver).IsAssignableFrom(t))
-    .OrderBy(static t => t.FullName)
-    .ToImmutableList();
+    .OrderBy(static t => t.FullName)];
 
     [DoesNotReturn]
     private static void ThrowAoC(AocCommuncationException ex)

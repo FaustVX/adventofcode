@@ -20,8 +20,22 @@ public partial class Project([Field] string repo, [Field] string sslSalt, [Field
         }
     }
 
+    private static void CopyStream(Stream from, Action<Stream, Stream> converter, Stream to)
+    {
+        try
+        {
+            converter(from, to);
+        }
+        finally
+        {
+            from?.Dispose();
+            to?.Dispose();
+        }
+    }
+
     public void Init()
     {
+        var lib = Path.Combine(Directory.GetCurrentDirectory(), ".git");
         var dir = Directory.CreateDirectory(Path.Combine("..", $"AoC-{_year}"));
         Directory.SetCurrentDirectory(dir.FullName);
         LibGit2Sharp.Repository.Init(".");
@@ -32,7 +46,7 @@ public partial class Project([Field] string repo, [Field] string sslSalt, [Field
         CopyStream(Extensions.GetEmbededResource("adventofcode..gitattributes"), File.Create(".gitattributes"));
         CopyStream(Extensions.GetEmbededResource("adventofcode..gitignore"), File.Create(".gitignore"));
         var vscode = Directory.CreateDirectory(".vscode");
-        CopyStream(Extensions.GetEmbededResource("adventofcode..vscode.tasks.json"), new FileInfo(Path.Combine(vscode.FullName, "tasks.json")).Create());
+        CopyStream(Extensions.GetEmbededResource("adventofcode..vscode.tasks.json"), ConvertTask, new FileInfo(Path.Combine(vscode.FullName, "tasks.json")).Create());
         CopyStream(Extensions.GetEmbededResource("adventofcode..vscode.extensions.json"), new FileInfo(Path.Combine(vscode.FullName, "extensions.json")).Create());
         CopyStream(Extensions.GetEmbededResource("adventofcode..vscode.launch.json"), new FileInfo(Path.Combine(vscode.FullName, "launch.json")).Create());
         CopyStream(Extensions.GetEmbededResource("adventofcode..vscode.settings.json"), new FileInfo(Path.Combine(vscode.FullName, "settings.json")).Create());
@@ -87,9 +101,18 @@ public partial class Project([Field] string repo, [Field] string sslSalt, [Field
                 sw.Write(content);
             }
         }
-        Process.Start("git", ["-c", "protocol.file.allow=always", "submodule", "add", _repo, "lib/aoc"]).WaitForExit();
+        Process.Start("git", ["-c", "protocol.file.allow=always", "submodule", "add", "-b", "main", "--", lib, "lib/aoc"]).WaitForExit();
+        Process.Start("git", ["submodule", "set-url", "lib/aoc", _repo]).WaitForExit();
         Process.Start("git", ["add", "*"]).WaitForExit();
         Process.Start("git", ["commit", "-m", "Initial commit"]).WaitForExit();
         Updater.OpenVsCode([dir.FullName]);
+
+        static void ConvertTask(Stream input, Stream output)
+        {
+            var json = System.Text.Json.JsonDocument.Parse(input, new() { AllowTrailingCommas = true, CommentHandling = System.Text.Json.JsonCommentHandling.Skip });
+            json.RootElement.GetProperty("tasks");
+            using var writer = new System.Text.Json.Utf8JsonWriter(output, new() { Indented = true });
+            json.WriteTo(writer);
+        }
     }
 }

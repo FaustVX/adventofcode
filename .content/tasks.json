@@ -1,0 +1,204 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "build",
+            "command": "dotnet",
+            "type": "process",
+            "args": [
+                "build",
+                "/tl",
+                "${workspaceFolder}/adventofcode.csproj"
+            ],
+            "problemMatcher": "$msCompile",
+            "options": {
+                "statusbar": {
+                    "hide": true,
+                    "running": {
+                        "label": "building"
+                    }
+                }
+            },
+        },
+        {
+            "label": "update today",
+            "command": "dotnet",
+            "args": [
+                "run",
+                "--",
+                "update",
+                "today"
+            ],
+            "problemMatcher": [],
+            "options": {
+                "statusbar": {
+                    "tooltip": "Retrive datas from AoC",
+                    "label": "$(cloud-download) Today",
+                    "running": {
+                        "label": "updating"
+                    }
+                },
+                "env": {
+                    "SESSION": "${input:session}"
+                }
+            },
+        },
+        {
+            "label": "update",
+            "command": "dotnet",
+            "args": [
+                "run",
+                "--",
+                "update",
+                "${input:year}/${input:day}"
+            ],
+            "problemMatcher": [],
+            "options": {
+                "statusbar": {
+                    "tooltip": "Retrive datas from AoC",
+                    "label": "$(cloud-download)",
+                    "running": {
+                        "label": "updating"
+                    }
+                },
+                "env": {
+                    "SESSION": "${input:session}"
+                },
+            },
+        },
+        {
+            "label": "run",
+            "command": "dotnet",
+            "args": [
+                "run",
+                "--configuration=Release",
+                "--",
+                "run",
+                "${relativeFileDirname}"
+            ],
+            "problemMatcher": [],
+            "options": {
+                "statusbar": {
+                    "label": "$(run)",
+                    "tooltip": "Run",
+                    "running": {
+                        "label": "running"
+                    },
+                    "filePattern": "Solution.cs",
+                },
+            },
+        },
+        {
+            "label": "upload",
+            "command": "dotnet",
+            "args": [
+                "run",
+                "--configuration=Release",
+                "--",
+                "upload",
+                "${relativeFileDirname}",
+            ],
+            "problemMatcher": [],
+            "options": {
+                "statusbar": {
+                    "label": "$(cloud-upload)",
+                    "tooltip": "Upload",
+                    "running": {
+                        "label": "updating"
+                    },
+                    "filePattern": "Solution.cs",
+                },
+                "env": {
+                    "SESSION": "${input:session}"
+                },
+            },
+        },
+        {
+            "label": "display",
+            "command": "dotnet",
+            "args": [
+                "run",
+                "--",
+                "display",
+                "${relativeFileDirname}"
+            ],
+            "problemMatcher": [],
+            "presentation": {
+                "focus": true,
+            },
+            "options": {
+                "statusbar": {
+                    "label": "$(preview)",
+                    "tooltip": "Display",
+                    "running": {
+                        "label": "displaying"
+                    },
+                    "filePattern": "Solution.cs",
+                },
+            },
+        },
+        {
+            "label": "benchmark",
+            "command": "dotnet",
+            "args": [
+                "run",
+                "--configuration=Release",
+                "--",
+                "benchmark",
+                "${relativeFileDirname}"
+            ],
+            "problemMatcher": [],
+            "options": {
+                "statusbar": {
+                    "label": "$(watch)",
+                    "tooltip": "Benchmark",
+                    "running": {
+                        "label": "benchmarking"
+                    },
+                    "filePattern": "Solution.cs",
+                },
+            },
+        },
+        {
+            "label": "format",
+            "command": "dotnet",
+            "args": [
+                "format",
+                "--include",
+                "${relativeFileDirname}"
+            ],
+            "problemMatcher": [],
+            "presentation": {
+                "focus": true,
+            },
+            "options": {
+                "statusbar": {
+                    "label": "$(note)",
+                    "tooltip": "Format today files",
+                    "filePattern": "Solution.cs",
+                },
+            },
+        },
+    ],
+    "inputs": [
+        {
+            "id": "session",
+            "type": "command",
+            "command": "memento.promptString",
+            "args": {
+                "id": "session",
+                "description": "Session Cookie"
+            }
+        },
+        {
+            "id": "day",
+            "type": "command",
+            "command": "memento.pickString",
+            "args": {
+                "id": "day",
+                "options": ["01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25"],
+                "description": "Current day"
+            }
+        },
+    ]
+}

@@ -48,11 +48,11 @@ public static class Extensions
 
     [MethodImpl(MethodImplOptions.AggressiveOptimization | MethodImplOptions.AggressiveInlining)]
     public static T[] ParseToArrayOfT<T>(this string input, Func<string, T> parser)
-        => ParseToIEnumOfT(input, parser).ToArray();
+        => [.. ParseToIEnumOfT(input, parser)];
 
     [MethodImpl(MethodImplOptions.AggressiveOptimization | MethodImplOptions.AggressiveInlining)]
     public static T[] ParseToArrayOfT<T>(this string[] inputs, Func<string, T> parser)
-        => ParseToIEnumOfT(inputs, parser).ToArray();
+        => [.. ParseToIEnumOfT(inputs, parser)];
 
     [MethodImpl(MethodImplOptions.AggressiveOptimization | MethodImplOptions.AggressiveInlining)]
     public static IEnumerable<T> ParseToIEnumOfT<T>(this string input, Func<string, T> parser)
