@@ -19,4 +19,13 @@
         "lib/**": true,
     },
     "dotnet.defaultSolution": "AdventOfCode.sln",
+    "workbench.editor.customLabels.patterns": {
+        "**/Solution.cs": "${dirname(1)}/${dirname(0)}.cs",
+        "**/*.in": "${dirname(1)}/${dirname(0)}.in",
+        "**/test/*.in": "${dirname(2)}/${dirname(1)}/${filename}.in",
+        "**/*.refout": "${dirname(1)}/${dirname(0)}.out",
+        "**/test/*.refout": "${dirname(2)}/${dirname(1)}/${filename}.out",
+        "**/README.md": "${dirname(1)}/${dirname(0)}.md",
+        "**/benchmark.md": "${dirname(1)}/${dirname(0)}.bench",
+    },
 }
