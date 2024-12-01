@@ -47,6 +47,23 @@ public static class Extensions
     }
 
     [MethodImpl(MethodImplOptions.AggressiveOptimization | MethodImplOptions.AggressiveInlining)]
+    public static T[] ParseToArray<T>(this string input)
+    where T : IParsable<T>
+    => [.. input.Split(['\r', '\n'], StringSplitOptions.RemoveEmptyEntries).Select(static i => T.Parse(i, null))];
+
+    [MethodImpl(MethodImplOptions.AggressiveOptimization | MethodImplOptions.AggressiveInlining)]
+    public static T[] ParseToArray<T>(this ReadOnlySpan<char> input)
+    where T : ISpanParsable<T>
+    {
+        var values = (stackalloc Range[System.MemoryExtensions.Count(input, '\n') + 1]);
+        values = values[.. input.SplitAny(values, ['\r', '\n'], StringSplitOptions.RemoveEmptyEntries)];
+        T[] result = new T[values.Length];
+        for (int i = 0; i < values.Length; i++)
+            result[i] = T.Parse(input[values[i]], null);
+        return result;
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveOptimization | MethodImplOptions.AggressiveInlining)]
     public static T[] ParseToArrayOfT<T>(this string input, Func<string, T> parser)
         => [.. ParseToIEnumOfT(input, parser)];
 
