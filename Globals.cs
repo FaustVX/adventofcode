@@ -20,4 +20,5 @@ public static class Globals
     public static bool IsTestInput { get; set; } = false;
     public static string InputFileName { get; set; }
     public static string ExpectedOutput { get; set; }
+    public static int Part { get; set; }
 }

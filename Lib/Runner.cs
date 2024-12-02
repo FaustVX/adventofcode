@@ -31,6 +31,7 @@ internal static class SolverExtensions
         object result = null;
         try
         {
+            Globals.Part = 1;
             result = solver.PartOne(memory);
         }
         catch (Exception ex)
@@ -45,6 +46,7 @@ internal static class SolverExtensions
             Globals.ExpectedOutput = null;
         try
         {
+            Globals.Part = 2;
             result = solver.PartTwo(memory);
         }
         catch (Exception ex)
