@@ -64,6 +64,34 @@ public static class Extensions
     }
 
     [MethodImpl(MethodImplOptions.AggressiveOptimization | MethodImplOptions.AggressiveInlining)]
+    public static ReadOnlySpan<T> ParseToArray<T>(this ReadOnlySpan<char> input, ref Span<T> span)
+    where T : ISpanParsable<T>
+    {
+        var values = (stackalloc Range[System.MemoryExtensions.Count(input, '\n') + 1]);
+        var length = input.SplitAny(values, ['\r', '\n'], StringSplitOptions.RemoveEmptyEntries);
+        values = values[.. length];
+        span = span[.. length];
+        // T[] result = new T[values.Length];
+        for (int i = 0; i < length; i++)
+            span[i] = T.Parse(input[values[i]], null);
+        return span;
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveOptimization | MethodImplOptions.AggressiveInlining)]
+    public static Span<T> ParseToArray<T>(this ReadOnlySpan<char> input, Span<T> span)
+    where T : ISpanParsable<T>
+    {
+        var values = (stackalloc Range[System.MemoryExtensions.Count(input, '\n') + 1]);
+        var length = input.SplitAny(values, ['\r', '\n'], StringSplitOptions.RemoveEmptyEntries);
+        values = values[.. length];
+        span = span[.. length];
+        // T[] result = new T[values.Length];
+        for (int i = 0; i < length; i++)
+            span[i] = T.Parse(input[values[i]], null);
+        return span;
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveOptimization | MethodImplOptions.AggressiveInlining)]
     public static T[] ParseToArrayOfT<T>(this string input, Func<string, T> parser)
         => [.. ParseToIEnumOfT(input, parser)];
 
