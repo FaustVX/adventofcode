@@ -180,6 +180,7 @@ internal static partial class Updater
                     var duration = signature.When - initial.Committer.When;
                     Process.Start("git", ["commit", "-m", $"Solved P1 in {(int)duration.TotalHours}:{duration:mm\\:ss}", "--allow-empty"]).WaitForExit();
                     repo.Tags.Add($"Y{problem.Year}D{problem.Day}P2", repo.Head.Tip);
+                    OpenVsCode([$"{problem.Year}/Day{problem.Day:00}/README.md"]);
                 }
                 else
                 {
