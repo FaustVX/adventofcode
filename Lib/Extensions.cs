@@ -55,25 +55,46 @@ public static class Extensions
     public static T[] ParseToArray<T>(this ReadOnlySpan<char> input)
     where T : ISpanParsable<T>
     {
-        var values = (stackalloc Range[System.MemoryExtensions.Count(input, '\n') + 1]);
-        values = values[.. input.SplitAny(values, ['\r', '\n'], StringSplitOptions.RemoveEmptyEntries)];
-        T[] result = new T[values.Length];
-        for (int i = 0; i < values.Length; i++)
-            result[i] = T.Parse(input[values[i]], null);
+        var ranges = (stackalloc Range[System.MemoryExtensions.Count(input, '\n') + 1]);
+        ranges = ranges[.. input.SplitAny(ranges, ['\r', '\n'], StringSplitOptions.RemoveEmptyEntries)];
+        T[] result = new T[ranges.Length];
+        for (int i = 0; i < ranges.Length; i++)
+            result[i] = T.Parse(input[ranges[i]], null);
         return result;
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveOptimization | MethodImplOptions.AggressiveInlining)]
+    public static (T1[], T2[]) ParseToArray<T1, T2>(this ReadOnlySpan<char> input)
+    where T1 : ISpanParsable<T1>
+    where T2 : ISpanParsable<T2>
+    {
+        var ranges = (stackalloc Range[2]);
+        input.Split(ranges, ['\n', '\n'], StringSplitOptions.RemoveEmptyEntries);
+        return (ParseToArray<T1>(input[ranges[0]]), ParseToArray<T2>(input[ranges[1]]));
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveOptimization | MethodImplOptions.AggressiveInlining)]
+    public static (T1[], T2[], T3[]) ParseToArray<T1, T2, T3>(this ReadOnlySpan<char> input)
+    where T1 : ISpanParsable<T1>
+    where T2 : ISpanParsable<T2>
+    where T3 : ISpanParsable<T3>
+    {
+        var ranges = (stackalloc Range[3]);
+        input.Split(ranges, ['\n', '\n'], StringSplitOptions.RemoveEmptyEntries);
+        return (ParseToArray<T1>(input[ranges[0]]), ParseToArray<T2>(input[ranges[1]]), ParseToArray<T3>(input[ranges[2]]));
     }
 
     [MethodImpl(MethodImplOptions.AggressiveOptimization | MethodImplOptions.AggressiveInlining)]
     public static ReadOnlySpan<T> ParseToArray<T>(this ReadOnlySpan<char> input, ref Span<T> span)
     where T : ISpanParsable<T>
     {
-        var values = (stackalloc Range[System.MemoryExtensions.Count(input, '\n') + 1]);
-        var length = input.SplitAny(values, ['\r', '\n'], StringSplitOptions.RemoveEmptyEntries);
-        values = values[.. length];
+        var ranges = (stackalloc Range[System.MemoryExtensions.Count(input, '\n') + 1]);
+        var length = input.SplitAny(ranges, ['\r', '\n'], StringSplitOptions.RemoveEmptyEntries);
+        ranges = ranges[.. length];
         span = span[.. length];
         // T[] result = new T[values.Length];
         for (int i = 0; i < length; i++)
-            span[i] = T.Parse(input[values[i]], null);
+            span[i] = T.Parse(input[ranges[i]], null);
         return span;
     }
 
@@ -81,13 +102,13 @@ public static class Extensions
     public static Span<T> ParseToArray<T>(this ReadOnlySpan<char> input, Span<T> span)
     where T : ISpanParsable<T>
     {
-        var values = (stackalloc Range[System.MemoryExtensions.Count(input, '\n') + 1]);
-        var length = input.SplitAny(values, ['\r', '\n'], StringSplitOptions.RemoveEmptyEntries);
-        values = values[.. length];
+        var ranges = (stackalloc Range[System.MemoryExtensions.Count(input, '\n') + 1]);
+        var length = input.SplitAny(ranges, ['\r', '\n'], StringSplitOptions.RemoveEmptyEntries);
+        ranges = ranges[.. length];
         span = span[.. length];
         // T[] result = new T[values.Length];
         for (int i = 0; i < length; i++)
-            span[i] = T.Parse(input[values[i]], null);
+            span[i] = T.Parse(input[ranges[i]], null);
         return span;
     }
 
