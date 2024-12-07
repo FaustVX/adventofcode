@@ -74,6 +74,17 @@ public static class Extensions
     }
 
     [MethodImpl(MethodImplOptions.AggressiveOptimization | MethodImplOptions.AggressiveInlining)]
+    public static void ParseToArray<T1, T2>(this ReadOnlySpan<char> input, ref Span<T1> span1, ref Span<T2> span2)
+    where T1 : ISpanParsable<T1>
+    where T2 : ISpanParsable<T2>
+    {
+        var ranges = (stackalloc Range[2]);
+        input.Split(ranges, ['\n', '\n'], StringSplitOptions.RemoveEmptyEntries);
+        span1 = ParseToArray<T1>(input[ranges[0]], span1);
+        span2 = ParseToArray<T2>(input[ranges[1]], span2);
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveOptimization | MethodImplOptions.AggressiveInlining)]
     public static (T1[], T2[], T3[]) ParseToArray<T1, T2, T3>(this ReadOnlySpan<char> input)
     where T1 : ISpanParsable<T1>
     where T2 : ISpanParsable<T2>
@@ -82,6 +93,19 @@ public static class Extensions
         var ranges = (stackalloc Range[3]);
         input.Split(ranges, ['\n', '\n'], StringSplitOptions.RemoveEmptyEntries);
         return (ParseToArray<T1>(input[ranges[0]]), ParseToArray<T2>(input[ranges[1]]), ParseToArray<T3>(input[ranges[2]]));
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveOptimization | MethodImplOptions.AggressiveInlining)]
+    public static void ParseToArray<T1, T2, T3>(this ReadOnlySpan<char> input, ref Span<T1> span1, ref Span<T2> span2, ref Span<T3> span3)
+    where T1 : ISpanParsable<T1>
+    where T2 : ISpanParsable<T2>
+    where T3 : ISpanParsable<T3>
+    {
+        var ranges = (stackalloc Range[3]);
+        input.Split(ranges, ['\n', '\n'], StringSplitOptions.RemoveEmptyEntries);
+        span1 =ParseToArray<T1>(input[ranges[0]]);
+        span2 =ParseToArray<T2>(input[ranges[1]]);
+        span3 =ParseToArray<T3>(input[ranges[2]]);
     }
 
     [MethodImpl(MethodImplOptions.AggressiveOptimization | MethodImplOptions.AggressiveInlining)]
