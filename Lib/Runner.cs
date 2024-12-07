@@ -3,7 +3,7 @@
 namespace AdventOfCode;
 
 [AttributeUsage(AttributeTargets.Class)]
-internal sealed partial class ProblemInfo([Property(Setter = "")] string name, [Property(Setter = "")] bool normalizeInput = true) : Attribute;
+internal sealed partial class ProblemInfo([Property(Setter = "")] string name, [Property(Setter = "")] bool normalizeInput = true, [Property(Setter = "")] bool isShortBenchmark = false) : Attribute;
 
 public interface ISolver
 {
@@ -130,7 +130,8 @@ internal static class Runner
 
     public static void RunBenchmark(Type solver)
     {
-        var solution = typeof(Bench<>).MakeGenericType(solver);
+        var bench = solver.GetCustomAttribute<ProblemInfo>().IsShortBenchmark ? typeof(ShortBench<>) : typeof(LongBench<>);
+        var solution = bench.MakeGenericType(solver);
         var fileInfo = new FileInfo("lib/aoc/adventofcode.csproj");
         fileInfo.MoveTo("lib/aoc/adventofcode.csproj.bak");
         BenchmarkDotNet.Running.BenchmarkRunner.Run(solution);
