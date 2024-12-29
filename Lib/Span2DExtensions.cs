@@ -148,4 +148,24 @@ public static partial class Span2DExtensions
                 return (y, i);
         return (-1, -1);
     }
+
+    public static ReadOnlySpan2DBlockEnumerator<T> EnumerateBlocks<T>(this ReadOnlySpan2D<T> span, int width, int height)
+    => new(span, width, height);
+}
+
+[System.Runtime.InteropServices.StructLayout(System.Runtime.InteropServices.LayoutKind.Auto)]
+public ref partial struct ReadOnlySpan2DBlockEnumerator<T>([Field]ReadOnlySpan2D<T> span, [Field]int width, [Field]int height)
+{
+    private int _x = -1, _y = -1;
+    public readonly ReadOnlySpan2DBlockEnumerator<T> GetEnumerator()
+    => this with { _y = 0 };
+
+    public bool MoveNext()
+    {
+        if (++_x > _span.Width - _width)
+            (_x, _y) = (0, _y + 1);
+        return _y <= _span.Height - _height;
+    }
+
+    public readonly ReadOnlySpan2D<T> Current => _span.Slice(_y, _x, _height, _width);
 }
