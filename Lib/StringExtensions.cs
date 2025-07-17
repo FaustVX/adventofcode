@@ -122,11 +122,14 @@ public static partial class StringExtensions
         }
     }
 
-    public static bool TryParseFormated<T>(this ReadOnlyMemory<char> input, [InterpolatedStringHandlerArgument(nameof(input))] ParserInterpolatedHandler<T> handler, out T values, bool allowTrailling = false)
-    where T : struct, ITuple
+    extension(ReadOnlyMemory<char> input)
     {
-        values = (T)handler.Values;
-        return handler.IsValid && (allowTrailling || !handler.HasTrailling);
+        public bool TryParseFormated<T>([InterpolatedStringHandlerArgument(nameof(input))] ParserInterpolatedHandler<T> handler, out T values, bool allowTrailling = false)
+    where T : struct, ITuple
+        {
+            values = handler.Values;
+            return handler.IsValid && (allowTrailling || !handler.HasTrailling);
+        }
     }
 
     extension(ReadOnlyMemory<char> span)
@@ -175,7 +178,7 @@ public ref partial struct ParserInterpolatedHandler<T>([DoNotUse] int literalLen
 where T : struct, ITuple
 {
     private static readonly List<System.Reflection.FieldInfo> _fields;
-    public readonly object Values = default(T);
+    public readonly T Values;
     private int _fieldIndex;
 
     static ParserInterpolatedHandler()
