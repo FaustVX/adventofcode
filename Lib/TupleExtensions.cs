@@ -9,24 +9,36 @@ public static class TupleExtensions
     {
         public (T, T) Add((T, T) right)
         => (left.Item1 + right.Item1, left.Item2 + right.Item2);
+
+        public static (T, T) operator +((T, T) l, (T, T) r)
+        => Add(l, r);
     }
 
     extension<T>((T, T, T) left) where T : System.Numerics.IAdditionOperators<T, T, T>
     {
         public (T, T, T) Add((T, T, T) right)
         => (left.Item1 + right.Item1, left.Item2 + right.Item2, left.Item3 + right.Item3);
+
+        public static (T, T, T) operator +((T, T, T) l, (T, T, T) r)
+        => Add(l, r);
     }
 
     extension<T>((T, T) tuple) where T : System.Numerics.IMultiplyOperators<T, T, T>
     {
         public (T, T) Times(T factor)
         => (tuple.Item1 * factor, tuple.Item2 * factor);
+
+        public static (T, T) operator *((T, T) l, T factor)
+        => Times(l, factor);
     }
 
     extension<T>((T, T, T) tuple) where T : System.Numerics.IMultiplyOperators<T, T, T>
     {
         public (T, T, T) Times(T factor)
         => (tuple.Item1 * factor, tuple.Item2 * factor, tuple.Item3 * factor);
+
+        public static (T, T, T) operator *((T, T, T) l, T factor)
+        => Times(l, factor);
     }
 
     extension(ReadOnlyMemory<ReadOnlyMemory<char>> memory)

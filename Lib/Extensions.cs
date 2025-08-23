@@ -269,6 +269,27 @@ public static class Extensions
         }
     }
 
+    extension<T>(T) where T : IComparable<T>
+    {
+        public static bool operator <(T l, T r)
+        => l.CompareTo(r) < 0;
+
+        public static bool operator <=(T l, T r)
+        => l.CompareTo(r) <= 0;
+
+        public static bool operator ==(T l, T r)
+        => l.CompareTo(r) == 0;
+
+        public static bool operator !=(T l, T r)
+        => l.CompareTo(r) != 0;
+
+        public static bool operator >=(T l, T r)
+        => l.CompareTo(r) >= 0;
+
+        public static bool operator >(T l, T r)
+        => l.CompareTo(r) > 0;
+    }
+
     extension<T>(T value)
     {
         public void SetMinMaxBy<TValue>(ref T min, ref T max, Func<T, TValue> getValue)
