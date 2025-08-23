@@ -59,38 +59,38 @@ internal static class SolverExtensions
             yield return result;
         }
 
-        public string GetName()
+        public string Name
         => solver
             .GetType()
             .GetCustomAttribute<ProblemInfo>()
             .Name;
 
-        public bool IsNormalizedInput()
+        public bool IsNormalizedInput
         => solver
             .GetType()
             .GetCustomAttribute<ProblemInfo>()
             .NormalizeInput;
 
         public string GetInput(string path)
-        => solver.IsNormalizedInput() ? Runner.GetNormalizedInput(path) : File.ReadAllText(path);
+        => solver.IsNormalizedInput ? Runner.GetNormalizedInput(path) : File.ReadAllText(path);
 
-        public string DayName()
-        => $"Day {solver.Day()}";
+        public string DayName
+        => $"Day {solver.Day}";
 
-        public int Year()
+        public int Year
         => Year(solver.GetType());
 
-        public int Day()
+        public int Day
         => Day(solver.GetType());
 
-        public string WorkingDir()
-        => WorkingDir(solver.Year(), solver.Day());
+        public string WorkingDir
+        => WorkingDir(solver.Year, solver.Day);
 
         public ISplashScreen SplashScreen()
         {
             var tsplashScreen = Assembly.GetEntryAssembly().GetTypes()
                  .Where(static t => t.GetTypeInfo().IsClass && typeof(ISplashScreen).IsAssignableFrom(t))
-                 .Single(t => Year(t) == solver.Year());
+                 .Single(t => Year(t) == solver.Year);
             return (ISplashScreen)Activator.CreateInstance(tsplashScreen);
         }
     }
@@ -159,9 +159,9 @@ internal static class Runner
 
     public static SolverResult RunSolver(ISolver solver)
     {
-        var workingDir = solver.WorkingDir();
+        var workingDir = solver.WorkingDir;
         var indent = "    ";
-        Write(ConsoleColor.White, $"{indent}{solver.DayName()}: {solver.GetName()}");
+        Write(ConsoleColor.White, $"{indent}{solver.DayName}: {solver.Name}");
         WriteLine();
         var solverResult = default(SolverResult);
         foreach (var dir in new[] { Path.Combine(workingDir, "test"), workingDir })
@@ -191,7 +191,7 @@ internal static class Runner
                         var (statusColor, status, err) =
                             refout == null || refout.Length <= iline || string.IsNullOrWhiteSpace(refout[iline]) ? (ConsoleColor.Cyan, "?", null) :
                             refout[iline] == line?.ToString() ? (ConsoleColor.DarkGreen, "✓", null) :
-                            (ConsoleColor.Red, "X", $"{solver.DayName()}: In line {iline + 1} expected '{refout[iline]}' but found '{line}'");
+                            (ConsoleColor.Red, "X", $"{solver.DayName}: In line {iline + 1} expected '{refout[iline]}' but found '{line}'");
 
                         if (err is not null)
                             errors.Add(err);
@@ -288,7 +288,7 @@ internal static class Runner
 
         static IEnumerable<string> GetInputs(ISolver solver)
         {
-            var workingDir = solver?.WorkingDir();
+            var workingDir = solver?.WorkingDir;
             if (workingDir is null)
                 yield break;
             foreach (var dir in new[] { Path.Combine(workingDir, "test"), workingDir })

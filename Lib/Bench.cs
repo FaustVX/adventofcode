@@ -17,7 +17,7 @@ where T : ISolver, new()
         Globals.CurrentRunMode = Mode.Benchmark;
         Globals.InputFileName = "input.in";
         _instance = new();
-        var file = Path.Combine("..", "..", "..", "..", "..", "..", "..", _instance.WorkingDir(), "input.in");
+        var file = Path.Combine("..", "..", "..", "..", "..", "..", "..", _instance.WorkingDir, "input.in");
         _input = _instance.GetInput(file).AsMemory();
     }
 
@@ -45,7 +45,7 @@ where T : ISolver, new()
         Globals.CurrentRunMode = Mode.Benchmark;
         Globals.InputFileName = "input.in";
         _instance = new();
-        var file = Path.Combine("..", "..", "..", "..", "..", "..", "..", _instance.WorkingDir(), "input.in");
+        var file = Path.Combine("..", "..", "..", "..", "..", "..", "..", _instance.WorkingDir, "input.in");
         _input = _instance.GetInput(file).AsMemory();
     }
 
