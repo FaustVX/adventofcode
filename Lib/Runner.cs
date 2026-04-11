@@ -7,9 +7,11 @@ internal sealed partial class ProblemInfo([Property(Setter = "")] string name, [
 
 public interface ISolver
 {
-    object PartOne(ReadOnlyMemory<char> input);
-    object PartTwo(ReadOnlyMemory<char> input);
+    Output PartOne(ReadOnlyMemory<char> input);
+    Output PartTwo(ReadOnlyMemory<char> input);
 }
+
+public readonly union Output(string, long, ulong);
 
 internal interface IDisplay
 {
@@ -23,14 +25,14 @@ internal static class SolverExtensions
 {
     extension(ISolver solver)
     {
-        public IEnumerable<object> Solve(string input, string[] expected)
+        public IEnumerable<Output?> Solve(string input, string[] expected)
         {
             var memory = input.AsMemory();
             if (expected is [var one, ..] && !string.IsNullOrWhiteSpace(one))
                 Globals.ExpectedOutput = one;
             else
                 Globals.ExpectedOutput = null;
-            object result = null;
+            Output? result = null;
             try
             {
                 Globals.Part = 1;
@@ -186,18 +188,25 @@ internal static class Runner
                     var stopwatch = TimeProvider.System.GetTimestamp();
                     foreach (var line in solver.Solve(input, refout))
                     {
+                        var lineString = line switch
+                        {
+                            string s => s,
+                            long l => l.ToString(),
+                            ulong l => l.ToString(),
+                            null => "",
+                        };
                         var ticks = TimeProvider.System.GetElapsedTime(stopwatch);
-                        answers.Add(line?.ToString());
+                        answers.Add(lineString);
                         var (statusColor, status, err) =
                             refout == null || refout.Length <= iline || string.IsNullOrWhiteSpace(refout[iline]) ? (ConsoleColor.Cyan, "?", null) :
-                            refout[iline] == line?.ToString() ? (ConsoleColor.DarkGreen, "✓", null) :
-                            (ConsoleColor.Red, "X", $"{solver.DayName}: In line {iline + 1} expected '{refout[iline]}' but found '{line}'");
+                            refout[iline] == lineString ? (ConsoleColor.DarkGreen, "✓", null) :
+                            (ConsoleColor.Red, "X", $"{solver.DayName}: In line {iline + 1} expected '{refout[iline]}' but found '{lineString}'");
 
                         if (err is not null)
                             errors.Add(err);
 
                         Write(statusColor, $"{indent}  {status}");
-                        Console.Write($" {line} ");
+                        Console.Write($" {lineString} ");
 
                         WriteLine(
                             ticks > TimeSpan.FromSeconds(5) ? ConsoleColor.Red :
