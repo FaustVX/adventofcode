@@ -21,68 +21,83 @@ internal interface IDisplay
 #endif
 internal static class SolverExtensions
 {
-    public static IEnumerable<object> Solve(this ISolver solver, string input, string[] expected)
+    extension(ISolver solver)
     {
-        var memory = input.AsMemory();
-        if (expected is [var one, ..] && !string.IsNullOrWhiteSpace(one))
-            Globals.ExpectedOutput = one;
-        else
-            Globals.ExpectedOutput = null;
-        object result = null;
-        try
+        public IEnumerable<object> Solve(string input, string[] expected)
         {
-            Globals.Part = 1;
-            result = solver.PartOne(memory);
+            var memory = input.AsMemory();
+            if (expected is [var one, ..] && !string.IsNullOrWhiteSpace(one))
+                Globals.ExpectedOutput = one;
+            else
+                Globals.ExpectedOutput = null;
+            object result = null;
+            try
+            {
+                Globals.Part = 1;
+                result = solver.PartOne(memory);
+            }
+            catch (Exception ex)
+            {
+                Runner.WriteLine(ConsoleColor.DarkRed, ex.ToString());
+                result = null;
+            }
+            yield return result;
+            if (expected is [_, var two, ..] && !string.IsNullOrWhiteSpace(two))
+                Globals.ExpectedOutput = two;
+            else
+                Globals.ExpectedOutput = null;
+            try
+            {
+                Globals.Part = 2;
+                result = solver.PartTwo(memory);
+            }
+            catch (Exception ex)
+            {
+                Runner.WriteLine(ConsoleColor.DarkRed, ex.ToString());
+                result = null;
+            }
+            yield return result;
         }
-        catch (Exception ex)
+
+        public string Name
+        => solver
+            .GetType()
+            .GetCustomAttribute<ProblemInfo>()
+            .Name;
+
+        public bool IsNormalizedInput
+        => solver
+            .GetType()
+            .GetCustomAttribute<ProblemInfo>()
+            .NormalizeInput;
+
+        public string GetInput(string path)
+        => solver.IsNormalizedInput ? Runner.GetNormalizedInput(path) : File.ReadAllText(path);
+
+        public string DayName
+        => $"Day {solver.Day}";
+
+        public int Year
+        => Year(solver.GetType());
+
+        public int Day
+        => Day(solver.GetType());
+
+        public string WorkingDir
+        => WorkingDir(solver.Year, solver.Day);
+
+        public ISplashScreen SplashScreen()
         {
-            Runner.WriteLine(ConsoleColor.DarkRed, ex.ToString());
-            result = null;
+            var tsplashScreen = Assembly.GetEntryAssembly().GetTypes()
+                 .Where(static t => t.GetTypeInfo().IsClass && typeof(ISplashScreen).IsAssignableFrom(t))
+                 .Single(t => Year(t) == solver.Year);
+            return (ISplashScreen)Activator.CreateInstance(tsplashScreen);
         }
-        yield return result;
-        if (expected is [_, var two, ..] && !string.IsNullOrWhiteSpace(two))
-            Globals.ExpectedOutput = two;
-        else
-            Globals.ExpectedOutput = null;
-        try
-        {
-            Globals.Part = 2;
-            result = solver.PartTwo(memory);
-        }
-        catch (Exception ex)
-        {
-            Runner.WriteLine(ConsoleColor.DarkRed, ex.ToString());
-            result = null;
-        }
-        yield return result;
     }
 
-    public static string GetName(this ISolver solver)
-    => solver
-        .GetType()
-        .GetCustomAttribute<ProblemInfo>()
-        .Name;
-
-    public static bool IsNormalizedInput(this ISolver solver)
-    => solver
-        .GetType()
-        .GetCustomAttribute<ProblemInfo>()
-        .NormalizeInput;
-
-    public static string GetInput(this ISolver solver, string path)
-    => solver.IsNormalizedInput() ? Runner.GetNormalizedInput(path) : File.ReadAllText(path);
-
-    public static string DayName(this ISolver solver)
-    => $"Day {solver.Day()}";
-
-    public static int Year(this ISolver solver)
-    => Year(solver.GetType());
 
     public static int Year(Type t)
     => int.Parse(t.FullName.Split('.')[1][1..]);
-
-    public static int Day(this ISolver solver)
-    => Day(solver.GetType());
 
     public static int Day(Type t)
     => int.Parse(t.FullName.Split('.')[2][3..]);
@@ -93,19 +108,8 @@ internal static class SolverExtensions
     public static string WorkingDir(int year, int day)
     => Path.Combine(WorkingDir(year), "Day" + day.ToString("00"));
 
-    public static string WorkingDir(this ISolver solver)
-    => WorkingDir(solver.Year(), solver.Day());
-
     public static string WorkingDir(Type solver)
     => WorkingDir(Year(solver), Day(solver));
-
-    public static ISplashScreen SplashScreen(this ISolver solver)
-    {
-        var tsplashScreen = Assembly.GetEntryAssembly().GetTypes()
-             .Where(static t => t.GetTypeInfo().IsClass && typeof(ISplashScreen).IsAssignableFrom(t))
-             .Single(t => Year(t) == solver.Year());
-        return (ISplashScreen)Activator.CreateInstance(tsplashScreen);
-    }
 }
 
 #if !LIBRARY
@@ -155,9 +159,9 @@ internal static class Runner
 
     public static SolverResult RunSolver(ISolver solver)
     {
-        var workingDir = solver.WorkingDir();
+        var workingDir = solver.WorkingDir;
         var indent = "    ";
-        Write(ConsoleColor.White, $"{indent}{solver.DayName()}: {solver.GetName()}");
+        Write(ConsoleColor.White, $"{indent}{solver.DayName}: {solver.Name}");
         WriteLine();
         var solverResult = default(SolverResult);
         foreach (var dir in new[] { Path.Combine(workingDir, "test"), workingDir })
@@ -187,7 +191,7 @@ internal static class Runner
                         var (statusColor, status, err) =
                             refout == null || refout.Length <= iline || string.IsNullOrWhiteSpace(refout[iline]) ? (ConsoleColor.Cyan, "?", null) :
                             refout[iline] == line?.ToString() ? (ConsoleColor.DarkGreen, "✓", null) :
-                            (ConsoleColor.Red, "X", $"{solver.DayName()}: In line {iline + 1} expected '{refout[iline]}' but found '{line}'");
+                            (ConsoleColor.Red, "X", $"{solver.DayName}: In line {iline + 1} expected '{refout[iline]}' but found '{line}'");
 
                         if (err is not null)
                             errors.Add(err);
@@ -284,7 +288,7 @@ internal static class Runner
 
         static IEnumerable<string> GetInputs(ISolver solver)
         {
-            var workingDir = solver?.WorkingDir();
+            var workingDir = solver?.WorkingDir;
             if (workingDir is null)
                 yield break;
             foreach (var dir in new[] { Path.Combine(workingDir, "test"), workingDir })

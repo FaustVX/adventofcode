@@ -9,132 +9,157 @@ namespace AdventOfCode;
 #endif
 public static partial class StringExtensions
 {
-    public static ReadOnlyMemory<ReadOnlyMemory<char>> SplitLine(this ReadOnlyMemory<char> st)
+    extension(ReadOnlyMemory<char> st)
     {
-        var matches = NewLineRegex().EnumerateMatches(st.Span);
-        var start = 0;
-        var list = new ReadOnlyMemory<char>[NewLineRegex().Count(st.Span) + 1];
-        var index = 0;
-        foreach (var match in matches)
+        public ReadOnlyMemory<ReadOnlyMemory<char>> SplitLine()
         {
-            list[index++] = st[start..match.Index];
-            start = match.Index + match.Length;
-        }
-        list[index] = st[start..];
-        return list;
-    }
-    public static ReadOnlyMemory<ReadOnlyMemory<char>> SplitSpace(this ReadOnlyMemory<char> st)
-    {
-        var matches = WhitespaceRegex().EnumerateMatches(st.Span);
-        var start = 0;
-        var list = new ReadOnlyMemory<char>[WhitespaceRegex().Count(st.Span) + 1];
-        var index = 0;
-        foreach (var match in matches)
-        {
-            list[index++] = st[start..match.Index];
-            start = match.Index + match.Length;
-        }
-        list[index] = st[start..];
-        return list;
-    }
-    public static ReadOnlyMemory<ReadOnlyMemory<char>> Split2Lines(this ReadOnlyMemory<char> st)
-    {
-        var matches = NewLine2Regex().EnumerateMatches(st.Span);
-        var start = 0;
-        var list = new ReadOnlyMemory<char>[NewLine2Regex().Count(st.Span) + 1];
-        var index = 0;
-        foreach (var match in matches)
-        {
-            list[index++] = st[start..match.Index];
-            start = match.Index + match.Length;
-        }
-        list[index] = st[start..];
-        return list;
-    }
-
-    public static ReadOnlyMemory<ReadOnlyMemory<char>> Split(this ReadOnlyMemory<char> st, [StringSyntax(StringSyntaxAttribute.Regex)] string regexSplit)
-    {
-        var matches = Regex.EnumerateMatches(st.Span, regexSplit);
-        var start = 0;
-        var list = new ReadOnlyMemory<char>[Regex.Count(st.Span, regexSplit) + 1];
-        var index = 0;
-        foreach (var match in matches)
-        {
-            list[index++] = st[start..match.Index];
-            start = match.Index + match.Length;
-        }
-        list[index] = st[start..];
-        return list;
-    }
-
-    public static SpanSplitEnumerator EnumerateSplits(this ReadOnlySpan<char> span, ReadOnlySpan<char> separator)
-    => new SpanSplitEnumerator(span, separator);
-
-    public static SpanSplitEnumerator EnumerateSplits(this string span, ReadOnlySpan<char> separator)
-    => new SpanSplitEnumerator(span, separator);
-
-    public static void TypeString(this StringBuilder input, TimeSpan maxTotalDuration)
-    {
-        var offset = maxTotalDuration / input.Length;
-        foreach (var chunk in input.GetChunks())
-            foreach (var letter in chunk.Span)
+            var matches = NewLineRegex().EnumerateMatches(st.Span);
+            var start = 0;
+            var list = new ReadOnlyMemory<char>[NewLineRegex().Count(st.Span) + 1];
+            var index = 0;
+            foreach (var match in matches)
             {
-                Thread.Sleep(Random.Shared.NextDouble() * offset);
-                Console.Write(letter);
+                list[index++] = st[start..match.Index];
+                start = match.Index + match.Length;
             }
-    }
-
-    public static void TypeString(this IEnumerable<TypedString> input, TimeSpan maxTotalDuration)
-    {
-        var strings = input.ToArray();
-        var offset = maxTotalDuration / strings.Sum(static s => s.Input.Length);
-        var (fore, back) = (Console.ForegroundColor, Console.BackgroundColor);
-        foreach (var chunk in input)
+            list[index] = st[start..];
+            return list;
+        }
+        public ReadOnlyMemory<ReadOnlyMemory<char>> SplitSpace()
         {
-            if (chunk.Background is { } b)
-                Console.BackgroundColor = b;
-            if (chunk.Foregroung is { } f)
-                Console.ForegroundColor = f;
-            foreach (var letter in chunk.Input)
+            var matches = WhitespaceRegex().EnumerateMatches(st.Span);
+            var start = 0;
+            var list = new ReadOnlyMemory<char>[WhitespaceRegex().Count(st.Span) + 1];
+            var index = 0;
+            foreach (var match in matches)
             {
-                Thread.Sleep(Random.Shared.NextDouble() * offset);
-                Console.Write(letter);
+                list[index++] = st[start..match.Index];
+                start = match.Index + match.Length;
             }
-            if (chunk.Background is { })
-                Console.BackgroundColor = back;
-            if (chunk.Foregroung is { })
-                Console.ForegroundColor = fore;
+            list[index] = st[start..];
+            return list;
+        }
+        public ReadOnlyMemory<ReadOnlyMemory<char>> Split2Lines()
+        {
+            var matches = NewLine2Regex().EnumerateMatches(st.Span);
+            var start = 0;
+            var list = new ReadOnlyMemory<char>[NewLine2Regex().Count(st.Span) + 1];
+            var index = 0;
+            foreach (var match in matches)
+            {
+                list[index++] = st[start..match.Index];
+                start = match.Index + match.Length;
+            }
+            list[index] = st[start..];
+            return list;
+        }
+
+        public ReadOnlyMemory<ReadOnlyMemory<char>> Split([StringSyntax(StringSyntaxAttribute.Regex)] string regexSplit)
+        {
+            var matches = Regex.EnumerateMatches(st.Span, regexSplit);
+            var start = 0;
+            var list = new ReadOnlyMemory<char>[Regex.Count(st.Span, regexSplit) + 1];
+            var index = 0;
+            foreach (var match in matches)
+            {
+                list[index++] = st[start..match.Index];
+                start = match.Index + match.Length;
+            }
+            list[index] = st[start..];
+            return list;
         }
     }
 
-    public static bool TryParseFormated<T>(this ReadOnlyMemory<char> input, [InterpolatedStringHandlerArgument(nameof(input))] ParserInterpolatedHandler<T> handler, out T values, bool allowTrailling = false)
+    extension(ReadOnlySpan<char> span)
+    {
+        public SpanSplitEnumerator EnumerateSplits(ReadOnlySpan<char> separator)
+        => new SpanSplitEnumerator(span, separator);
+    }
+
+    extension(string span)
+    {
+        public SpanSplitEnumerator EnumerateSplits(ReadOnlySpan<char> separator)
+        => new SpanSplitEnumerator(span, separator);
+    }
+
+    extension(StringBuilder input)
+    {
+        public void TypeString(TimeSpan maxTotalDuration)
+        {
+            var offset = maxTotalDuration / input.Length;
+            foreach (var chunk in input.GetChunks())
+                foreach (var letter in chunk.Span)
+                {
+                    Thread.Sleep(Random.Shared.NextDouble() * offset);
+                    Console.Write(letter);
+                }
+        }
+    }
+
+    extension(IEnumerable<TypedString> input)
+    {
+        public void TypeString(TimeSpan maxTotalDuration)
+        {
+            var strings = input.ToArray();
+            var offset = maxTotalDuration / strings.Sum(static s => s.Input.Length);
+            var (fore, back) = (Console.ForegroundColor, Console.BackgroundColor);
+            foreach (var chunk in input)
+            {
+                if (chunk.Background is { } b)
+                    Console.BackgroundColor = b;
+                if (chunk.Foregroung is { } f)
+                    Console.ForegroundColor = f;
+                foreach (var letter in chunk.Input)
+                {
+                    Thread.Sleep(Random.Shared.NextDouble() * offset);
+                    Console.Write(letter);
+                }
+                if (chunk.Background is { })
+                    Console.BackgroundColor = back;
+                if (chunk.Foregroung is { })
+                    Console.ForegroundColor = fore;
+            }
+        }
+    }
+
+    extension(ReadOnlyMemory<char> input)
+    {
+        public bool TryParseFormated<T>([InterpolatedStringHandlerArgument(nameof(input))] ParserInterpolatedHandler<T> handler, out T values, bool allowTrailling = false)
     where T : struct, ITuple
-    {
-        values = (T)handler.Values;
-        return handler.IsValid && (allowTrailling || !handler.HasTrailling);
+        {
+            values = handler.Values;
+            return handler.IsValid && (allowTrailling || !handler.HasTrailling);
+        }
     }
 
-    /// <summary>
-    /// Returns an enumeration of lines over the provided memory.
-    /// </summary>
-    /// <remarks>
-    /// It is recommended that protocol parsers not utilize this API. See the documentation
-    /// for <see cref="string.ReplaceLineEndings"/> for more information on how newline
-    /// sequences are detected.
-    /// </remarks>
-    public static MemoryLineEnumerator EnumerateLines(this ReadOnlyMemory<char> span)
-    => new(span);
+    extension(ReadOnlyMemory<char> span)
+    {
+        /// <summary>
+        /// Returns an enumeration of lines over the provided memory.
+        /// </summary>
+        /// <remarks>
+        /// It is recommended that protocol parsers not utilize this API. See the documentation
+        /// for <see cref="string.ReplaceLineEndings"/> for more information on how newline
+        /// sequences are detected.
+        /// </remarks>
+        public MemoryLineEnumerator EnumerateLines()
+        => new(span);
+    }
 
-    /// <summary>
-    /// Returns an enumeration of lines over the provided memory.
-    /// </summary>
-    /// <remarks>
-    /// It is recommended that protocol parsers not utilize this API. See the documentation
-    /// for <see cref="string.ReplaceLineEndings"/> for more information on how newline
-    /// sequences are detected.
-    /// </remarks>
-    public static MemoryLineEnumerator EnumerateLines(this Memory<char> span)
-    => new(span);
+    extension(Memory<char> span)
+    {
+        /// <summary>
+        /// Returns an enumeration of lines over the provided memory.
+        /// </summary>
+        /// <remarks>
+        /// It is recommended that protocol parsers not utilize this API. See the documentation
+        /// for <see cref="string.ReplaceLineEndings"/> for more information on how newline
+        /// sequences are detected.
+        /// </remarks>
+        public MemoryLineEnumerator EnumerateLines()
+        => new(span);
+    }
+
     [GeneratedRegex("\r?\n")]
     private static partial Regex NewLineRegex();
     [GeneratedRegex("\\s")]
@@ -153,7 +178,7 @@ public ref partial struct ParserInterpolatedHandler<T>([DoNotUse] int literalLen
 where T : struct, ITuple
 {
     private static readonly List<System.Reflection.FieldInfo> _fields;
-    public readonly object Values = default(T);
+    public readonly T Values;
     private int _fieldIndex;
 
     static ParserInterpolatedHandler()

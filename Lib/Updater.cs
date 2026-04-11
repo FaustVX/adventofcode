@@ -105,7 +105,7 @@ internal static partial class Updater
             return;
         }
 
-        var problem = await DownloadProblem(GetContext(), GetBaseAddress(), solver.Year(), solver.Day());
+        var problem = await DownloadProblem(GetContext(), GetBaseAddress(), solver.Year, solver.Day);
 
         if (problem.Answers.Length == 2)
         {
@@ -137,7 +137,7 @@ internal static partial class Updater
             ]);
 
             cookieContainer.Add(GetBaseAddress(), new Cookie("session", GetSession()));
-            var result = await client.PostAsync($"/{solver.Year()}/day/{solver.Day()}/answer", content);
+            var result = await client.PostAsync($"/{solver.Year}/day/{solver.Day}/answer", content);
             result.EnsureSuccessStatusCode();
             var responseString = await result.Content.ReadAsStringAsync();
 
@@ -159,7 +159,7 @@ internal static partial class Updater
                 Console.WriteLine(article);
                 Console.ForegroundColor = color;
                 Console.WriteLine();
-                await Update(solver.Year(), solver.Day());
+                await Update(solver.Year, solver.Day);
 
                 if (!git)
                 {
