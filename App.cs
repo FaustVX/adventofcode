@@ -82,13 +82,7 @@ internal class Commands
 
     [Command]
     public static void Init([Option("git-repo", ['g'])] string git_repo, [Option("ssl-salt", ['s'])] string sslSalt, [Option("ssl-password", ['p'])] string? sslPassword, [Option(['u', 'n'])] string username, [Option('y')] int? year)
-    {
-        year ??= TimeProvider.System.GetLocalNow().Year;
-        if (sslPassword is string password)
-            new AdventOfCode.Model.Project(git_repo, sslSalt, password, year.Value) { UserName = username }.Init();
-        else
-            new AdventOfCode.Model.Project(git_repo, sslSalt, "", year.Value) { UserName = username }.Init();
-    }
+    => new AdventOfCode.Model.Project(git_repo, sslSalt, sslPassword ?? "", year ?? TimeProvider.System.GetLocalNow().Year) { UserName = username }.Init();
 
     private static ISolver? GetSolver(Type tsolver)
     => (ISolver?)Activator.CreateInstance(tsolver);
