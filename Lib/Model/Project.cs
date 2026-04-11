@@ -42,7 +42,7 @@ public partial class Project([Field] string repo, [Field] string sslSalt, [Field
         new DirectoryInfo("./").EnumerateDirectories("_git*").FirstOrDefault()?.Delete();
         var git = new LibGit2Sharp.Repository(".git");
         CopyStream(Extensions.GetEmbededResource("adventofcode.adventofcode.csproj"), File.Create("adventofcode.csproj"));
-        CopyStream(Extensions.GetEmbededResource("adventofcode.AdventOfCode.sln"), File.Create("AdventOfCode.sln"));
+        CopyStream(Extensions.GetEmbededResource("adventofcode.AdventOfCode.slnx"), File.Create("AdventOfCode.slnx"));
         CopyStream(Extensions.GetEmbededResource("adventofcode..gitattributes"), File.Create(".gitattributes"));
         CopyStream(Extensions.GetEmbededResource("adventofcode..gitignore"), File.Create(".gitignore"));
         var vscode = Directory.CreateDirectory(".vscode");
