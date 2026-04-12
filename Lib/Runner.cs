@@ -1,4 +1,5 @@
 ﻿using System.Reflection;
+using System.Runtime.CompilerServices;
 
 namespace AdventOfCode;
 
@@ -11,7 +12,48 @@ public interface ISolver
     Output PartTwo(ReadOnlyMemory<char> input);
 }
 
-public readonly union Output(string, long, ulong);
+[Union]
+public readonly struct Output : IUnion
+{
+    public Output(string s)
+    => (_tag, _s) = (1, s);
+    public Output(long l)
+    => (_tag, _l) = (2, l);
+    public Output(ulong u)
+    => (_tag, _u) = (3, u);
+
+    private readonly byte _tag = 0;
+    private readonly string _s;
+    private readonly long _l;
+    private readonly ulong _u;
+    public object Value
+    => _tag switch
+    {
+        1 => _s,
+        2 => _l,
+        3 => _u,
+        _ => throw new TypeAccessException(),
+    };
+    public bool HasValue => _tag != 0;
+
+    public bool TryGetValue(out string value)
+    {
+        value = _s;
+        return _tag == 1;
+    }
+
+    public bool TryGetValue(out long value)
+    {
+        value = _l;
+        return _tag == 2;
+    }
+
+    public bool TryGetValue(out ulong value)
+    {
+        value = _u;
+        return _tag == 3;
+    }
+}
 
 internal interface IDisplay
 {
