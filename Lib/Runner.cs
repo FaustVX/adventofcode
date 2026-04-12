@@ -12,6 +12,9 @@ public interface ISolver
     Output PartTwo(ReadOnlyMemory<char> input);
 }
 
+/// <summary>
+/// A <see langword="union"/> accepting <see cref="string"/>, <see cref="long"/> or <see cref="ulong"/>
+/// </summary>
 [Union]
 public readonly struct Output : IUnion
 {
