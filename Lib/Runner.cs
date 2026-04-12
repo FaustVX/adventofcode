@@ -15,6 +15,7 @@ public interface ISolver
 /// <summary>
 /// A <see langword="union"/> accepting <see cref="string"/>, <see cref="long"/> or <see cref="ulong"/>
 /// </summary>
+/// <remarks>https://learn.microsoft.com/en-us/dotnet/csharp/language-reference/builtin-types/union#non-boxing-access-pattern</remarks>
 [Union]
 public readonly struct Output : IUnion
 {
