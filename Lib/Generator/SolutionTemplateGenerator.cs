@@ -15,12 +15,12 @@ internal static class SolutionTemplateGenerator
     [{{nameof(ProblemInfo)}}("{{problem.Title}}")]
     public class Solution : {{nameof(ISolver)}} //, {{nameof(IDisplay)}}
     {
-        public object {{nameof(ISolver.PartOne)}}({{nameof(ReadOnlyMemory<>)}}<char> input)
+        public {{nameof(Output)}} {{nameof(ISolver.PartOne)}}({{nameof(ReadOnlyMemory<>)}}<char> input)
         {
             return 0;
         }
 
-        public object {{nameof(ISolver.PartTwo)}}({{nameof(ReadOnlyMemory<>)}}<char> input)
+        public {{nameof(Output)}} {{nameof(ISolver.PartTwo)}}({{nameof(ReadOnlyMemory<>)}}<char> input)
         {
             return 0;
         }

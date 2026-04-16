@@ -22,11 +22,11 @@ where T : ISolver, new()
     }
 
     [Benchmark]
-    public object PartOne()
+    public Output PartOne()
     => _instance.PartOne(_input);
 
     [Benchmark]
-    public object PartTwo()
+    public Output PartTwo()
     => _instance.PartTwo(_input);
 }
 
@@ -50,10 +50,10 @@ where T : ISolver, new()
     }
 
     [Benchmark]
-    public object PartOne()
+    public Output PartOne()
     => _instance.PartOne(_input);
 
     [Benchmark]
-    public object PartTwo()
+    public Output PartTwo()
     => _instance.PartTwo(_input);
 }
