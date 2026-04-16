@@ -54,13 +54,12 @@ public readonly struct Output : IUnion
         return _tag == 3;
     }
 
-    public static string ToString(Output? output)
-    => output switch
+    public override string ToString()
+    => this switch
     {
         string s => s,
         long l => l.ToString(),
-        ulong l => l.ToString(),
-        null => "",
+        ulong l => l.ToString()
     };
 }
 
@@ -239,7 +238,7 @@ internal static class Runner
                     var stopwatch = TimeProvider.System.GetTimestamp();
                     foreach (var line in solver.Solve(input, refout))
                     {
-                        var lineString = Output.ToString(line);
+                        var lineString = line?.ToString() ?? "";
                         var ticks = TimeProvider.System.GetElapsedTime(stopwatch);
                         answers.Add(lineString);
                         var (statusColor, status, err) =
